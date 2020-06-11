@@ -23,10 +23,10 @@ class Lightning_Publisher {
     add_filter('the_content',        array($this, 'ifpaid_filter'));
 
     // ajax
-    add_action('wp_ajax_ln_publisher_invoice',        array($this, 'ajax_make_invoice'));
-    add_action('wp_ajax_nopriv_ln_publisher_invoice', array($this, 'ajax_make_invoice'));
-    add_action('wp_ajax_ln_publisher_token',          array($this, 'ajax_make_token'));
-    add_action('wp_ajax_nopriv_ln_publisher_token',   array($this, 'ajax_make_token'));
+    add_action('wp_ajax_lnd_invoice',        array($this, 'ajax_make_invoice'));
+    add_action('wp_ajax_nopriv_lnd_invoice', array($this, 'ajax_make_invoice'));
+    add_action('wp_ajax_lnd_token',          array($this, 'ajax_make_token'));
+    add_action('wp_ajax_nopriv_lnd_token',   array($this, 'ajax_make_token'));
 
     // admin
     add_action('admin_init', array($this, 'admin_init'));
@@ -156,15 +156,15 @@ class Lightning_Publisher {
 
   public function admin_menu() {
     add_options_page('Lightning Publisher Settings', 'Lightning Publisher',
-                     'manage_options', 'ln_publisher', array($this, 'admin_page'));
+                     'manage_options', 'lnd_', array($this, 'admin_page'));
   }
   public function admin_init() {
-    register_setting('ln_publisher', 'ln_publisher');
-    add_settings_section('ln_publisher_server', 'Lightning Charge Server', null, 'ln_publisher');
+    register_setting('lnd_', 'lnd_');
+    add_settings_section('lnd_server', 'Lightning Charge Server', null, 'lnd_');
 
-    add_settings_field('ln_publisher_address', 'Address', array($this, 'field_address'), 'ln_publisher', 'ln_publisher_server');
-    add_settings_field('ln_publisher_macaroon', 'Macaroon', array($this, 'field_macaroon'), 'ln_publisher', 'ln_publisher_server');
-    add_settings_field('ln_publisher_tls_cert', 'TLS cert', array($this, 'field_tls_cert'), 'ln_publisher', 'ln_publisher_server');
+    add_settings_field('lnd_address', 'Address', array($this, 'field_address'), 'lnd_', 'lnd_server');
+    add_settings_field('lnd_macaroon', 'Macaroon', array($this, 'field_macaroon'), 'lnd_', 'lnd_server');
+    add_settings_field('lnd_tls_cert', 'TLS cert', array($this, 'field_tls_cert'), 'lnd_', 'lnd_server');
   }
   public function admin_page() {
     ?>
@@ -172,8 +172,8 @@ class Lightning_Publisher {
         <h1>Lightning Publisher Settings</h1>
         <form method="post" action="options.php">
         <?php
-            settings_fields('ln_publisher');
-            do_settings_sections('ln_publisher');
+            settings_fields('lnd_');
+            do_settings_sections('lnd_');
             submit_button();
         ?>
         </form>
@@ -181,14 +181,14 @@ class Lightning_Publisher {
     <?php
   }
   public function field_address(){
-    printf('<input type="text" name="ln_publisher[address]" value="%s" />', esc_attr($this->options['address']));
+    printf('<input type="text" name="lnd_[address]" value="%s" />', esc_attr($this->options['address']));
   }
   public function field_macaroon(){
-    printf('<input type="text" name="ln_publisher[macaroon]" value="%s" /><br><label>%s</label>', esc_attr($this->options['macaroon']),
+    printf('<input type="text" name="lnd_[macaroon]" value="%s" /><br><label>%s</label>', esc_attr($this->options['macaroon']),
            'URL where Lightning Charge is publicily accessible to users. Optional, defaults to Server URL.');
   }
   public function field_tls_cert(){
-    printf('<input type="text" name="ln_publisher[tls_cert]" value="%s" />', esc_attr($this->options['tls_cert']));
+    printf('<input type="text" name="lnd_[tls_cert]" value="%s" />', esc_attr($this->options['tls_cert']));
   }
 }
 
