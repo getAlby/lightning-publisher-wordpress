@@ -162,9 +162,9 @@ class Lightning_Publisher {
     register_setting('ln_publisher', 'ln_publisher');
     add_settings_section('ln_publisher_server', 'Lightning Charge Server', null, 'ln_publisher');
 
-    add_settings_field('ln_publisher_server_url', 'Server URL', array($this, 'field_server_url'), 'ln_publisher', 'ln_publisher_server');
-    add_settings_field('ln_publisher_server_public_url', 'Public URL', array($this, 'field_public_url'), 'ln_publisher', 'ln_publisher_server');
-    add_settings_field('ln_publisher_token', 'API token', array($this, 'field_token'), 'ln_publisher', 'ln_publisher_server');
+    add_settings_field('ln_publisher_address', 'Address', array($this, 'field_address'), 'ln_publisher', 'ln_publisher_server');
+    add_settings_field('ln_publisher_macaroon', 'Macaroon', array($this, 'field_macaroon'), 'ln_publisher', 'ln_publisher_server');
+    add_settings_field('ln_publisher_tls_cert', 'TLS cert', array($this, 'field_tls_cert'), 'ln_publisher', 'ln_publisher_server');
   }
   public function admin_page() {
     ?>
@@ -180,15 +180,15 @@ class Lightning_Publisher {
     </div>
     <?php
   }
-  public function field_server_url(){
-    printf('<input type="text" name="ln_publisher[server_url]" value="%s" />', esc_attr($this->options['server_url']));
+  public function field_address(){
+    printf('<input type="text" name="ln_publisher[address]" value="%s" />', esc_attr($this->options['address']));
   }
-  public function field_public_url(){
-    printf('<input type="text" name="ln_publisher[public_url]" value="%s" /><br><label>%s</label>', esc_attr($this->options['public_url']),
+  public function field_macaroon(){
+    printf('<input type="text" name="ln_publisher[macaroon]" value="%s" /><br><label>%s</label>', esc_attr($this->options['macaroon']),
            'URL where Lightning Charge is publicily accessible to users. Optional, defaults to Server URL.');
   }
-  public function field_token(){
-    printf('<input type="text" name="ln_publisher[api_token]" value="%s" />', esc_attr($this->options['api_token']));
+  public function field_tls_cert(){
+    printf('<input type="text" name="ln_publisher[tls_cert]" value="%s" />', esc_attr($this->options['tls_cert']));
   }
 }
 
