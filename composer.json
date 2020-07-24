@@ -5,6 +5,9 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "elementsproject/lightning-charge-client-php": "^0.1.3"
-    }
+        "octan/lnd-rest": "dev-composer"
+    },
+    "repositories": [
+      { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" }
+    ]
 }
