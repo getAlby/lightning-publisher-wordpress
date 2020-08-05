@@ -5,7 +5,8 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "octan/lnd-rest": "dev-composer"
+        "octan/lnd-rest": "dev-master",
+        "firebase/php-jwt": "dev-master"
     },
     "repositories": [
       { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" }

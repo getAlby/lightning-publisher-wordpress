@@ -1,38 +1,62 @@
 jQuery(function($) {
-  var ajax_url      = LN_publisher.ajax_url
-    , charge_url    = LN_publisher.charge_url
-    , charge_origin = $('<a>').attr('href', charge_url)[0].origin
 
-  function show_pay(post_id, target) {
-    $.post(ajax_url, { action: 'ln_publisher_invoice', post_id: post_id})
-      .success(function(invoice_id) { target.replaceWith(pay_frame(invoice_id)) })
-      .fail(function(err) { throw err })
+  var checkPaidInterval = null;
+  var wp_ajax_url       = LN_Paywall.ajax_url;
+
+  function pay(invoice) {
+    return WebLN.requestProvider()
+      .then(function(webln) {
+        webln.sendPayment(invoice.payment_request)
+          .catch(function(e) {
+            stopWatchingForPayment();
+          });
+        startWatchingForPayment(invoice.token);
+      })
+      .catch(function(err) {
+        stopWatchingForPayment();
+      });
   }
 
-  function get_access(invoice_id) {
-    $.post(ajax_url, { action: 'ln_publisher_token', invoice_id: invoice_id })
-      .success(function(res) { location.href = res.url })
-      .fail(function(err) { throw err })
+  function startWatchingForPayment(token) {
+    stopWatchingForPayment();
+    checkPaidInterval = setInterval(checkPaymentStatus(token), 800);
   }
 
-  function pay_frame(invoice_id) {
-    return $('<iframe>').addClass('ln-publisher-frame')
-      .attr('src', charge_url + '/checkout/' + invoice_id)
+  function stopWatchingForPayment() {
+    if (checkPaidInterval) {
+      clearTimeout(checkPaidInterval);
+      checkPaidInterval = null;
+    }
+  }
+
+  function checkPaymentStatus(token) {
+    return function() {
+      $.post(wp_ajax_url, { action: 'lnp_check_payment', token: token })
+        .success(function(content) {
+          showContent(content);
+        })
+    }
+  }
+
+  function showContent(content) {
+    stopWatchingForPayment();
+    $('#ln-publisher').replaceWith(content);
+  }
+
+  function requestInvoice(postId) {
+    $.post(wp_ajax_url, { action: 'lnp_invoice', post_id: postId})
+      .success(function(invoice) {
+        pay(invoice);
+      })
+      .fail(function(err) { throw err })
   }
 
   $('[data-publisher-postid]').click(function(e) {
-    e.preventDefault()
-    var t = $(this)
-    t.attr('disabled', true)
-    show_pay(t.data('publisher-postid'), t.closest('.ln-publisher-pay'))
+    e.preventDefault();
+    var t = $(this);
+    t.attr('disabled', true);
+
+    requestInvoice(t.data('publisher-postid'));
   })
 
-  $(window).on('message', function(ev) {
-    var ov = ev.originalEvent
-    if (ov.origin !== charge_origin) return;
-    switch (ov.data.type) {
-      case 'height':    $('.ln-publisher-frame').height(ov.data.value); break
-      case 'completed': get_access(ov.data.invoice); break
-    }
-  })
 })

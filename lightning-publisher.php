@@ -1,61 +1,130 @@
 <?php
 /*
-    Plugin Name: Lightning Publisher
-    Version:     0.1.8
-    Plugin URI:  https://github.com/ElementsProject/wordpress-lightning-publisher
-    Description: Lightning Publisher for WordPress
-    Author:      Blockstream
-    Author URI:  https://blockstream.com
+    Plugin Name: Lightning Paywall
+    Version:     0.0.1
+    Plugin URI:  
+    Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
+    Author:      
+    Author URI:  
+
+    Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
 */
 
 if (!defined('ABSPATH')) exit;
 
 require_once 'vendor/autoload.php';
-define('LIGHTNING_PUBLISHER_KEY', hash_hmac('sha256', 'lightning-publisher-token', AUTH_KEY));
 
-class Lightning_Publisher {
+use \Firebase\JWT\JWT;
+
+define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
+
+class WP_LN_Paywall {
   public function __construct() {
-    $this->options = get_option('ln_publisher');
-    $this->charge = new LightningChargeClient($this->options['server_url'], $this->options['api_token']);
+    $this->options = get_option('lnp');
 
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
-    add_filter('the_content',        array($this, 'ifpaid_filter'));
+    add_filter('the_content',        array($this, 'ln_paywall_filter'));
 
     // ajax
-    add_action('wp_ajax_lnd_invoice',        array($this, 'ajax_make_invoice'));
-    add_action('wp_ajax_nopriv_lnd_invoice', array($this, 'ajax_make_invoice'));
-    add_action('wp_ajax_lnd_token',          array($this, 'ajax_make_token'));
-    add_action('wp_ajax_nopriv_lnd_token',   array($this, 'ajax_make_token'));
+    add_action('wp_ajax_lnp_invoice',           array($this, 'ajax_make_invoice'));
+    add_action('wp_ajax_nopriv_lnp_invoice',   array($this, 'ajax_make_invoice'));
+
+    add_action('wp_ajax_ln[_check_payment',  array($this, 'ajax_check_payment'));
+    add_action('wp_ajax_nopriv_lnp_check_payment',  array($this, 'ajax_check_payment'));
 
     // admin
     add_action('admin_init', array($this, 'admin_init'));
     add_action('admin_menu', array($this, 'admin_menu'));
   }
 
+  protected function getLNDClient() {
+    if (!$this->lnd) {
+      $this->lnd = new LND\Client();
+      $this->lnd->setAddress(trim($this->options['lnd_address']));
+      $this->lnd->setMacarronHex(trim($this->options['lnd_macaroon']));
+      if (!empty($this->options['lnd_cert'])) {
+        $certPath = tempnam(sys_get_temp_dir(), "WPLNP");
+        file_put_contents($certPath, hex2bin($this->options['lnd_cert']));
+        $this->lnd->setTlsCertificatePath($certPath);
+      }
+    }
+    return $this->lnd;
+  }
   /**
-   * Process [ifpaid] tags in post content
+   * filter ln shortcodes and inject payment request HTML
    */
-  public function ifpaid_filter($content) {
-    $ifpaid = self::extract_ifpaid_tag($content);
-    if (!$ifpaid) return $content;
+  public function ln_paywall_filter($content) {
+    $ln_shortcode_data = self::extract_ln_shortcode($content);
+    if (!$ln_shortcode_data) return $content;
 
     $post_id = get_the_ID();
-    list($public, $protected) = preg_split('/(<p>)?' . preg_quote($ifpaid->tag, '/') . '(<\/p>)?/', $content, 2);
 
-    return self::check_payment($post_id) ? self::format_paid($post_id, $ifpaid, $public, $protected)
-                                         : self::format_unpaid($post_id, $ifpaid, $public);
+    list($public, $protected) = self::splitPublicProtected($content);
+    $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
+    if (self::has_paid_for_post($post_id)) {
+      return self::format_paid($post_id, $ln_shortcode_data, $public, $protected);
+    }
+    if ($ln_shortcode_data['total'] && (int)$ln_shortcode_data['total'] < $amount_received) {
+      return self::format_paid($post_id, $ln_shortcode_data, $public, $protected);
+    }
+
+    return self::format_unpaid($post_id, $ln_shortcode_data, $public);
   }
 
+  public static function splitPublicProtected($content) {
+    return preg_split('/(<p>)?\[ln.+\](<\/p>)?/', $content, 2);
+  }
+
+  /**
+   * Store the post_id in an cookie to remember the payment
+   * and increment the paid amount on the post
+   * must only be called once (can be exploited currently)
+   */
+  public static function save_as_paid($post_id, $amount_paid = 0) {
+    $paid_post_ids = self::get_paid_post_ids();
+    if (!in_array($post_id, $post_ids)) {
+      $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
+      if (is_numeric($amount_received)) {
+        $amount = $amount_received + $amount_paid;
+      } else {
+        $amount = $amount_paid;
+      }
+      update_post_meta($post_id, '_lnp_amount_received', $amount);
+
+      array_push($paid_post_ids, $post_id);
+    }
+    $jwt = JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY);
+    setcookie('wplnp', $jwt, time() + time() + 60*60*24*180, '/');
+  }
+
+  public static function get_paid_post_ids() {
+    if (empty($_COOKIE["wplnp"])) return [];
+    try {
+      $jwt = JWT::decode($_COOKIE["wplnp"], WP_LN_PAYWALL_JWT_KEY, array('HS256'));
+      $paid_post_ids = $jwt->{'post_ids'};
+      if (!is_array($paid_post_ids)) return [];
+
+      return $paid_post_ids;
+    } catch (Exception $e) {
+      //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
+      return [];
+    }
+  }
+
+  public static function has_paid_for_post($post_id) {
+    $paid_post_ids = self::get_paid_post_ids();
+    return in_array($post_id, $paid_post_ids);
+  }
   /**
    * Register scripts and styles
    */
   public function enqueue_script() {
-    wp_enqueue_script('ln-publisher', plugins_url('js/publisher.js', __FILE__), array('jquery'));
-    wp_enqueue_style('ln-publisher', plugins_url('css/publisher.css', __FILE__));
-    wp_localize_script('ln-publisher', 'LN_publisher', array(
+    wp_enqueue_script('webln', 'https://unpkg.com/webln@0.2.0/dist/webln.min.js'); // TODO bundle
+    wp_enqueue_script('ln-paywall', plugins_url('js/publisher.js', __FILE__), array('jquery'));
+    wp_enqueue_style('ln-paywall', plugins_url('css/publisher.css', __FILE__));
+    wp_localize_script('ln-paywall', 'LN_Paywall', array(
       'ajax_url'   => admin_url('admin-ajax.php'),
-      'charge_url' => !empty($this->options['public_url']) ? $this->options['public_url'] : $this->options['server_url']
     ));
   }
 
@@ -64,132 +133,131 @@ class Lightning_Publisher {
    */
   public function ajax_make_invoice() {
     $post_id = (int)$_POST['post_id'];
-    $ifpaid = self::extract_ifpaid_tag(get_post_field('post_content', $post_id));
-    if (!$ifpaid) return status_header(404);
+    $ln_shortcode_data = self::extract_ln_shortcode(get_post_field('post_content', $post_id));
 
-    $invoice = $this->charge->invoice([
-      'currency'    => $ifpaid->currency,
-      'amount'      => $ifpaid->amount,
-      'description' => get_bloginfo('name') . ': pay to continue reading ' . get_the_title($post_id),
-      'metadata'    => [ 'source' => 'wordpress-lightning-publisher', 'post_id' => $post_id, 'url' => get_permalink($post_id) ]
+    if (!$ln_shortcode_data) return status_header(404);
+
+    $invoice = $this->getLNDClient()->addInvoice([
+      'memo' => 'POST ID' . $post_id,
+      'value' => $ln_shortcode_data['amount'] // in sats
     ]);
 
-    wp_send_json($invoice->id, 201);
+    $jwt = JWT::encode(array('post_id' => $post_id, 'r_hash' => $invoice->{'r_hash'}, exp => time() + 60*5), WP_LIGHTNING_JWT_KEY);
+
+    wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'payment_request' => $invoice->{'payment_request'}]);
   }
 
   /**
-   * AJAX endpoint to exchange invoices for HMAC access tokens
-   * @TODO persist to cookie?
+   * AJAX endpoint to check if an invoice is settled
+   * returns the protected content if the invoice is settled
    */
-  public function ajax_make_token() {
-    $invoice = $this->charge->fetch($_POST['invoice_id']);
+  public function ajax_check_payment() {
+    try {
+      $jwt = JWT::decode($_POST['token'], WP_LIGHTNING_JWT_KEY, array('HS256'));
+    } catch(Exception $e) {
+      return wp_send_json([ 'settled' => false ], 404);
+    }
+    $r_hash_str = $jwt->{'r_hash'};
+    $post_id = $jwt->{'post_id'};
 
-    if (!$invoice)                    return status_header(404);
-    if ($invoice->status !== 'paid')  return status_header(402);
-    if (!$invoice->metadata->post_id) return status_header(500); // should never actually happen
-
-    $post_id = $invoice->metadata->post_id;
-    $token   = self::make_token($post_id);
-    $url     = add_query_arg('publisher_access', $token, get_permalink($post_id));
-
-    wp_send_json([ 'post_id' => $post_id, 'token' => $token, 'url' => $url ]);
+    $invoice = $this->getLNDClient()->getInvoice($r_hash_str);
+    $amount = (int)$invoice->{'value'};
+    if ($invoice && $invoice->{'settled'}) {
+      $content = get_post_field('post_content', $post_id);
+      list($public, $protected) = self::splitPublicProtected($content);
+      self::save_as_paid($post_id, $amount);
+      wp_send_json($protected);
+    } else {
+      wp_send_json([ 'settled' => false ], 402);
+    }
   }
 
   /**
-   * Create HMAC tokens granting access to $post_id
-   * @param int $post_id
-   * @return str base36 token
-   * @TODO expiry time, link token to invoice
-   */
-  protected static function make_token($post_id) {
-    return base_convert(hash_hmac('sha256', $post_id, LIGHTNING_PUBLISHER_KEY), 16, 36);
-  }
-
-
-  /**
-   * Check whether the current visitor has access to $post_id
-   * @param int $post_id
-   * @return bool
-   */
-  protected static function check_payment($post_id) {
-    return isset($_GET['publisher_access']) && self::make_token($post_id) === $_GET['publisher_access'];
-  }
-
-  /**
-   * Parse [ifpaid] tags and return as structured data
-   * Expected format: [ifpaid AMOUNT CURRENCY KEY=VAL]
+   * Parse [ln] tags and return as structured data
+   * Expected format: [ln key=val]
    * @param string $content
    * @return array
    */
-  protected static function extract_ifpaid_tag($content) {
-    if (!preg_match('/\[ifpaid [\d.]+ [a-z]+.*?\]/i', $content, $m)) return;
-    $tag = html_entity_decode(str_replace(array('&#8220;', '&#8221;'), '"', $m[0]));
-    if (substr($tag, -2, 1) !== ' ') $tag = substr($tag, 0, -1) . ' ]';
-    $attrs = shortcode_parse_atts($tag);
-    return (object)[ 'tag' => $m[0], 'amount' => $attrs[1], 'currency' => $attrs[2], 'attrs' => $attrs ];
+  protected static function extract_ln_shortcode($content) {
+    if (!preg_match('/\[ln(.+)\]/i', $content, $m)) return;
+    return shortcode_parse_atts($m[1]);
   }
 
   /**
    * Format display for paid post
    */
-  protected static function format_paid($post_id, $ifpaid, $public, $protected) {
-    $text = isset($ifpaid->attrs['thanks']) ? $ifpaid->attrs['thanks']
-      : "<p>Thank you for paying! The rest of the post is available below.</p><p>To return to this content later, please add this page to your bookmarks (Ctrl-d).</p>";
-
-    return sprintf('%s<div class="ln-publisher-paid" id="paid">%s</div>%s', $public, $text, $protected);
+  protected static function format_paid($post_id, $ln_shortcode_data, $public, $protected) {
+    return sprintf('%s%s', $public, $protected);
   }
 
   /**
-   * Format display for unpaid post
+   * Format display for unpaid post. Injects the payment request HTML
    */
-  protected static function format_unpaid($post_id, $ifpaid, $public) {
-    $attrs  = $ifpaid->attrs;
-    $text   = '<p>' . sprintf(!isset($attrs['text']) ? 'To continue reading the rest of this post, please pay <em>%s</em>.' : $attrs['text'], $ifpaid->amount . ' ' . $ifpaid->currency).'</p>';
-    $button = sprintf('<a class="ln-publisher-btn" href="#" data-publisher-postid="%d">%s</a>', $post_id, !isset($attrs['button']) ? 'Pay to continue reading' : $attrs['button']);
+  protected static function format_unpaid($post_id, $ln_shortcode_data, $public) {
+    $text   = '<p>' . sprintf(!isset($ln_shortcode_data['text']) ? 'To continue reading the rest of this post, please pay <em>%s</em>.' : $ln_shortcode_data['text'], $ln_shortcode_data['amount']).'</p>';
+    $button = sprintf('<a class="ln-publisher-btn" href="#" data-publisher-postid="%d">%s</a>', $post_id, !isset($ln_shortcode_data['button']) ? 'Pay to continue reading' : $ln_shortcode_data['button']);
 
-    return sprintf('%s<div class="ln-publisher-pay">%s%s</div>', $public, $text, $button);
+    return sprintf('%s<div id="ln-publisher" class="ln-publisher-pay">%s%s</div>', $public, $text, $button);
   }
 
   /**
-   * Admin settings page
+   * Admin
    */
-
   public function admin_menu() {
-    add_options_page('Lightning Publisher Settings', 'Lightning Publisher',
-                     'manage_options', 'lnd_', array($this, 'admin_page'));
+    add_options_page('Lighting Paywall Settings', 'Lightning', 'manage_options', 'lnp', array($this, 'admin_page'));
   }
-  public function admin_init() {
-    register_setting('lnd_', 'lnd_');
-    add_settings_section('lnd_server', 'Lightning Charge Server', null, 'lnd_');
 
-    add_settings_field('lnd_address', 'Address', array($this, 'field_address'), 'lnd_', 'lnd_server');
-    add_settings_field('lnd_macaroon', 'Macaroon', array($this, 'field_macaroon'), 'lnd_', 'lnd_server');
-    add_settings_field('lnd_tls_cert', 'TLS cert', array($this, 'field_tls_cert'), 'lnd_', 'lnd_server');
+  public function admin_init() {
+    register_setting('lnp', 'lnp');
+    add_settings_section('lnd', 'LND Config', null, 'lnp');
+
+    add_settings_field('lnd_address', 'Address', array($this, 'field_lnd_address'), 'lnp', 'lnd');
+    add_settings_field('lnd_macaroon', 'Macaroon', array($this, 'field_lnd_macaroon'), 'lnp', 'lnd');
+    add_settings_field('lnd_cert', 'TLS Cert', array($this, 'field_lnd_cert'), 'lnp', 'lnd');
   }
   public function admin_page() {
     ?>
     <div class="wrap">
-        <h1>Lightning Publisher Settings</h1>
+        <h1>Lightning Paywall Settings</h1>
+        <div class="node-info">
+          <?php
+            try {
+              if ($this->getLNDClient()->isConnectionValid()) {
+                $node_info = $this->getLNDClient()->getInfo();
+                echo "Connected to: " . $node_info->{'alias'} . ' - ' . $node_info->{'identity_pubkey'};
+              } else {
+                echo 'Not connected';
+              }
+            } catch (Exception $e) {
+              echo "Failed to connect: " . $e;
+            }
+          ?>
+        </div>
         <form method="post" action="options.php">
         <?php
-            settings_fields('lnd_');
-            do_settings_sections('lnd_');
+            settings_fields('lnp');
+            do_settings_sections('lnp');
             submit_button();
         ?>
         </form>
     </div>
     <?php
   }
-  public function field_address(){
-    printf('<input type="text" name="lnd_[address]" value="%s" />', esc_attr($this->options['address']));
+  public function field_lnd_address(){
+    printf('<input type="text" name="lnp[lnd_address]" value="%s" />',
+      esc_attr($this->options['lnd_address']),
+      'http://localhost');
   }
-  public function field_macaroon(){
-    printf('<input type="text" name="lnd_[macaroon]" value="%s" /><br><label>%s</label>', esc_attr($this->options['macaroon']),
-           'URL where Lightning Charge is publicily accessible to users. Optional, defaults to Server URL.');
+  public function field_lnd_macaroon(){
+    printf('<input type="text" name="lnp[lnd_macaroon]" value="%s" /><br><label>%s</label>',
+      esc_attr($this->options['lnd_macaroon']),
+      'Invoices macaroon in HEX format');
   }
-  public function field_tls_cert(){
-    printf('<input type="text" name="lnd_[tls_cert]" value="%s" />', esc_attr($this->options['tls_cert']));
+  public function field_lnd_cert(){
+    printf('<input type="text" name="lnp[lnd_cert]" value="%s" /><br><label>%s</label>',
+      esc_attr($this->options['lnd_cert']),
+      'TLS Certificate');
   }
 }
 
-new Lightning_Publisher();
+new WP_LN_Paywall();
