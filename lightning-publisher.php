@@ -30,7 +30,7 @@ class WP_LN_Paywall {
     add_action('wp_ajax_lnp_invoice',           array($this, 'ajax_make_invoice'));
     add_action('wp_ajax_nopriv_lnp_invoice',   array($this, 'ajax_make_invoice'));
 
-    add_action('wp_ajax_ln[_check_payment',  array($this, 'ajax_check_payment'));
+    add_action('wp_ajax_lnp_check_payment',  array($this, 'ajax_check_payment'));
     add_action('wp_ajax_nopriv_lnp_check_payment',  array($this, 'ajax_check_payment'));
 
     // admin
