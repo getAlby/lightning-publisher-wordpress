@@ -13,7 +13,9 @@ jQuery(function($) {
         startWatchingForPayment(invoice);
       })
       .catch(function(err) {
-        stopWatchingForPayment();
+        showQRCode(invoice);
+        startWatchingForPayment(invoice);
+        console.log(err);
       });
   }
 
@@ -41,6 +43,12 @@ jQuery(function($) {
   function showContent(postId, content) {
     stopWatchingForPayment();
     $('.wp-lnp-wrapper[data-lnp-postid=' + postId + ']').replaceWith(content);
+  }
+
+  function showQRCode(invoice) {
+    var wrapper = $('.wp-lnp-wrapper[data-lnp-postid=' + invoice.post_id + ']');
+    var button = wrapper.find('button.wp-lnp-btn');
+    button.replaceWith('<div class="wp-lnp-qrcode"><img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=' + invoice.payment_request + '"></div>');
   }
 
   function requestInvoice(postId) {

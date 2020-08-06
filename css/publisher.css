@@ -31,3 +31,11 @@
   cursor: not-allowed;
   opacity: 0.4;
 }
+
+.wp-lnp-qrcode {
+  text-align: center;
+}
+.wp-lnp-qrcode img {
+  width: 200px;
+  display: inline;
+}
