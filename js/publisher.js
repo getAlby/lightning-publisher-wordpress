@@ -40,7 +40,7 @@ jQuery(function($) {
 
   function showContent(content) {
     stopWatchingForPayment();
-    $('#ln-publisher').replaceWith(content);
+    $('#wp-lnp-wrapper').replaceWith(content);
   }
 
   function requestInvoice(postId) {
@@ -51,12 +51,24 @@ jQuery(function($) {
       .fail(function(err) { throw err })
   }
 
-  $('[data-publisher-postid]').click(function(e) {
+  $('[data-lnp-postid]').click(function(e) {
     e.preventDefault();
     var t = $(this);
     t.attr('disabled', true);
 
-    requestInvoice(t.data('publisher-postid'));
-  })
+    if ($('#wp-lnp-autopay').val() === '1') {
+      localStorage.setItem('wplnp_autopay', true);
+    }
+    requestInvoice(t.data('lnp-postid'));
+  });
+
+  if (localStorage.getItem('wplnp_autopay')) {
+    var element = $('[data-lnp-postid]').first();
+    if (element.length) {
+      console.log(element);
+      console.log(element.data());
+      requestInvoice(element.data('lnp-postid'));
+    }
+  }
 
 })

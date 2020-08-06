@@ -194,10 +194,10 @@ class WP_LN_Paywall {
    * Format display for unpaid post. Injects the payment request HTML
    */
   protected static function format_unpaid($post_id, $ln_shortcode_data, $public) {
-    $text   = '<p>' . sprintf(!isset($ln_shortcode_data['text']) ? 'To continue reading the rest of this post, please pay <em>%s</em>.' : $ln_shortcode_data['text'], $ln_shortcode_data['amount']).'</p>';
-    $button = sprintf('<a class="ln-publisher-btn" href="#" data-publisher-postid="%d">%s</a>', $post_id, !isset($ln_shortcode_data['button']) ? 'Pay to continue reading' : $ln_shortcode_data['button']);
-
-    return sprintf('%s<div id="ln-publisher" class="ln-publisher-pay">%s%s</div>', $public, $text, $button);
+    $text   = '<p>' . sprintf(!isset($ln_shortcode_data['text']) ? 'To continue reading the rest of this post, please pay <em>%s Satoshi</em>.' : $ln_shortcode_data['text'], $ln_shortcode_data['amount']).'</p>';
+    $button = sprintf('<a class="wp-lnp-btn" href="#" data-lnp-postid="%d">%s</a>', $post_id, !isset($ln_shortcode_data['button']) ? 'Pay to continue reading' : $ln_shortcode_data['button']);
+    $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" id="wp-lnp-autopay" />Enable autopay<label</p>';
+    return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper">%s%s%s</div>', $public, $text, $button, $autopay);
   }
 
   /**
