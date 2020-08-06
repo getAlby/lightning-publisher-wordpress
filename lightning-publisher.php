@@ -16,7 +16,7 @@ require_once 'vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 
-define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
+define('WP_LIGHTNING_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
 
 class WP_LN_Paywall {
   public function __construct() {
@@ -120,7 +120,7 @@ class WP_LN_Paywall {
    * Register scripts and styles
    */
   public function enqueue_script() {
-    wp_enqueue_script('webln', 'https://unpkg.com/webln@0.2.0/dist/webln.min.js'); // TODO bundle
+    wp_enqueue_script('webln', plugins_url('js/webln.min.js', __FILE__));
     wp_enqueue_script('ln-paywall', plugins_url('js/publisher.js', __FILE__), array('jquery'));
     wp_enqueue_style('ln-paywall', plugins_url('css/publisher.css', __FILE__));
     wp_localize_script('ln-paywall', 'LN_Paywall', array(
@@ -135,14 +135,19 @@ class WP_LN_Paywall {
     $post_id = (int)$_POST['post_id'];
     $ln_shortcode_data = self::extract_ln_shortcode(get_post_field('post_content', $post_id));
 
-    if (!$ln_shortcode_data) return status_header(404);
+    if (!$ln_shortcode_data) {
+      return wp_send_json([ 'error' => 'invalid post' ], 404);
+    }
+
+    $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
 
     $invoice = $this->getLNDClient()->addInvoice([
-      'memo' => 'POST ID' . $post_id,
-      'value' => $ln_shortcode_data['amount'] // in sats
+      'memo' => substr($memo, 0, 64),
+      'value' => $ln_shortcode_data['amount'], // in sats
+      'expiry' => 1800
     ]);
 
-    $jwt = JWT::encode(array('post_id' => $post_id, 'r_hash' => $invoice->{'r_hash'}, exp => time() + 60*5), WP_LIGHTNING_JWT_KEY);
+    $jwt = JWT::encode(array('post_id' => $post_id, 'r_hash' => $invoice->{'r_hash'}, 'exp' => time() + 60*5), WP_LIGHTNING_JWT_KEY);
 
     wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'payment_request' => $invoice->{'payment_request'}]);
   }
@@ -195,9 +200,9 @@ class WP_LN_Paywall {
    */
   protected static function format_unpaid($post_id, $ln_shortcode_data, $public) {
     $text   = '<p>' . sprintf(!isset($ln_shortcode_data['text']) ? 'To continue reading the rest of this post, please pay <em>%s Satoshi</em>.' : $ln_shortcode_data['text'], $ln_shortcode_data['amount']).'</p>';
-    $button = sprintf('<a class="wp-lnp-btn" href="#" data-lnp-postid="%d">%s</a>', $post_id, !isset($ln_shortcode_data['button']) ? 'Pay to continue reading' : $ln_shortcode_data['button']);
-    $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" id="wp-lnp-autopay" />Enable autopay<label</p>';
-    return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper">%s%s%s</div>', $public, $text, $button, $autopay);
+    $button = sprintf('<button class="wp-lnp-btn">%s</button>', !isset($ln_shortcode_data['button']) ? 'Pay to continue reading' : $ln_shortcode_data['button']);
+    $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
+    return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s%s</div>', $public, $post_id, $text, $button, $autopay);
   }
 
   /**

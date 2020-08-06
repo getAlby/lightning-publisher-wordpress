@@ -10,16 +10,16 @@ jQuery(function($) {
           .catch(function(e) {
             stopWatchingForPayment();
           });
-        startWatchingForPayment(invoice.token);
+        startWatchingForPayment(invoice);
       })
       .catch(function(err) {
         stopWatchingForPayment();
       });
   }
 
-  function startWatchingForPayment(token) {
+  function startWatchingForPayment(invoice) {
     stopWatchingForPayment();
-    checkPaidInterval = setInterval(checkPaymentStatus(token), 800);
+    checkPaidInterval = setInterval(checkPaymentStatus(invoice), 800);
   }
 
   function stopWatchingForPayment() {
@@ -29,46 +29,48 @@ jQuery(function($) {
     }
   }
 
-  function checkPaymentStatus(token) {
+  function checkPaymentStatus(invoice) {
     return function() {
-      $.post(wp_ajax_url, { action: 'lnp_check_payment', token: token })
+      $.post(wp_ajax_url, { action: 'lnp_check_payment', token: invoice.token })
         .success(function(content) {
-          showContent(content);
-        })
+          showContent(invoice.post_id, content);
+        });
     }
   }
 
-  function showContent(content) {
+  function showContent(postId, content) {
     stopWatchingForPayment();
-    $('#wp-lnp-wrapper').replaceWith(content);
+    $('.wp-lnp-wrapper[data-lnp-postid=' + postId + ']').replaceWith(content);
   }
 
   function requestInvoice(postId) {
     $.post(wp_ajax_url, { action: 'lnp_invoice', post_id: postId})
-      .success(function(invoice) {
-        pay(invoice);
-      })
+      .success(function(invoice) { pay(invoice); })
       .fail(function(err) { throw err })
   }
 
-  $('[data-lnp-postid]').click(function(e) {
+  $('[data-lnp-postid] button.wp-lnp-btn').click(function(e) {
     e.preventDefault();
-    var t = $(this);
-    t.attr('disabled', true);
+    var button = $(this);
+    button.attr('disabled', true);
 
-    if ($('#wp-lnp-autopay').val() === '1') {
+    var wrapper = button.closest('.wp-lnp-wrapper');
+    var autopayInput = wrapper.find('input.wp-lnp-autopay:checked');
+
+    if (autopayInput.length) {
       localStorage.setItem('wplnp_autopay', true);
     }
-    requestInvoice(t.data('lnp-postid'));
+    requestInvoice(wrapper.data('lnp-postid'));
   });
 
+
   if (localStorage.getItem('wplnp_autopay')) {
-    var element = $('[data-lnp-postid]').first();
-    if (element.length) {
-      console.log(element);
-      console.log(element.data());
-      requestInvoice(element.data('lnp-postid'));
+    var wrappers = $('.wp-lnp-wrapper[data-lnp-postid]')
+    if (wrappers.length === 1) {
+      var wrapper = wrappers.first();
+      var button = wrapper.find('button.wp-lnp-btn');
+      button.attr('disabled', true);
+      requestInvoice(wrappers.first().data('lnp-postid'));
     }
   }
-
-})
+});
