@@ -21,17 +21,18 @@ define('WP_LIGHTNING_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_
 class WP_LN_Paywall {
   public function __construct() {
     $this->options = get_option('lnp');
+    $this->lnd = null;
 
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
     add_filter('the_content',        array($this, 'ln_paywall_filter'));
 
     // ajax
-    add_action('wp_ajax_lnp_invoice',           array($this, 'ajax_make_invoice'));
-    add_action('wp_ajax_nopriv_lnp_invoice',   array($this, 'ajax_make_invoice'));
+    add_action('wp_ajax_lnp_invoice',        array($this, 'ajax_make_invoice'));
+    add_action('wp_ajax_nopriv_lnp_invoice', array($this, 'ajax_make_invoice'));
 
-    add_action('wp_ajax_lnp_check_payment',  array($this, 'ajax_check_payment'));
-    add_action('wp_ajax_nopriv_lnp_check_payment',  array($this, 'ajax_check_payment'));
+    add_action('wp_ajax_lnp_check_payment', array($this, 'ajax_check_payment'));
+    add_action('wp_ajax_nopriv_lnp_check_payment', array($this, 'ajax_check_payment'));
 
     // admin
     add_action('admin_init', array($this, 'admin_init'));
