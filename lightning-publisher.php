@@ -209,7 +209,9 @@ class WP_LN_Paywall {
    * Admin
    */
   public function admin_menu() {
-    add_options_page('Lighting Paywall Settings', 'Lightning', 'manage_options', 'lnp', array($this, 'admin_page'));
+    add_menu_page('Lighting Paywall Settings', 'Lighting Paywall', 'manage_options', 'lnp_settings');
+    add_submenu_page('lnp_settings','Lighting Paywall Settings', 'Settings', 'manage_options', 'lnp_settings',array($this, 'settings_page'));
+    add_submenu_page('lnp_settings', 'Lightning Paywall Balances','Balances', 'manage_options', 'lnp_balances', array($this, 'balances_page'));
   }
 
   public function admin_init() {
@@ -220,7 +222,8 @@ class WP_LN_Paywall {
     add_settings_field('lnd_macaroon', 'Macaroon', array($this, 'field_lnd_macaroon'), 'lnp', 'lnd');
     add_settings_field('lnd_cert', 'TLS Cert', array($this, 'field_lnd_cert'), 'lnp', 'lnd');
   }
-  public function admin_page() {
+
+  public function settings_page() {
     ?>
     <div class="wrap">
         <h1>Lightning Paywall Settings</h1>
@@ -243,6 +246,35 @@ class WP_LN_Paywall {
             settings_fields('lnp');
             do_settings_sections('lnp');
             submit_button();
+        ?>
+        </form>
+    </div>
+    <?php
+  }
+
+  public function balances_page() {
+    ?>
+    <div class="wrap">
+        <h1>Lightning Paywall Balances</h1>
+        <div class="node-info">
+          <?php
+            try {
+              if ($this->getLNDClient()->isConnectionValid()) {
+                $node_info = $this->getLNDClient()->getInfo();
+                echo "Connected to: " . $node_info->{'alias'} . ' - ' . $node_info->{'identity_pubkey'};
+              } else {
+                echo 'Not connected';
+              }
+            } catch (Exception $e) {
+              echo "Failed to connect: " . $e;
+            }
+          ?>
+        </div>
+        <form method="post" action="options.php">
+        <?php
+            // settings_fields('lnp');
+            // do_settings_sections('lnp');
+            // submit_button();
         ?>
         </form>
     </div>
