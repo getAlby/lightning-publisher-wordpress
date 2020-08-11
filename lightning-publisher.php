@@ -21,35 +21,42 @@ define('WP_LIGHTNING_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_
 class WP_LN_Paywall {
   public function __construct() {
     $this->options = get_option('lnp');
+    $this->lightningClient = null;
 
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
     add_filter('the_content',        array($this, 'ln_paywall_filter'));
 
     // ajax
-    add_action('wp_ajax_lnp_invoice',           array($this, 'ajax_make_invoice'));
-    add_action('wp_ajax_nopriv_lnp_invoice',   array($this, 'ajax_make_invoice'));
+    add_action('wp_ajax_lnp_invoice',        array($this, 'ajax_make_invoice'));
+    add_action('wp_ajax_nopriv_lnp_invoice', array($this, 'ajax_make_invoice'));
 
-    add_action('wp_ajax_lnp_check_payment',  array($this, 'ajax_check_payment'));
-    add_action('wp_ajax_nopriv_lnp_check_payment',  array($this, 'ajax_check_payment'));
+    add_action('wp_ajax_lnp_check_payment', array($this, 'ajax_check_payment'));
+    add_action('wp_ajax_nopriv_lnp_check_payment', array($this, 'ajax_check_payment'));
 
     // admin
     add_action('admin_init', array($this, 'admin_init'));
     add_action('admin_menu', array($this, 'admin_menu'));
   }
 
-  protected function getLNDClient() {
-    if (!$this->lnd) {
-      $this->lnd = new LND\Client();
-      $this->lnd->setAddress(trim($this->options['lnd_address']));
-      $this->lnd->setMacarronHex(trim($this->options['lnd_macaroon']));
+  protected function getLightningClient() {
+    if ($this->lightningClient) {
+      return $this->lightningClient;
+    }
+
+    if (!empty($this->options['lnd_address'])) {
+      $this->lightningClient = new LND\Client();
+      $this->lightningClient->setAddress(trim($this->options['lnd_address']));
+      $this->lightningClient->setMacarronHex(trim($this->options['lnd_macaroon']));
       if (!empty($this->options['lnd_cert'])) {
         $certPath = tempnam(sys_get_temp_dir(), "WPLNP");
         file_put_contents($certPath, hex2bin($this->options['lnd_cert']));
-        $this->lnd->setTlsCertificatePath($certPath);
+        $this->lightningClient->setTlsCertificatePath($certPath);
       }
+    } elseif (!empty($this->options['lnbits_apikey'])) {
+      $this->lightningClient = new LNbits\Client($this->options['lnbits_apikey']);
     }
-    return $this->lnd;
+    return $this->lightningClient;
   }
   /**
    * filter ln shortcodes and inject payment request HTML
@@ -98,10 +105,23 @@ class WP_LN_Paywall {
     setcookie('wplnp', $jwt, time() + time() + 60*60*24*180, '/');
   }
 
-  public static function get_paid_post_ids() {
-    if (empty($_COOKIE["wplnp"])) return [];
+  public static function has_paid_for_all() {
+    $wplnp = $_COOKIE['wplnp'] || $_GET['wplnp'];
+    if (empty($wplnp)) return false;
     try {
-      $jwt = JWT::decode($_COOKIE["wplnp"], WP_LN_PAYWALL_JWT_KEY, array('HS256'));
+      $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
+      return $jwt->{'all_until'} > time();
+    } catch (Exception $e) {
+      //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
+      return false;
+    }
+  }
+
+  public static function get_paid_post_ids() {
+    $wplnp = $_COOKIE['wplnp'] || $_GET['wplnp'];
+    if (empty($wplnp)) return [];
+    try {
+      $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
       $paid_post_ids = $jwt->{'post_ids'};
       if (!is_array($paid_post_ids)) return [];
 
@@ -113,6 +133,9 @@ class WP_LN_Paywall {
   }
 
   public static function has_paid_for_post($post_id) {
+    if (self::has_paid_for_all()) {
+      return true;
+    }
     $paid_post_ids = self::get_paid_post_ids();
     return in_array($post_id, $paid_post_ids);
   }
@@ -141,15 +164,15 @@ class WP_LN_Paywall {
 
     $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
 
-    $invoice = $this->getLNDClient()->addInvoice([
+    $invoice = $this->getLightningClient()->addInvoice([
       'memo' => substr($memo, 0, 64),
       'value' => $ln_shortcode_data['amount'], // in sats
       'expiry' => 1800
     ]);
 
-    $jwt = JWT::encode(array('post_id' => $post_id, 'r_hash' => $invoice->{'r_hash'}, 'exp' => time() + 60*5), WP_LIGHTNING_JWT_KEY);
+    $jwt = JWT::encode(array('post_id' => $post_id, 'invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*5, 'amount' => $ln_shortcode_data['amount']), WP_LIGHTNING_JWT_KEY);
 
-    wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'payment_request' => $invoice->{'payment_request'}]);
+    wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'payment_request' => $invoice['payment_request']]);
   }
 
   /**
@@ -162,12 +185,12 @@ class WP_LN_Paywall {
     } catch(Exception $e) {
       return wp_send_json([ 'settled' => false ], 404);
     }
-    $r_hash_str = $jwt->{'r_hash'};
+    $invoice_id = $jwt->{'invoice_id'};
     $post_id = $jwt->{'post_id'};
 
-    $invoice = $this->getLNDClient()->getInvoice($r_hash_str);
-    $amount = (int)$invoice->{'value'};
-    if ($invoice && $invoice->{'settled'}) {
+    $invoice = $this->getLightningClient()->getInvoice($invoice_id);
+    $amount = (int)$invoice['value'] || (int)$jwt->{'amount'}; // TODO: invoice LNbits does not return the amount. needs to be added to lnbits
+    if ($invoice && $invoice['settled']) {
       $content = get_post_field('post_content', $post_id);
       list($public, $protected) = self::splitPublicProtected($content);
       self::save_as_paid($post_id, $amount);
@@ -221,6 +244,9 @@ class WP_LN_Paywall {
     add_settings_field('lnd_address', 'Address', array($this, 'field_lnd_address'), 'lnp', 'lnd');
     add_settings_field('lnd_macaroon', 'Macaroon', array($this, 'field_lnd_macaroon'), 'lnp', 'lnd');
     add_settings_field('lnd_cert', 'TLS Cert', array($this, 'field_lnd_cert'), 'lnp', 'lnd');
+
+    add_settings_section('lnbits', 'LNbits', null, 'lnp');
+    add_settings_field('lnbits_apikey', 'API Key', array($this, 'field_lnbits_apikey'), 'lnp', 'lnbits');
   }
 
   public function settings_page() {
@@ -230,9 +256,9 @@ class WP_LN_Paywall {
         <div class="node-info">
           <?php
             try {
-              if ($this->getLNDClient()->isConnectionValid()) {
-                $node_info = $this->getLNDClient()->getInfo();
-                echo "Connected to: " . $node_info->{'alias'} . ' - ' . $node_info->{'identity_pubkey'};
+              if ($this->getLightningClient()->isConnectionValid()) {
+                $node_info = $this->getLightningClient()->getInfo();
+                echo "Connected to: " . $node_info['alias'] . ' - ' . $node_info['identity_pubkey'];
               } else {
                 echo 'Not connected';
               }
@@ -256,44 +282,28 @@ class WP_LN_Paywall {
     ?>
     <div class="wrap">
         <h1>Lightning Paywall Balances</h1>
-        <div class="node-info">
-          <?php
-            try {
-              if ($this->getLNDClient()->isConnectionValid()) {
-                $node_info = $this->getLNDClient()->getInfo();
-                echo "Connected to: " . $node_info->{'alias'} . ' - ' . $node_info->{'identity_pubkey'};
-              } else {
-                echo 'Not connected';
-              }
-            } catch (Exception $e) {
-              echo "Failed to connect: " . $e;
-            }
-          ?>
-        </div>
-        <form method="post" action="options.php">
-        <?php
-            // settings_fields('lnp');
-            // do_settings_sections('lnp');
-            // submit_button();
-        ?>
-        </form>
     </div>
     <?php
   }
   public function field_lnd_address(){
-    printf('<input type="text" name="lnp[lnd_address]" value="%s" />',
+    printf('<input type="text" name="lnp[lnd_address]" value="%s" autocomplete="off" />',
       esc_attr($this->options['lnd_address']),
       'http://localhost');
   }
   public function field_lnd_macaroon(){
-    printf('<input type="text" name="lnp[lnd_macaroon]" value="%s" /><br><label>%s</label>',
+    printf('<input type="text" name="lnp[lnd_macaroon]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnd_macaroon']),
       'Invoices macaroon in HEX format');
   }
   public function field_lnd_cert(){
-    printf('<input type="text" name="lnp[lnd_cert]" value="%s" /><br><label>%s</label>',
+    printf('<input type="text" name="lnp[lnd_cert]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnd_cert']),
       'TLS Certificate');
+  }
+  public function field_lnbits_apikey(){
+    printf('<input type="text" name="lnp[lnbits_apikey]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['lnbits_apikey']),
+      'LNbits API Key.');
   }
 }
 
