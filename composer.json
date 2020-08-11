@@ -6,9 +6,11 @@
     "minimum-stability": "dev",
     "require": {
         "octan/lnd-rest": "dev-master",
+        "octan/lnbits": "dev-master",
         "firebase/php-jwt": "dev-master"
     },
     "repositories": [
-      { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" }
+      { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" },
+      { "type": "vcs", "url": "https://github.com/bumi/lnbits-php" }
     ]
 }

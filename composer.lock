@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4520cc1aeb67bd4f8d1278a0e29cbe8",
+    "content-hash": "6cb6d2f717691d46b09fa0238750b414",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -282,6 +282,50 @@
             "time": "2020-05-17T20:05:25+00:00"
         },
         {
+            "name": "octan/lnbits",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bumi/lnbits-php.git",
+                "reference": "fb474217c431d06016b9199216aa0b169d86d400"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/fb474217c431d06016b9199216aa0b169d86d400",
+                "reference": "fb474217c431d06016b9199216aa0b169d86d400",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "php": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LNbits\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bumi",
+                    "email": "hello@michaelbumann.com"
+                },
+                {
+                    "name": "Promesse",
+                    "email": "promesse@octan.group"
+                }
+            ],
+            "description": "A client for the LNbits API",
+            "support": {
+                "source": "https://github.com/bumi/lnbits-php/tree/master",
+                "issues": "https://github.com/bumi/lnbits-php/issues"
+            },
+            "time": "2020-08-10T20:08:29+00:00"
+        },
+        {
             "name": "octan/lnd-rest",
             "version": "dev-master",
             "source": {
@@ -470,6 +514,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "octan/lnd-rest": 20,
+        "octan/lnbits": 20,
         "firebase/php-jwt": 20
     },
     "prefer-stable": false,
