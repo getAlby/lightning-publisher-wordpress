@@ -37,6 +37,10 @@ class WP_LN_Paywall {
     // admin
     add_action('admin_init', array($this, 'admin_init'));
     add_action('admin_menu', array($this, 'admin_menu'));
+
+    // feed
+    // https://code.tutsplus.com/tutorials/extending-the-default-wordpress-rss-feed--wp-27935
+    add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
   }
 
   protected function getLightningClient() {
@@ -62,21 +66,41 @@ class WP_LN_Paywall {
    * filter ln shortcodes and inject payment request HTML
    */
   public function ln_paywall_filter($content) {
-    $ln_shortcode_data = self::extract_ln_shortcode($content);
-    if (!$ln_shortcode_data) return $content;
-
     $post_id = get_the_ID();
+    $paywall_options = $this->get_paywall_options_for($post_id, $content);
+
+    if (!$paywall_options) {
+      return $content;
+    }
 
     list($public, $protected) = self::splitPublicProtected($content);
-    $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
-    if (self::has_paid_for_post($post_id)) {
-      return self::format_paid($post_id, $ln_shortcode_data, $public, $protected);
+
+    if (!empty($paywall_options['timeout']) && time() > get_post_time('U') + $paywall_options['timeout'] *24*60*60) {
+      return self::format_paid($post_id, $paywall_options, $public, $protected);
     }
-    if ($ln_shortcode_data['total'] && (int)$ln_shortcode_data['total'] < $amount_received) {
-      return self::format_paid($post_id, $ln_shortcode_data, $public, $protected);
+    if (!empty($paywall_options['timein']) && time() < get_post_time('U') + $paywall_options['timein'] *24*60*60) {
+      return self::format_paid($post_id, $paywall_options, $public, $protected);
     }
 
-    return self::format_unpaid($post_id, $ln_shortcode_data, $public);
+    $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
+    if (!empty($paywall_options['total']) && $amount_received >= $paywall_options['total']) {
+      return self::format_paid($post_id, $paywall_options, $public, $protected);
+    }
+
+    if (self::has_paid_for_all()) {
+      return self::format_paid($post_id, $paywall_options, $public, $protected);
+    }
+
+    if (self::has_paid_for_post($post_id)) {
+      return self::format_paid($post_id, $paywall_options, $public, $protected);
+    }
+
+    return self::format_unpaid($post_id, $paywall_options, $public);
+  }
+
+  public function add_lnurl_to_rss_item_filter() {
+    global $post;
+    echo '<payment:lnurl>http://...</payment:lnurl>';
   }
 
   public static function splitPublicProtected($content) {
@@ -106,7 +130,7 @@ class WP_LN_Paywall {
   }
 
   public static function has_paid_for_all() {
-    $wplnp = $_COOKIE['wplnp'] || $_GET['wplnp'];
+    $wplnp = isset($_COOKIE['wplnp']) ? $_COOKIE['wplnp'] : $_GET['wplnp'];
     if (empty($wplnp)) return false;
     try {
       $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
@@ -118,7 +142,7 @@ class WP_LN_Paywall {
   }
 
   public static function get_paid_post_ids() {
-    $wplnp = $_COOKIE['wplnp'] || $_GET['wplnp'];
+    $wplnp = isset($_COOKIE['wplnp']) ? $_COOKIE['wplnp'] : $_GET['wplnp'];
     if (empty($wplnp)) return [];
     try {
       $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
@@ -133,12 +157,10 @@ class WP_LN_Paywall {
   }
 
   public static function has_paid_for_post($post_id) {
-    if (self::has_paid_for_all()) {
-      return true;
-    }
     $paid_post_ids = self::get_paid_post_ids();
     return in_array($post_id, $paid_post_ids);
   }
+
   /**
    * Register scripts and styles
    */
@@ -156,9 +178,13 @@ class WP_LN_Paywall {
    */
   public function ajax_make_invoice() {
     $post_id = (int)$_POST['post_id'];
-    $ln_shortcode_data = self::extract_ln_shortcode(get_post_field('post_content', $post_id));
+    if (empty($post_id)) {
+      return wp_send_json([ 'error' => 'invalid post' ], 404);
+    }
 
-    if (!$ln_shortcode_data) {
+    $paywall_options = $this->get_paywall_options_for($post_id, get_post_field('post_content', $post_id));
+
+    if (!$paywall_options) {
       return wp_send_json([ 'error' => 'invalid post' ], 404);
     }
 
@@ -166,13 +192,13 @@ class WP_LN_Paywall {
 
     $invoice = $this->getLightningClient()->addInvoice([
       'memo' => substr($memo, 0, 64),
-      'value' => $ln_shortcode_data['amount'], // in sats
+      'value' => $paywall_options['amount'], // in sats
       'expiry' => 1800
     ]);
 
-    $jwt = JWT::encode(array('post_id' => $post_id, 'invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*5, 'amount' => $ln_shortcode_data['amount']), WP_LIGHTNING_JWT_KEY);
+    $jwt = JWT::encode(array('post_id' => $post_id, 'invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*5, 'amount' => $paywall_options['amount']), WP_LIGHTNING_JWT_KEY);
 
-    wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'payment_request' => $invoice['payment_request']]);
+    wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'amount' => $paywall_options['amount'], 'payment_request' => $invoice['payment_request']]);
   }
 
   /**
@@ -180,6 +206,9 @@ class WP_LN_Paywall {
    * returns the protected content if the invoice is settled
    */
   public function ajax_check_payment() {
+    if (empty($_POST['token'])) {
+      return wp_send_json([ 'settled' => false ], 404);
+    }
     try {
       $jwt = JWT::decode($_POST['token'], WP_LIGHTNING_JWT_KEY, array('HS256'));
     } catch(Exception $e) {
@@ -189,7 +218,7 @@ class WP_LN_Paywall {
     $post_id = $jwt->{'post_id'};
 
     $invoice = $this->getLightningClient()->getInvoice($invoice_id);
-    $amount = (int)$invoice['value'] || (int)$jwt->{'amount'}; // TODO: invoice LNbits does not return the amount. needs to be added to lnbits
+    $amount = !empty($invoice['value']) ? (int)$invoice['value'] : (int)$jwt->{'amount'}; // TODO: invoice LNbits does not return the amount. needs to be added to lnbits
     if ($invoice && $invoice['settled']) {
       $content = get_post_field('post_content', $post_id);
       list($public, $protected) = self::splitPublicProtected($content);
@@ -211,6 +240,20 @@ class WP_LN_Paywall {
     return shortcode_parse_atts($m[1]);
   }
 
+  public function get_paywall_options_for($postId, $content) {
+    $ln_shortcode_data = self::extract_ln_shortcode($content);
+    if (!$ln_shortcode_data) return null;
+
+    return [
+      'paywall_text' => $ln_shortcode_data['text'] ? $ln_shortcode_data['text'] : $this->options['paywall_text'],
+      'button_text'  => $ln_shortcode_data['button'] ? $ln_shortcode_data['button'] : $this->options['button_text'],
+      'amount'       => $ln_shortcode_data['amount'] ? (int)$ln_shortcode_data['amount'] : (int)$this->options['amount'],
+      'total'        => $ln_shortcode_data['total'] ? (int)$ln_shortcode_data['total'] : (int)$this->options['total'],
+      'timeout'      => $ln_shortcode_data['timeout'] ? (int)$ln_shortcode_data['timeout'] : (int)$this->options['timeout'],
+      'timein'       => $ln_shortcode_data['timein'] ? (int)$ln_shortcode_data['timein'] : (int)$this->options['timein'],
+    ];
+  }
+
   /**
    * Format display for paid post
    */
@@ -221,9 +264,9 @@ class WP_LN_Paywall {
   /**
    * Format display for unpaid post. Injects the payment request HTML
    */
-  protected static function format_unpaid($post_id, $ln_shortcode_data, $public) {
-    $text   = '<p>' . sprintf(!isset($ln_shortcode_data['text']) ? 'To continue reading the rest of this post, please pay <em>%s sats</em>.' : $ln_shortcode_data['text'], $ln_shortcode_data['amount']).'</p>';
-    $button = sprintf('<button class="wp-lnp-btn">%s</button>', !isset($ln_shortcode_data['button']) ? 'Pay now' : $ln_shortcode_data['button']);
+  protected static function format_unpaid($post_id, $options, $public) {
+    $text   = '<p>' . sprintf(empty($options['paywall_text']) ? 'To continue reading the rest of this post, please pay <em>%s sats</em>.' : $options['paywall_text'], $options['amount']).'</p>';
+    $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($options['button_text']) ? 'Pay now' : $options['button_text']);
     $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
     return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s%s</div>', $public, $post_id, $text, $button, $autopay);
   }
@@ -233,8 +276,8 @@ class WP_LN_Paywall {
    */
   public function admin_menu() {
     add_menu_page('Lighting Paywall Settings', 'Lighting Paywall', 'manage_options', 'lnp_settings');
-    add_submenu_page('lnp_settings','Lighting Paywall Settings', 'Settings', 'manage_options', 'lnp_settings',array($this, 'settings_page'));
-    add_submenu_page('lnp_settings', 'Lightning Paywall Balances','Balances', 'manage_options', 'lnp_balances', array($this, 'balances_page'));
+    add_submenu_page('lnp_settings','Lighting Paywall Settings', 'Connection', 'manage_options', 'lnp_settings',array($this, 'settings_page'));
+    add_submenu_page('lnp_settings', 'Lightning Paywall Balances','Paywall', 'manage_options', 'lnp_balances', array($this, 'balances_page'));
   }
 
   public function admin_init() {
@@ -245,14 +288,22 @@ class WP_LN_Paywall {
     add_settings_field('lnd_macaroon', 'Macaroon', array($this, 'field_lnd_macaroon'), 'lnp', 'lnd');
     add_settings_field('lnd_cert', 'TLS Cert', array($this, 'field_lnd_cert'), 'lnp', 'lnd');
 
-    add_settings_section('lnbits', 'LNbits', null, 'lnp');
+    add_settings_section('lnbits', 'LNbits Config', null, 'lnp');
     add_settings_field('lnbits_apikey', 'API Key', array($this, 'field_lnbits_apikey'), 'lnp', 'lnbits');
+
+    add_settings_section('paywall', 'Paywall Config', null, 'lnp');
+    add_settings_field('paywall_text', 'Text', array($this, 'field_paywall_text'), 'lnp', 'paywall');
+    add_settings_field('paywall_button_text', 'Button', array($this, 'field_paywall_button_text'), 'lnp', 'paywall');
+    add_settings_field('paywall_amount', 'Amount', array($this, 'field_paywall_amount'), 'lnp', 'paywall');
+    add_settings_field('paywall_total', 'Total', array($this, 'field_paywall_total'), 'lnp', 'paywall');
+    add_settings_field('paywall_timeout', 'Timeout', array($this, 'field_paywall_timeout'), 'lnp', 'paywall');
+    add_settings_field('paywall_timein', 'Timein', array($this, 'field_paywall_timein'), 'lnp', 'paywall');
   }
 
   public function settings_page() {
     ?>
     <div class="wrap">
-        <h1>Lightning Paywall Settings</h1>
+        <h1>Lightning Connection Settings</h1>
         <div class="node-info">
           <?php
             try {
@@ -274,6 +325,16 @@ class WP_LN_Paywall {
             submit_button();
         ?>
         </form>
+        <h3>Shortcodes</h3>
+        <p>
+          To configure each article the following shortcode attributes are available:
+        </p>
+        <ul>
+          <li>amount</li>
+          <li>total</li>
+          <li>timein</li>
+          <li>timeout</li>
+        </ul>
     </div>
     <?php
   }
@@ -283,6 +344,13 @@ class WP_LN_Paywall {
     <div class="wrap">
         <h1>Lightning Paywall Balances</h1>
     </div>
+    <form method="post" action="options.php">
+      <?php
+        settings_fields('lnp');
+        do_settings_sections('lnp');
+        submit_button();
+      ?>
+    </form>
     <?php
   }
   public function field_lnd_address(){
@@ -304,6 +372,36 @@ class WP_LN_Paywall {
     printf('<input type="text" name="lnp[lnbits_apikey]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnbits_apikey']),
       'LNbits API Key.');
+  }
+  public function field_paywall_text(){
+    printf('<input type="text" name="lnp[paywall_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['paywall_text']),
+      'Paywall text');
+  }
+  public function field_paywall_button_text(){
+    printf('<input type="text" name="lnp[button_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['button_text']),
+      'Button text');
+  }
+  public function field_paywall_amount(){
+    printf('<input type="text" name="lnp[amount]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['amount']),
+      'Amount in sats per article');
+  }
+  public function field_paywall_total(){
+    printf('<input type="text" name="lnp[total]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['total']),
+      'Total amount to collect. After that amount the article will be free');
+  }
+  public function field_paywall_timeout(){
+    printf('<input type="text" name="lnp[timeout]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['timeout']),
+      'Make the article free X days after it is published');
+  }
+  public function field_paywall_timein(){
+    printf('<input type="text" name="lnp[timein]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['timein']),
+      'Enable the paywall x days after the article is published');
   }
 }
 
