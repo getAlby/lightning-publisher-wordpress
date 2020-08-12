@@ -7,7 +7,8 @@
     "require": {
         "octan/lnd-rest": "dev-master",
         "octan/lnbits": "dev-master",
-        "firebase/php-jwt": "dev-master"
+        "firebase/php-jwt": "dev-master",
+        "tkijewski/php-lnurl": "dev-master"
     },
     "repositories": [
       { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" },

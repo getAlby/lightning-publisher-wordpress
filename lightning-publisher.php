@@ -14,6 +14,7 @@ if (!defined('ABSPATH')) exit;
 
 require_once 'vendor/autoload.php';
 
+use \tkijewski\lnurl;
 use \Firebase\JWT\JWT;
 
 define('WP_LIGHTNING_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
@@ -40,7 +41,58 @@ class WP_LN_Paywall {
 
     // feed
     // https://code.tutsplus.com/tutorials/extending-the-default-wordpress-rss-feed--wp-27935
-    add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
+    if (!empty($this->options['lnurl_rss'])) {
+      add_action('init', array($this, 'add_lnurl_endpoints'));
+      add_action('template_redirect', array($this, 'lnurl_endpoints'));
+      add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
+    }
+  }
+
+  public function add_lnurl_endpoints() {
+    add_rewrite_tag( '%lnurl%', '([^&]+)' );
+    add_rewrite_tag( '%lnurl_post_id%', '([^&]+)' );
+    add_rewrite_tag( '%amount%', '([^&]+)' );
+    //add_rewrite_rule( 'lnurl/([^&]+)/?', 'index.php?lnurl=$matches[1]', 'top' );
+  }
+
+  public function lnurl_endpoints() {
+    global $wp_query;
+    $lnurl = $wp_query->get('lnurl');
+    $post_id = $wp_query->get('lnurl_post_id');
+
+    if (!$lnurl) {
+      return;
+    }
+
+    $description = get_bloginfo('name');
+    if (!empty($post_id)) {
+      $description = $description . ' - ' . get_the_title($post_id);
+    }
+
+    if ($lnurl == 'pay') {
+      $callback_url = home_url(add_query_arg('lnurl', 'cb'));
+      wp_send_json([
+        'callback' => $callback_url,
+        'minSendable' => 1000,
+        'maxSendable' => 1000000,
+        'tag' => 'payRequest',
+        'metadata' => '[["text/plain", "' . $description . '"]]'
+      ]);
+    } elseif ($lnurl == 'cb') {
+      $amount = $_GET['amount'];
+      if (empty($amount)) {
+        wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
+        return;
+      }
+      $description_hash = base64_encode(hash('sha256', '[["text/plain", "' . $description . '"]]', true));
+      $invoice = $this->getLightningClient()->addInvoice([
+        'memo' => substr($description, 0, 64),
+        'description_hash' => $description_hash,
+        'value' => $amount,
+        'expiry' => 1800
+      ]);
+      wp_send_json(['pr' => $invoice['payment_request'], 'routes' =>[] ]);
+    }
   }
 
   protected function getLightningClient() {
@@ -62,6 +114,7 @@ class WP_LN_Paywall {
     }
     return $this->lightningClient;
   }
+
   /**
    * filter ln shortcodes and inject payment request HTML
    */
@@ -100,7 +153,12 @@ class WP_LN_Paywall {
 
   public function add_lnurl_to_rss_item_filter() {
     global $post;
-    echo '<payment:lnurl>http://...</payment:lnurl>';
+    $pay_url = add_query_arg([
+      'lnurl' => 'pay',
+      'lnurl_post_id' => $post->ID
+    ], get_site_url());
+    $lnurl = lnurl\encodeUrl($pay_url);
+    echo '<payment:lnurl>' . $lnurl . '</payment:lnurl>';
   }
 
   public static function splitPublicProtected($content) {
@@ -298,6 +356,7 @@ class WP_LN_Paywall {
     add_settings_field('paywall_total', 'Total', array($this, 'field_paywall_total'), 'lnp', 'paywall');
     add_settings_field('paywall_timeout', 'Timeout', array($this, 'field_paywall_timeout'), 'lnp', 'paywall');
     add_settings_field('paywall_timein', 'Timein', array($this, 'field_paywall_timein'), 'lnp', 'paywall');
+    add_settings_field('paywall_lnurl_rss', 'Add LNURL to RSS items', array($this, 'field_paywall_lnurl_rss'), 'lnp', 'paywall');
   }
 
   public function settings_page() {
@@ -402,6 +461,11 @@ class WP_LN_Paywall {
     printf('<input type="text" name="lnp[timein]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['timein']),
       'Enable the paywall x days after the article is published');
+  }
+  public function field_paywall_lnurl_rss(){
+    printf('<input type="checkbox" name="lnp[lnurl_rss]" value="1" %s/><br><label>%s</label>',
+      empty($this->options['lnurl_rss']) ? '' : 'checked',
+      'Add lightning payment details to RSS items');
   }
 }
 
