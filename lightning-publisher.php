@@ -228,7 +228,7 @@ class WP_LN_Paywall {
    */
   public function enqueue_script() {
     wp_enqueue_script('webln', plugins_url('js/webln.min.js', __FILE__));
-    wp_enqueue_script('ln-paywall', plugins_url('js/publisher.js', __FILE__), array('jquery'));
+    wp_enqueue_script('ln-paywall', plugins_url('js/publisher.js', __FILE__));
     wp_enqueue_style('ln-paywall', plugins_url('css/publisher.css', __FILE__));
     wp_localize_script('ln-paywall', 'LN_Paywall', array(
       'ajax_url'   => admin_url('admin-ajax.php'),
@@ -285,7 +285,7 @@ class WP_LN_Paywall {
       $content = get_post_field('post_content', $post_id);
       list($public, $protected) = self::splitPublicProtected($content);
       self::save_as_paid($post_id, $amount);
-      wp_send_json($protected);
+      wp_send_json($protected, 200);
     } else {
       wp_send_json([ 'settled' => false ], 402);
     }
