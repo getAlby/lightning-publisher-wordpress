@@ -48,6 +48,7 @@ class WP_LN_Paywall {
     }
   }
 
+  // endpoint idea from: https://webdevstudios.com/2015/07/09/creating-simple-json-endpoint-wordpress/
   public function add_lnurl_endpoints() {
     add_rewrite_tag( '%lnurl%', '([^&]+)' );
     add_rewrite_tag( '%lnurl_post_id%', '([^&]+)' );
@@ -401,7 +402,7 @@ class WP_LN_Paywall {
   public function balances_page() {
     ?>
     <div class="wrap">
-        <h1>Lightning Paywall Balances</h1>
+        <h1>Lightning Paywall Settings</h1>
     </div>
     <form method="post" action="options.php">
       <?php
@@ -430,7 +431,7 @@ class WP_LN_Paywall {
   public function field_lnbits_apikey(){
     printf('<input type="text" name="lnp[lnbits_apikey]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnbits_apikey']),
-      'LNbits API Key.');
+      'LNbits Invoice/read key');
   }
   public function field_paywall_text(){
     printf('<input type="text" name="lnp[paywall_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
