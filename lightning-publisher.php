@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) exit;
 
 require_once 'vendor/autoload.php';
 
+require_once 'LnpWidget.php';
+
 use \tkijewski\lnurl;
 use \Firebase\JWT\JWT;
 
@@ -39,6 +41,7 @@ class WP_LN_Paywall {
     add_action('admin_init', array($this, 'admin_init'));
     add_action('admin_menu', array($this, 'admin_menu'));
 
+    add_action('widgets_init', array($this, 'widget_init'));
     // feed
     // https://code.tutsplus.com/tutorials/extending-the-default-wordpress-rss-feed--wp-27935
     if (!empty($this->options['lnurl_rss'])) {
@@ -328,6 +331,10 @@ class WP_LN_Paywall {
     $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($options['button_text']) ? 'Pay now' : $options['button_text']);
     $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
     return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s%s</div>', $public, $post_id, $text, $button, $autopay);
+  }
+
+  function widget_init() {
+    register_widget('LnpWidget');
   }
 
   /**
