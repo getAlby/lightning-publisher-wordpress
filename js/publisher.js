@@ -2,24 +2,26 @@ window.addEventListener("DOMContentLoaded", function () {
   var checkPaidInterval = null;
   var wp_ajax_url = LN_Paywall.ajax_url;
 
-  function pay(invoice) {
+  function pay(invoice, options) {
     return WebLN.requestProvider()
       .then(function (webln) {
         webln.sendPayment(invoice.payment_request).catch(function (e) {
           stopWatchingForPayment();
         });
-        startWatchingForPayment(invoice);
+        return startWatchingForPayment(invoice);
       })
       .catch(function (err) {
-        showQRCode(invoice);
-        startWatchingForPayment(invoice);
         console.log(err);
+        showQRCode(invoice, options);
+        return startWatchingForPayment(invoice);
       });
   }
 
   function startWatchingForPayment(invoice) {
     stopWatchingForPayment();
-    checkPaidInterval = setInterval(checkPaymentStatus(invoice), 800);
+    return new Promise(function (resolve, reject) {
+      checkPaidInterval = setInterval(checkPaymentStatus(invoice, resolve), 800);
+    });
   }
 
   function stopWatchingForPayment() {
@@ -29,7 +31,7 @@ window.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function checkPaymentStatus(invoice) {
+  function checkPaymentStatus(invoice, callback) {
     return function () {
       fetch(wp_ajax_url, {
         method: "POST",
@@ -42,41 +44,32 @@ window.addEventListener("DOMContentLoaded", function () {
       }).then(function (response) {
         if (response.ok) {
           response.json().then(function (content) {
-            showContent(invoice.post_id, content);
+            stopWatchingForPayment();
+            callback(content, invoice);
           });
         }
       });
     };
   }
 
-  function showContent(postId, content) {
-    stopWatchingForPayment();
-    var wrapper = document.querySelector(
-      '.wp-lnp-wrapper[data-lnp-postid="' + postId + '"]'
-    );
-    if (wrapper) {
-      wrapper.outerHTML = content;
-    }
-  }
-
-  function showQRCode(invoice) {
-    var button = document.querySelector(
-      '.wp-lnp-wrapper[data-lnp-postid="' +
-        invoice.post_id +
-        '"] button.wp-lnp-btn'
-    );
+  function showQRCode(invoice, options) {
+    var button = options.target.querySelector('button.wp-lnp-btn');
     button.outerHTML =
       '<div class="wp-lnp-qrcode"><img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=' +
       invoice.payment_request +
       '"></div>';
   }
 
-  function requestInvoice(postId) {
-    fetch(wp_ajax_url, {
+  function requestPayment(params, options) {
+    var paramsQueryString = Object.keys(params)
+      .map(key => `${key}=${params[key]}`)
+      .join('&');
+
+    return fetch(wp_ajax_url, {
       method: "POST",
       credentials: "same-origin",
       cache: "no-cache",
-      body: "action=lnp_invoice&post_id=" + postId,
+      body: "action=lnp_invoice&" + paramsQueryString,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
       },
@@ -85,37 +78,85 @@ window.addEventListener("DOMContentLoaded", function () {
         return resp.json();
       })
       .then(function (invoice) {
-        pay(invoice);
-      })
-      .catch(function (err) {
-        throw err;
+        return pay(invoice, options);
       });
   }
 
-  document
-    .querySelector("[data-lnp-postid] button.wp-lnp-btn")
-    .addEventListener("click", function (e) {
-      e.preventDefault();
-      this.setAttribute("disabled", "");
 
-      var wrapper = this.closest(".wp-lnp-wrapper");
-      var autopayInput = wrapper.querySelector("input.wp-lnp-autopay:checked");
+  function initPostPaywalls() {
+    var buttons = document.querySelectorAll("[data-lnp-postid] button.wp-lnp-btn");
+    if (buttons.length === 0) {
+      return;
+    }
+    buttons.forEach(function (button) {
+      console.log(button);
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        this.setAttribute("disabled", "");
 
-      if (autopayInput) {
-        localStorage.setItem("wplnp_autopay", true);
-      }
-      requestInvoice(wrapper.dataset.lnpPostid);
+        var wrapper = this.closest(".wp-lnp-wrapper");
+        var autopayInput = wrapper.querySelector("input.wp-lnp-autopay:checked");
+
+        if (autopayInput) {
+          localStorage.setItem("wplnp_autopay", true);
+        }
+        requestPayment({post_id: wrapper.dataset.lnpPostid}, {target: wrapper})
+          .then(function (content, invoice) {
+            wrapper.outerHTML = content;
+          })
+          .catch(function (e) {
+            console.log(e);
+            alert('sorry, something went wrong.');
+          });
+      });
     });
+  }
 
-  if (localStorage.getItem("wplnp_autopay")) {
-    var wrappers = document.querySelectorAll(
-      ".wp-lnp-wrapper[data-lnp-postid]"
-    );
-    if (wrappers.length === 1) {
-      var wrapper = wrappers[0];
-      var button = wrapper.querySelector("button.wp-lnp-btn");
-      button.setAttribute("disabled", "");
-      requestInvoice(wrapper.dataset.lnpPostid);
+  function initAllPaywalls() {
+    var buttonsForAll = document.querySelectorAll('.wp-lnp-all button.wp-lnp-btn');
+    if (buttonsForAll.length === 0) {
+      return;
+    }
+    buttonsForAll.forEach(function (button) {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        this.setAttribute("disabled", "");
+
+        var wrapper = this.closest(".wp-lnp-all");
+        requestPayment({all: '1'}, {target: wrapper})
+          .then(function (content, invoice) {
+              wrapper.innerHTML = '<p class="wp-all-confirmation">' + content + '</p>';
+          })
+          .catch(function (e) {
+            console.log(e);
+            alert('Sorry, something went wrong.');
+          });
+      });
+    });
+  }
+
+  function autopay() {
+    if (localStorage.getItem("wplnp_autopay")) {
+      var wrappers = document.querySelectorAll(
+        ".wp-lnp-wrapper[data-lnp-postid]"
+      );
+      if (wrappers.length === 1) {
+        var wrapper = wrappers[0];
+        var button = wrapper.querySelector("button.wp-lnp-btn");
+        button.setAttribute("disabled", "");
+        requestPayment({post_id: wrapper.dataset.lnpPostid})
+          .then(function (content, invoice) {
+            wrapper.outerHTML = content;
+          })
+          .catch(function (e) {
+            console.log(e);
+            alert('Sorry, something went wrong.');
+          });
+      }
     }
   }
+
+  initPostPaywalls();
+  initAllPaywalls();
+  autopay();
 });
