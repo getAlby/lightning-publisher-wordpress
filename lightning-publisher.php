@@ -225,7 +225,7 @@ class WP_LN_Paywall {
       'expiry' => 1800
     ]);
 
-    $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*5]);
+    $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*10]);
     $jwt = JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY);
 
     $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
