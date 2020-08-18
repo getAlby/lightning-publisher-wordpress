@@ -419,6 +419,7 @@ class WP_LN_Paywall {
             document.getElementById('load_from_lndconnect').addEventListener('click', function (e) {
               e.preventDefault();
               var lndConnectUrl = prompt('Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)');
+              if (!lndConnectUrl) { return' }
               var url = new URL(lndConnectUrl);
               document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
               document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
