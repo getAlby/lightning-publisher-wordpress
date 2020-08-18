@@ -226,7 +226,8 @@ class WP_LN_Paywall {
     $invoice = $this->getLightningClient()->addInvoice([
       'memo' => substr($memo, 0, 64),
       'value' => $amount, // in sats
-      'expiry' => 1800
+      'expiry' => 1800,
+      'private' => true
     ]);
 
     $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*10]);
@@ -355,7 +356,8 @@ class WP_LN_Paywall {
         'memo' => substr($description, 0, 64),
         'description_hash' => $description_hash,
         'value' => $amount,
-        'expiry' => 1800
+        'expiry' => 1800,
+        'private' => true
       ]);
       wp_send_json(['pr' => $invoice['payment_request'], 'routes' =>[] ]);
     }
