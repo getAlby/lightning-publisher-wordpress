@@ -414,6 +414,18 @@ class WP_LN_Paywall {
           ?>
         </div>
         <form method="post" action="options.php">
+        <script>
+          window.addEventListener("DOMContentLoaded", function () {
+            document.getElementById('load_from_lndconnect').addEventListener('click', function (e) {
+              e.preventDefault();
+              var lndConnectUrl = prompt('Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)');
+              var url = new URL(lndConnectUrl);
+              document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
+              document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
+              document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
+            });
+          });
+        </script>
         <?php
             settings_fields('lnp');
             do_settings_sections('lnp');
@@ -449,17 +461,18 @@ class WP_LN_Paywall {
     <?php
   }
   public function field_lnd_address(){
-    printf('<input type="text" name="lnp[lnd_address]" value="%s" autocomplete="off" />',
+    $help = 'e.g. https://127.0.0.1:8080 - or <a href="#" id="load_from_lndconnect">click here to load details from a lndconnect</a>';
+    printf('<input type="text" name="lnp[lnd_address]" id="lnp_lnd_address" value="%s" autocomplete="off" /><br>%s',
       esc_attr($this->options['lnd_address']),
-      'http://localhost');
+      $help);
   }
   public function field_lnd_macaroon(){
-    printf('<input type="text" name="lnp[lnd_macaroon]" value="%s" autocomplete="off" /><br><label>%s</label>',
+    printf('<input type="text" name="lnp[lnd_macaroon]" id="lnp_lnd_macaroon" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnd_macaroon']),
       'Invoices macaroon in HEX format');
   }
   public function field_lnd_cert(){
-    printf('<input type="text" name="lnp[lnd_cert]" value="%s" autocomplete="off" /><br><label>%s</label>',
+    printf('<input type="text" name="lnp[lnd_cert]" value="%s" id="lnp_lnd_cert" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnd_cert']),
       'TLS Certificate');
   }
