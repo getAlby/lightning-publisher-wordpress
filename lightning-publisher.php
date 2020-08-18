@@ -90,6 +90,10 @@ class WP_LN_Paywall {
 
     list($public, $protected) = self::splitPublicProtected($content);
 
+    if ($paywall_options['disable_in_rss'] && is_feed()) {
+      return self::format_paid($post_id, $paywall_options, $public, $protected);
+    }
+
     if (!empty($paywall_options['timeout']) && time() > get_post_time('U') + $paywall_options['timeout'] *24*60*60) {
       return self::format_paid($post_id, $paywall_options, $public, $protected);
     }
@@ -283,6 +287,7 @@ class WP_LN_Paywall {
       'total'        => $ln_shortcode_data['total'] ? (int)$ln_shortcode_data['total'] : (int)$this->options['total'],
       'timeout'      => $ln_shortcode_data['timeout'] ? (int)$ln_shortcode_data['timeout'] : (int)$this->options['timeout'],
       'timein'       => $ln_shortcode_data['timein'] ? (int)$ln_shortcode_data['timein'] : (int)$this->options['timein'],
+      'disable_in_rss' => $ln_shortcode_data['disable_in_rss'] ? true : $this->options['disable_paywall_in_rss'],
     ];
   }
 
@@ -387,6 +392,7 @@ class WP_LN_Paywall {
     add_settings_field('paywall_all_period', 'Days available', array($this, 'field_paywall_all_days'), 'lnp', 'paywall');
     add_settings_field('paywall_all_confirmation', 'Confirmation text', array($this, 'field_paywall_all_confirmation'), 'lnp', 'paywall');
     add_settings_field('paywall_lnurl_rss', 'Add LNURL to RSS items', array($this, 'field_paywall_lnurl_rss'), 'lnp', 'paywall');
+    add_settings_field('paywall_disable_in_rss', 'Disable paywall in RSS?', array($this, 'field_paywall_disable_in_rss'), 'lnp', 'paywall');
   }
 
   public function settings_page() {
@@ -511,6 +517,11 @@ class WP_LN_Paywall {
     printf('<input type="checkbox" name="lnp[lnurl_rss]" value="1" %s/><br><label>%s</label>',
       empty($this->options['lnurl_rss']) ? '' : 'checked',
       'Add lightning payment details to RSS items');
+  }
+  public function field_paywall_disable_in_rss(){
+    printf('<input type="checkbox" name="lnp[disable_paywall_in_rss]" value="1" %s/><br><label>%s</label>',
+      empty($this->options['disable_paywall_in_rss']) ? '' : 'checked',
+      'Disable paywall in RSS items / show full content in RSS.');
   }
 }
 
