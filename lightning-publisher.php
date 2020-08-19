@@ -340,8 +340,8 @@ class WP_LN_Paywall {
       $callback_url = home_url(add_query_arg('lnurl', 'cb'));
       wp_send_json([
         'callback' => $callback_url,
-        'minSendable' => 1000,
-        'maxSendable' => 1000000,
+        'minSendable' => 1000 *1000, // millisatoshi
+        'maxSendable' => 1000000 *1000, // millisatoshi
         'tag' => 'payRequest',
         'metadata' => '[["text/plain", "' . $description . '"]]'
       ]);
