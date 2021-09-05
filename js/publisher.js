@@ -22,7 +22,7 @@ window.addEventListener("DOMContentLoaded", function () {
     return new Promise(function (resolve, reject) {
       checkPaidInterval = setInterval(
         checkPaymentStatus(invoice, resolve),
-        800
+        2500
       );
     });
   }
@@ -98,7 +98,6 @@ window.addEventListener("DOMContentLoaded", function () {
       return;
     }
     buttons.forEach(function (button) {
-      console.log(button);
       button.addEventListener("click", function (e) {
         e.preventDefault();
         this.setAttribute("disabled", "");
