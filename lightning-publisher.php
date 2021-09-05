@@ -258,10 +258,11 @@ class WP_LN_Paywall {
     }
     $invoice_id = $jwt->{'invoice_id'};
     $invoice = $this->getLightningClient()->getInvoice($invoice_id);
+
     $amount = !empty($invoice['value']) ? (int)$invoice['value'] : (int)$jwt->{'amount'}; // TODO: invoice LNbits does not return the amount. needs to be added to lnbits
 
     // TODO check amount
-    if ($invoice && $invoice['settled'] && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
+    if ($invoice && $invoice['settled']) { // && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
       $post_id = $jwt->{'post_id'};
       if (!empty($post_id)) {
         $content = get_post_field('post_content', $post_id);
