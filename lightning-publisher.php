@@ -2,10 +2,10 @@
 /*
     Plugin Name: Lightning Paywall
     Version:     0.0.1
-    Plugin URI:  
+    Plugin URI:
     Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
-    Author:      
-    Author URI:  
+    Author:
+    Author URI:
 
     Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
 */
@@ -303,9 +303,9 @@ class WP_LN_Paywall {
    * Format display for unpaid post. Injects the payment request HTML
    */
   protected static function format_unpaid($post_id, $options, $public) {
-    $text   = '<p>' . sprintf(empty($options['paywall_text']) ? 'To continue reading the rest of this post, please pay <em>%s sats</em>.' : $options['paywall_text'], $options['amount']).'</p>';
+    $text   = '<p>' . sprintf(empty($options['paywall_text']) ? 'To continue reading the rest of this post, please pay <em>%s Sats</em>.' : $options['paywall_text'], $options['amount']).'</p>';
     $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($options['button_text']) ? 'Pay now' : $options['button_text']);
-    $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
+    // $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
     return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s%s</div>', $public, $post_id, $text, $button, $autopay);
   }
 
@@ -487,7 +487,7 @@ class WP_LN_Paywall {
   public function field_paywall_text(){
     printf('<input type="text" name="lnp[paywall_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['paywall_text']),
-      'Paywall text');
+      'Paywall text (use %s for the amount)');
   }
   public function field_paywall_button_text(){
     printf('<input type="text" name="lnp[button_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
