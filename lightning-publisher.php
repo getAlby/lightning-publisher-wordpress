@@ -223,12 +223,17 @@ class WP_LN_Paywall {
     } else {
       return wp_send_json([ 'error' => 'invalid post' ], 404);
     }
-    $invoice = $this->getLightningClient()->addInvoice([
-      'memo' => substr($memo, 0, 64),
+
+    $memo = substr($memo, 0, 64);
+    $memo = preg_replace('/[^\w_ ]/', '', $memo);
+    $invoice_params = [
+      'memo' => $memo,
       'value' => $amount, // in sats
       'expiry' => 1800,
       'private' => true
-    ]);
+    ];
+
+    $invoice = $this->getLightningClient()->addInvoice($invoice_params);
 
     $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*10]);
     $jwt = JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY);
