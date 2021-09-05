@@ -117,12 +117,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "815dae7f2fac5313b0a0bae4f437b6dd3de582f6"
+                "reference": "e38c668f3b565bf9d045f20460a9bdf415073bf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/815dae7f2fac5313b0a0bae4f437b6dd3de582f6",
-                "reference": "815dae7f2fac5313b0a0bae4f437b6dd3de582f6",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/e38c668f3b565bf9d045f20460a9bdf415073bf8",
+                "reference": "e38c668f3b565bf9d045f20460a9bdf415073bf8",
                 "shasum": ""
             },
             "require": {
@@ -234,7 +234,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-05T19:11:34+00:00"
+            "time": "2021-09-05T19:58:29+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -327,12 +327,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "87f16fd88d70afc7f2738a2e1f57581c49817b76"
+                "reference": "4095c77b73893521ef1c84109b95f97aa35e48b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/87f16fd88d70afc7f2738a2e1f57581c49817b76",
-                "reference": "87f16fd88d70afc7f2738a2e1f57581c49817b76",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/4095c77b73893521ef1c84109b95f97aa35e48b8",
+                "reference": "4095c77b73893521ef1c84109b95f97aa35e48b8",
                 "shasum": ""
             },
             "require": {
@@ -371,12 +371,33 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 },
                 {
+                    "name": "George Mponos",
+                    "email": "gmponos@gmail.com",
+                    "homepage": "https://github.com/gmponos"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://github.com/sagikazarmark"
+                },
+                {
                     "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
                     "homepage": "https://github.com/Tobion"
                 },
                 {
@@ -400,7 +421,21 @@
                 "issues": "https://github.com/guzzle/psr7/issues",
                 "source": "https://github.com/guzzle/psr7/tree/master"
             },
-            "time": "2021-09-05T19:15:44+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/psr7",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-09-05T19:59:03+00:00"
         },
         {
             "name": "octan/lnbits",
@@ -408,12 +443,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "fb474217c431d06016b9199216aa0b169d86d400"
+                "reference": "e342d31526520025ecca5f7eff4a388dffef52b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/fb474217c431d06016b9199216aa0b169d86d400",
-                "reference": "fb474217c431d06016b9199216aa0b169d86d400",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/e342d31526520025ecca5f7eff4a388dffef52b1",
+                "reference": "e342d31526520025ecca5f7eff4a388dffef52b1",
                 "shasum": ""
             },
             "require": {
@@ -445,7 +480,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2020-08-10T20:08:29+00:00"
+            "time": "2021-09-05T22:03:57+00:00"
         },
         {
             "name": "octan/lnd-rest",
