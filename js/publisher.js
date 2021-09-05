@@ -20,7 +20,10 @@ window.addEventListener("DOMContentLoaded", function () {
   function startWatchingForPayment(invoice) {
     stopWatchingForPayment();
     return new Promise(function (resolve, reject) {
-      checkPaidInterval = setInterval(checkPaymentStatus(invoice, resolve), 800);
+      checkPaidInterval = setInterval(
+        checkPaymentStatus(invoice, resolve),
+        800
+      );
     });
   }
 
@@ -53,17 +56,22 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   function showQRCode(invoice, options) {
-    var button = options.target.querySelector('button.wp-lnp-btn');
-    button.outerHTML =
-      '<div class="wp-lnp-qrcode"><img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=' +
-      invoice.payment_request +
-      '"></div>';
+    var button = options.target.querySelector("button.wp-lnp-btn");
+    button.outerHTML = `<div class="wp-lnp-qrcode">
+      <img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=${
+        invoice.payment_request
+      }">
+      <br />
+      <a href="lightning:${
+        invoice.payment_request
+      }">${invoice.payment_request.substr(0, 36)}...</a>
+      </div>`;
   }
 
   function requestPayment(params, options) {
     var paramsQueryString = Object.keys(params)
-      .map(key => `${key}=${params[key]}`)
-      .join('&');
+      .map((key) => `${key}=${params[key]}`)
+      .join("&");
 
     return fetch(wp_ajax_url, {
       method: "POST",
@@ -82,9 +90,10 @@ window.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-
   function initPostPaywalls() {
-    var buttons = document.querySelectorAll("[data-lnp-postid] button.wp-lnp-btn");
+    var buttons = document.querySelectorAll(
+      "[data-lnp-postid] button.wp-lnp-btn"
+    );
     if (buttons.length === 0) {
       return;
     }
@@ -95,25 +104,32 @@ window.addEventListener("DOMContentLoaded", function () {
         this.setAttribute("disabled", "");
 
         var wrapper = this.closest(".wp-lnp-wrapper");
-        var autopayInput = wrapper.querySelector("input.wp-lnp-autopay:checked");
+        var autopayInput = wrapper.querySelector(
+          "input.wp-lnp-autopay:checked"
+        );
 
         if (autopayInput) {
           localStorage.setItem("wplnp_autopay", true);
         }
-        requestPayment({post_id: wrapper.dataset.lnpPostid}, {target: wrapper})
+        requestPayment(
+          { post_id: wrapper.dataset.lnpPostid },
+          { target: wrapper }
+        )
           .then(function (content, invoice) {
             wrapper.outerHTML = content;
           })
           .catch(function (e) {
             console.log(e);
-            alert('sorry, something went wrong.');
+            alert("sorry, something went wrong.");
           });
       });
     });
   }
 
   function initAllPaywalls() {
-    var buttonsForAll = document.querySelectorAll('.wp-lnp-all button.wp-lnp-btn');
+    var buttonsForAll = document.querySelectorAll(
+      ".wp-lnp-all button.wp-lnp-btn"
+    );
     if (buttonsForAll.length === 0) {
       return;
     }
@@ -123,13 +139,14 @@ window.addEventListener("DOMContentLoaded", function () {
         this.setAttribute("disabled", "");
 
         var wrapper = this.closest(".wp-lnp-all");
-        requestPayment({all: '1'}, {target: wrapper})
+        requestPayment({ all: "1" }, { target: wrapper })
           .then(function (content, invoice) {
-              wrapper.innerHTML = '<p class="wp-all-confirmation">' + content + '</p>';
+            wrapper.innerHTML =
+              '<p class="wp-all-confirmation">' + content + "</p>";
           })
           .catch(function (e) {
             console.log(e);
-            alert('Sorry, something went wrong.');
+            alert("Sorry, something went wrong.");
           });
       });
     });
@@ -144,13 +161,13 @@ window.addEventListener("DOMContentLoaded", function () {
         var wrapper = wrappers[0];
         var button = wrapper.querySelector("button.wp-lnp-btn");
         button.setAttribute("disabled", "");
-        requestPayment({post_id: wrapper.dataset.lnpPostid})
+        requestPayment({ post_id: wrapper.dataset.lnpPostid })
           .then(function (content, invoice) {
             wrapper.outerHTML = content;
           })
           .catch(function (e) {
             console.log(e);
-            alert('Sorry, something went wrong.');
+            alert("Sorry, something went wrong.");
           });
       }
     }

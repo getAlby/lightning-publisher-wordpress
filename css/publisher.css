@@ -1,8 +1,7 @@
 .wp-lnp-wrapper {
   padding: 1em;
   border-radius: 2px;
-  background: #FBFCD0;
-  text-align: center; /* @XXX good for paid too? */
+  text-align: center;
 }
 
 .p-lnp-wrapper p:last-child {
@@ -16,14 +15,8 @@
   border: 1px solid transparent;
   padding: 8px 12px;
 
-  font-size: 20px;
   line-height: 1.4;
   border-radius: 2px;
-
-  color: #ffffff !important;
-  background-color: #008cba !important;
-  border-color: #0079a1 !important;
-
 }
 
 .wp-lnp-btn[disabled] {
@@ -36,6 +29,6 @@
   text-align: center;
 }
 .wp-lnp-qrcode img {
-  width: 200px;
+  width: 240px;
   display: inline;
 }
