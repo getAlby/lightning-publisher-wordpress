@@ -8,7 +8,8 @@
         "octan/lnd-rest": "dev-master",
         "octan/lnbits": "dev-master",
         "firebase/php-jwt": "dev-master",
-        "tkijewski/php-lnurl": "dev-master"
+        "tkijewski/php-lnurl": "dev-master",
+        "jorijn/bitcoin-bolt11": "dev-master"
     },
     "repositories": [
       { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" },

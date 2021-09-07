@@ -1,13 +1,21 @@
 window.addEventListener("DOMContentLoaded", function () {
   var checkPaidInterval = null;
   var wp_ajax_url = LN_Paywall.ajax_url;
+  var LN_Paywall_Spinner =
+    '<svg class="LNP_spinner" viewBox="0 0 50 50"><circle class="LNP_path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>';
 
   function pay(invoice, options) {
     return WebLN.requestProvider()
       .then(function (webln) {
-        webln.sendPayment(invoice.payment_request).catch(function (e) {
-          stopWatchingForPayment();
-        });
+        webln
+          .sendPayment(invoice.payment_request)
+          .then((response) => {
+            window.LNP_CURRENT_PREIMAGE =
+              response.preimage || response.payment_preimage;
+          })
+          .catch(function (e) {
+            stopWatchingForPayment();
+          });
         return startWatchingForPayment(invoice);
       })
       .catch(function (err) {
@@ -28,6 +36,7 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   function stopWatchingForPayment() {
+    window.LNP_CURRENT_PREIMAGE = null;
     if (checkPaidInterval) {
       clearTimeout(checkPaidInterval);
       checkPaidInterval = null;
@@ -40,7 +49,11 @@ window.addEventListener("DOMContentLoaded", function () {
         method: "POST",
         credentials: "same-origin",
         cache: "no-cache",
-        body: "action=lnp_check_payment&token=" + invoice.token,
+        body:
+          "action=lnp_check_payment&token=" +
+          invoice.token +
+          "&preimage=" +
+          window.LNP_CURRENT_PREIMAGE,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         },
@@ -102,6 +115,7 @@ window.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         this.setAttribute("disabled", "");
 
+        this.innerHTML = LN_Paywall_Spinner;
         var wrapper = this.closest(".wp-lnp-wrapper");
         var autopayInput = wrapper.querySelector(
           "input.wp-lnp-autopay:checked"

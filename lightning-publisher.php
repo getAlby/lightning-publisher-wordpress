@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) exit;
 
 require_once 'vendor/autoload.php';
 
+require_once 'lightning_address.php';
+
 require_once 'LnpWidget.php';
 
 use \tkijewski\lnurl;
@@ -73,6 +75,12 @@ class WP_LN_Paywall {
       }
     } elseif (!empty($this->options['lnbits_apikey'])) {
       $this->lightningClient = new LNbits\Client($this->options['lnbits_apikey']);
+    } elseif (!empty($this->options['lnaddress_address'])) {
+      $this->lightningClient = new LightningAddress();
+      $this->lightningClient->setAddress($this->options['lnaddress_address']);
+    } elseif (!empty($this->options['lnaddress_lnurl'])) {
+      $this->lightningClient = new LightningAddress();
+      $this->lightningClient->setLnurl($this->options['lnaddress_lnurl']);
     }
     return $this->lightningClient;
   }
@@ -235,7 +243,7 @@ class WP_LN_Paywall {
 
     $invoice = $this->getLightningClient()->addInvoice($invoice_params);
 
-    $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'exp' => time() + 60*10]);
+    $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60*10]);
     $jwt = JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY);
 
     $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
@@ -256,12 +264,17 @@ class WP_LN_Paywall {
     } catch(Exception $e) {
       return wp_send_json([ 'settled' => false ], 404);
     }
-    $invoice_id = $jwt->{'invoice_id'};
-    $invoice = $this->getLightningClient()->getInvoice($invoice_id);
 
-    $amount = !empty($invoice['value']) ? (int)$invoice['value'] : (int)$jwt->{'amount'}; // TODO: invoice LNbits does not return the amount. needs to be added to lnbits
+    // if we get a preimage we can check if the preimage matches the payment hash and accept it.
+    if (!empty($_POST['preimage']) && hash('sha256', hex2bin($_POST['preimage']), false) == $jwt->{"r_hash"}) {
+      $invoice = ['settled' => true];
+    // if ew do not have a preimage we must check with the LN node if the invoice was paid.
+    } else {
+      $invoice_id = $jwt->{'invoice_id'};
+      $invoice = $this->getLightningClient()->getInvoice($invoice_id);
+    }
 
-    // TODO check amount
+    // TODO check amount?
     if ($invoice && $invoice['settled']) { // && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
       $post_id = $jwt->{'post_id'};
       if (!empty($post_id)) {
@@ -389,6 +402,9 @@ class WP_LN_Paywall {
     add_settings_section('lnbits', 'LNbits Config', null, 'lnp');
     add_settings_field('lnbits_apikey', 'API Key', array($this, 'field_lnbits_apikey'), 'lnp', 'lnbits');
 
+    add_settings_section('lnaddress', 'Lightning Address Config', null, 'lnp');
+    add_settings_field('lnaddress_address', 'Lightning Address', array($this, 'field_lnaddress_address'), 'lnp', 'lnaddress');
+
     add_settings_section('paywall', 'Paywall Config', null, 'lnp');
     add_settings_field('paywall_text', 'Text', array($this, 'field_paywall_text'), 'lnp', 'paywall');
     add_settings_field('paywall_button_text', 'Button', array($this, 'field_paywall_button_text'), 'lnp', 'paywall');
@@ -489,6 +505,11 @@ class WP_LN_Paywall {
     printf('<input type="text" name="lnp[lnbits_apikey]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnbits_apikey']),
       'LNbits Invoice/read key');
+  }
+  public function field_lnaddress_address(){
+    printf('<input type="text" name="lnp[lnaddress_address]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['lnaddress_address']),
+      'Lightning Address (e.g. you@payaddress.co) - only works if the vistor supports WebLN!');
   }
   public function field_paywall_text(){
     printf('<input type="text" name="lnp[paywall_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
