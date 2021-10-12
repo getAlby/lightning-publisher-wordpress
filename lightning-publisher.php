@@ -657,11 +657,11 @@ class WP_LN_Paywall
     );
   }
   public function field_paywall_all_confirmation()
-  { 
+  {
     printf(
       '<input type="text" name="lnp[all_confirmation]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['all_confirmation']),
-      'Confirmation text for all  article payments'
+      'Confirmation text for all article payments'
     );
   }
   public function field_paywall_lnurl_rss()
