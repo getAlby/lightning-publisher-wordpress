@@ -576,19 +576,21 @@ class WP_LN_Paywall
       'Lndhub Url'
     );
   }
-  public function field_lndhub_login(){
+  public function field_lndhub_login()
+  {
     printf(
       '<input type="text" name="lnp[lndhub_login]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lndhub_login']),
       'Lndhub Login'
-    ); 
+    );
   }
-  public function field_lndhub_password(){
+  public function field_lndhub_password()
+  {
     printf(
       '<input type="password" name="lnp[lndhub_password]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lndhub_password']),
       'Lndhub Password'
-    ); 
+    );
   }
   public function field_paywall_text()
   {
@@ -655,11 +657,11 @@ class WP_LN_Paywall
     );
   }
   public function field_paywall_all_confirmation()
-  {
+  { 
     printf(
       '<input type="text" name="lnp[all_confirmation]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['all_confirmation']),
-      'Confirmation text for all article payments'
+      'Confirmation text for all  article payments'
     );
   }
   public function field_paywall_lnurl_rss()
