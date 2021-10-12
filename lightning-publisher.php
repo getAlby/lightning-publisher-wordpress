@@ -168,7 +168,12 @@ class WP_LN_Paywall {
   }
 
   public static function has_paid_for_all() {
-    $wplnp = isset($_COOKIE['wplnp']) ? $_COOKIE['wplnp'] : $_GET['wplnp'];
+    $wplnp = null;
+    if (isset($_COOKIE['wplnp'])) {
+      $wplnp = $_COOKIE['wplnp'];
+    } elseif (isset($_GET['wplnp'])) {
+      $wplnp = $_GET['wplnp'];
+    }
     if (empty($wplnp)) return false;
     try {
       $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
@@ -180,8 +185,13 @@ class WP_LN_Paywall {
   }
 
   public static function get_paid_post_ids() {
-    $wplnp = isset($_COOKIE['wplnp']) ? $_COOKIE['wplnp'] : $_GET['wplnp'];
-    if (empty($wplnp)) return [];
+    $wplnp = null;
+    if (isset($_COOKIE['wplnp'])) {
+      $wplnp = $_COOKIE['wplnp'];
+    } elseif (isset($_GET['wplnp'])) {
+      $wplnp = $_GET['wplnp'];
+    }
+    if (empty($wplnp)) return false;
     try {
       $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
       $paid_post_ids = $jwt->{'post_ids'};
