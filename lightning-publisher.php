@@ -84,6 +84,9 @@ class WP_LN_Paywall
     } elseif (!empty($this->options['lnaddress_lnurl'])) {
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setLnurl($this->options['lnaddress_lnurl']);
+    } elseif (!empty($this->options['lndhub_url']) && !empty($this->options['lndhub_login']) && !empty($this->options['lndhub_password'])) {
+      $this->lightningClient = new LNDHub\Client($this->options['lndhub_url'], $this->options['lndhub_login'], $this->options['lndhub_password']);
+      $this->lightningClient->init();
     }
     return $this->lightningClient;
   }
