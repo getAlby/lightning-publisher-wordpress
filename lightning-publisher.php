@@ -84,6 +84,9 @@ class WP_LN_Paywall
     } elseif (!empty($this->options['lnaddress_lnurl'])) {
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setLnurl($this->options['lnaddress_lnurl']);
+    } elseif (!empty($this->options['lndhub_url']) && !empty($this->options['lndhub_login']) && !empty($this->options['lndhub_password'])) {
+      $this->lightningClient = new LNDHub\Client($this->options['lndhub_url'], $this->options['lndhub_login'], $this->options['lndhub_password']);
+      $this->lightningClient->init();
     }
     return $this->lightningClient;
   }
@@ -438,6 +441,12 @@ class WP_LN_Paywall
     add_settings_section('lnaddress', 'Lightning Address Config', null, 'lnp');
     add_settings_field('lnaddress_address', 'Lightning Address', array($this, 'field_lnaddress_address'), 'lnp', 'lnaddress');
 
+
+    add_settings_section('lndhub', 'LNDHub Config', null, 'lnp');
+    add_settings_field('lndhub_url', 'Lndhub url', array($this, 'field_lndhub_url'), 'lnp', 'lndhub');
+    add_settings_field('lndhub_login', 'Lndhub Login', array($this, 'field_lndhub_login'), 'lnp', 'lndhub');
+    add_settings_field('lndhub_password', 'Lndhub Password', array($this, 'field_lndhub_password'), 'lnp', 'lndhub');
+
     add_settings_section('paywall', 'Paywall Config', null, 'lnp');
     add_settings_field('paywall_text', 'Text', array($this, 'field_paywall_text'), 'lnp', 'paywall');
     add_settings_field('paywall_button_text', 'Button', array($this, 'field_paywall_button_text'), 'lnp', 'paywall');
@@ -560,6 +569,30 @@ class WP_LN_Paywall
       '<input type="text" name="lnp[lnaddress_address]" value="%s" autocomplete="off" /><br><label>%s</label>',
       esc_attr($this->options['lnaddress_address']),
       'Lightning Address (e.g. you@payaddress.co) - only works if the vistor supports WebLN!'
+    );
+  }
+  public function field_lndhub_url()
+  {
+    printf(
+      '<input type="text" name="lnp[lndhub_url]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['lndhub_url']),
+      'Lndhub Url'
+    );
+  }
+  public function field_lndhub_login()
+  {
+    printf(
+      '<input type="text" name="lnp[lndhub_login]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['lndhub_login']),
+      'Lndhub Login'
+    );
+  }
+  public function field_lndhub_password()
+  {
+    printf(
+      '<input type="password" name="lnp[lndhub_password]" value="%s" autocomplete="off" /><br><label>%s</label>',
+      esc_attr($this->options['lndhub_password']),
+      'Lndhub Password'
     );
   }
   public function field_paywall_text()
