@@ -204,7 +204,7 @@ class WP_LN_Paywall
     } elseif (isset($_GET['wplnp'])) {
       $wplnp = $_GET['wplnp'];
     }
-    if (empty($wplnp)) return false;
+    if (empty($wplnp)) return [];
     try {
       $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
       $paid_post_ids = $jwt->{'post_ids'};
@@ -330,13 +330,13 @@ class WP_LN_Paywall
     if (!$ln_shortcode_data) return null;
 
     return [
-      'paywall_text' => $ln_shortcode_data['text'] ? $ln_shortcode_data['text'] : $this->options['paywall_text'],
-      'button_text'  => $ln_shortcode_data['button'] ? $ln_shortcode_data['button'] : $this->options['button_text'],
-      'amount'       => $ln_shortcode_data['amount'] ? (int)$ln_shortcode_data['amount'] : (int)$this->options['amount'],
-      'total'        => $ln_shortcode_data['total'] ? (int)$ln_shortcode_data['total'] : (int)$this->options['total'],
-      'timeout'      => $ln_shortcode_data['timeout'] ? (int)$ln_shortcode_data['timeout'] : (int)$this->options['timeout'],
-      'timein'       => $ln_shortcode_data['timein'] ? (int)$ln_shortcode_data['timein'] : (int)$this->options['timein'],
-      'disable_in_rss' => $ln_shortcode_data['disable_in_rss'] ? true : $this->options['disable_paywall_in_rss'],
+      'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->options['paywall_text'],
+      'button_text'  => array_key_exists('button', $ln_shortcode_data) ? $ln_shortcode_data['button'] : $this->options['button_text'],
+      'amount'       => array_key_exists('amount', $ln_shortcode_data) ? (int)$ln_shortcode_data['amount'] : (int)$this->options['amount'],
+      'total'        => array_key_exists('total', $ln_shortcode_data) ? (int)$ln_shortcode_data['total'] : (int)$this->options['total'],
+      'timeout'      => array_key_exists('timeout', $ln_shortcode_data) ? (int)$ln_shortcode_data['timeout'] : (int)$this->options['timeout'],
+      'timein'       => array_key_exists('timein', $ln_shortcode_data) ? (int)$ln_shortcode_data['timein'] : (int)$this->options['timein'],
+      'disable_in_rss' => array_key_exists('disable_in_rss', $ln_shortcode_data) ? true : $this->options['disable_paywall_in_rss'] ?? [],
     ];
   }
 
@@ -356,6 +356,7 @@ class WP_LN_Paywall
     $text   = '<p>' . sprintf(empty($options['paywall_text']) ? 'To continue reading the rest of this post, please pay <em>%s Sats</em>.' : $options['paywall_text'], $options['amount']) . '</p>';
     $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($options['button_text']) ? 'Pay now' : $options['button_text']);
     // $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
+    $autopay = '';
     return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s%s</div>', $public, $post_id, $text, $button, $autopay);
   }
 
