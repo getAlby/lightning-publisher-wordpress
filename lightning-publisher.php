@@ -487,12 +487,13 @@ class WP_LN_Paywall
                     e.preventDefault();
                     var lndConnectUrl = prompt('Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)');
                     if (!lndConnectUrl) {
-                      return ' }
-                      var url = new URL(lndConnectUrl);
-                      document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
-                      document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
-                      document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
-                    });
+                      return;
+                    }
+                    var url = new URL(lndConnectUrl);
+                    document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
+                    document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
+                    document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
+                  });
                 });
         </script>
         <?php
