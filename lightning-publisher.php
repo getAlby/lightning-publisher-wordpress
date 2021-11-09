@@ -331,14 +331,18 @@ class WP_LN_Paywall
 
   protected static function extract_ln_shortcode($content)
   {
-    if (!preg_match('/\[ln(.+)\]/i', $content, $m)) return;
+    if (!preg_match('/\[ln(.+)\]/i', $content, $m)) {
+        return;
+    }
     return shortcode_parse_atts($m[1]);
   }
 
   public function get_paywall_options_for($postId, $content)
   {
     $ln_shortcode_data = self::extract_ln_shortcode($content);
-    if (!$ln_shortcode_data) return null;
+    if (!$ln_shortcode_data) {
+        return null;
+    }
 
     return [
       'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->options['paywall_text'],
