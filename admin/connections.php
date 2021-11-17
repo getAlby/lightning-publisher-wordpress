@@ -46,7 +46,7 @@ class ConnectionPage implements SettingsPage
             <div class="node-info">
                 <?php
                 try {
-                    if ($this->plugin->getLightningClient()->isConnectionValid()) {
+                    if ($this->plugin->getLightningClient() && $this->plugin->getLightningClient()->isConnectionValid()) {
                         $node_info = $this->plugin->getLightningClient()->getInfo();
                         echo "Connected to: " . $node_info['alias'] . ' - ' . $node_info['identity_pubkey'];
                     } else {
@@ -64,7 +64,8 @@ class ConnectionPage implements SettingsPage
                                         e.preventDefault();
                                         var lndConnectUrl = prompt('Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)');
                                         if (!lndConnectUrl) {
-                                            return ' }
+                                            return;
+                                        }
                                             var url = new URL(lndConnectUrl);
                                             document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
                                             document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
@@ -78,16 +79,6 @@ class ConnectionPage implements SettingsPage
                 submit_button();
                 ?>
             </form>
-            <h3>Shortcodes</h3>
-            <p>
-                To configure each article the following shortcode attributes are available:
-            </p>
-            <ul>
-                <li>amount</li>
-                <li>total</li>
-                <li>timein</li>
-                <li>timeout</li>
-            </ul>
         </div>
 <?php
     }

@@ -31,7 +31,7 @@ class PaywallPage implements SettingsPage
 
 
     public function initPage(){
-        add_submenu_page('lnp_settings', 'Lightning Paywall Balances', 'Paywall', 'manage_options', 'lnp_paywall', array($this, 'renderer'));
+        add_submenu_page('lnp_settings', 'Lightning Paywall Settings', 'Paywall', 'manage_options', 'lnp_paywall', array($this, 'renderer'));
     }
 
     public function renderer()

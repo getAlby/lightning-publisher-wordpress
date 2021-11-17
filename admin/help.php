@@ -25,8 +25,21 @@ class HelpPage implements SettingsPage
     public function renderer()
     {
 ?>
+<div class="wrap">
+            <h1>Lightning Paywall Help</h1>
+        </div>
         <div class="wrap">
-            <h1>Lightning Paywall Balances</h1>
+        <h3>Shortcodes</h3>
+            <p>
+                To configure each article the following shortcode attributes are available:
+            </p>
+            <ul>
+                <li>amount</li>
+                <li>total</li>
+                <li>timein</li>
+                <li>timeout</li>
+            </ul>
+            
         </div>
 <?php
     }
