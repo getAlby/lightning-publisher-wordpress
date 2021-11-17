@@ -17,6 +17,10 @@ require_once 'vendor/autoload.php';
 require_once 'lightning_address.php';
 
 require_once 'LnpWidget.php';
+require_once 'admin/connections.php';
+require_once 'admin/paywall.php';
+require_once 'admin/help.php';
+require_once 'admin/balance.php';
 
 use \tkijewski\lnurl;
 use \Firebase\JWT\JWT;
@@ -30,6 +34,13 @@ class WP_LN_Paywall
     $this->options = get_option('lnp');
     $this->lightningClient = null;
 
+    $this->settingsPages = array(
+      new ConnectionPage($this),
+      new PaywallPage($this),
+      new BalancePage($this),
+      new HelpPage($this)
+    );
+    
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
     add_filter('the_content',        array($this, 'ln_paywall_filter'));
@@ -61,7 +72,7 @@ class WP_LN_Paywall
     }
   }
 
-  protected function getLightningClient()
+  public function getLightningClient()
   {
     if ($this->lightningClient) {
       return $this->lightningClient;
@@ -320,14 +331,18 @@ class WP_LN_Paywall
 
   protected static function extract_ln_shortcode($content)
   {
-    if (!preg_match('/\[ln(.+)\]/i', $content, $m)) return;
+    if (!preg_match('/\[ln(.+)\]/i', $content, $m)) {
+        return;
+    }
     return shortcode_parse_atts($m[1]);
   }
 
   public function get_paywall_options_for($postId, $content)
   {
     $ln_shortcode_data = self::extract_ln_shortcode($content);
-    if (!$ln_shortcode_data) return null;
+    if (!$ln_shortcode_data) {
+        return null;
+    }
 
     return [
       'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->options['paywall_text'],
@@ -422,267 +437,16 @@ class WP_LN_Paywall
   public function admin_menu()
   {
     add_menu_page('Lighting Paywall Settings', 'Lighting Paywall', 'manage_options', 'lnp_settings');
-    add_submenu_page('lnp_settings', 'Lighting Paywall Settings', 'Connection', 'manage_options', 'lnp_settings', array($this, 'settings_page'));
-    add_submenu_page('lnp_settings', 'Lightning Paywall Balances', 'Paywall', 'manage_options', 'lnp_balances', array($this, 'balances_page'));
+    foreach ($this->settingsPages as $page) {
+      $page->initPage();
+    }
   }
 
   public function admin_init()
   {
-    register_setting('lnp', 'lnp');
-    add_settings_section('lnd', 'LND Config', null, 'lnp');
-
-    add_settings_field('lnd_address', 'Address', array($this, 'field_lnd_address'), 'lnp', 'lnd');
-    add_settings_field('lnd_macaroon', 'Macaroon', array($this, 'field_lnd_macaroon'), 'lnp', 'lnd');
-    add_settings_field('lnd_cert', 'TLS Cert', array($this, 'field_lnd_cert'), 'lnp', 'lnd');
-
-    add_settings_section('lnbits', 'LNbits Config', null, 'lnp');
-    add_settings_field('lnbits_apikey', 'API Key', array($this, 'field_lnbits_apikey'), 'lnp', 'lnbits');
-
-    add_settings_section('lnaddress', 'Lightning Address Config', null, 'lnp');
-    add_settings_field('lnaddress_address', 'Lightning Address', array($this, 'field_lnaddress_address'), 'lnp', 'lnaddress');
-
-
-    add_settings_section('lndhub', 'LNDHub Config', null, 'lnp');
-    add_settings_field('lndhub_url', 'Lndhub url', array($this, 'field_lndhub_url'), 'lnp', 'lndhub');
-    add_settings_field('lndhub_login', 'Lndhub Login', array($this, 'field_lndhub_login'), 'lnp', 'lndhub');
-    add_settings_field('lndhub_password', 'Lndhub Password', array($this, 'field_lndhub_password'), 'lnp', 'lndhub');
-
-    add_settings_section('paywall', 'Paywall Config', null, 'lnp');
-    add_settings_field('paywall_text', 'Text', array($this, 'field_paywall_text'), 'lnp', 'paywall');
-    add_settings_field('paywall_button_text', 'Button', array($this, 'field_paywall_button_text'), 'lnp', 'paywall');
-    add_settings_field('paywall_amount', 'Amount', array($this, 'field_paywall_amount'), 'lnp', 'paywall');
-    add_settings_field('paywall_total', 'Total', array($this, 'field_paywall_total'), 'lnp', 'paywall');
-    add_settings_field('paywall_timeout', 'Timeout', array($this, 'field_paywall_timeout'), 'lnp', 'paywall');
-    add_settings_field('paywall_timein', 'Timein', array($this, 'field_paywall_timein'), 'lnp', 'paywall');
-    add_settings_field('paywall_all_amount', 'Amount for all', array($this, 'field_paywall_all_amount'), 'lnp', 'paywall');
-    add_settings_field('paywall_all_period', 'Days available', array($this, 'field_paywall_all_days'), 'lnp', 'paywall');
-    add_settings_field('paywall_all_confirmation', 'Confirmation text', array($this, 'field_paywall_all_confirmation'), 'lnp', 'paywall');
-    add_settings_field('paywall_lnurl_rss', 'Add LNURL to RSS items', array($this, 'field_paywall_lnurl_rss'), 'lnp', 'paywall');
-    add_settings_field('paywall_disable_in_rss', 'Disable paywall in RSS?', array($this, 'field_paywall_disable_in_rss'), 'lnp', 'paywall');
-  }
-
-  public function settings_page()
-  {
-?>
-    <div class="wrap">
-      <h1>Lightning Connection Settings</h1>
-      <div class="node-info">
-        <?php
-        try {
-          if ($this->getLightningClient()->isConnectionValid()) {
-            $node_info = $this->getLightningClient()->getInfo();
-            echo "Connected to: " . $node_info['alias'] . ' - ' . $node_info['identity_pubkey'];
-          } else {
-            echo 'Not connected';
-          }
-        } catch (Exception $e) {
-          echo "Failed to connect: " . $e;
-        }
-        ?>
-      </div>
-      <form method="post" action="options.php">
-        <script>
-          window.addEventListener("DOMContentLoaded", function() {
-                document.getElementById('load_from_lndconnect').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var lndConnectUrl = prompt('Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)');
-                    if (!lndConnectUrl) {
-                      return;
-                    }
-                    var url = new URL(lndConnectUrl);
-                    document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
-                    document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
-                    document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
-                  });
-                });
-        </script>
-        <?php
-        settings_fields('lnp');
-        do_settings_sections('lnp');
-        submit_button();
-        ?>
-      </form>
-      <h3>Shortcodes</h3>
-      <p>
-        To configure each article the following shortcode attributes are available:
-      </p>
-      <ul>
-        <li>amount</li>
-        <li>total</li>
-        <li>timein</li>
-        <li>timeout</li>
-      </ul>
-    </div>
-  <?php
-  }
-
-  public function balances_page()
-  {
-  ?>
-    <div class="wrap">
-      <h1>Lightning Paywall Settings</h1>
-    </div>
-    <form method="post" action="options.php">
-      <?php
-      settings_fields('lnp');
-      do_settings_sections('lnp');
-      submit_button();
-      ?>
-    </form>
-<?php
-  }
-  public function field_lnd_address()
-  {
-    $help = 'e.g. https://127.0.0.1:8080 - or <a href="#" id="load_from_lndconnect">click here to load details from a lndconnect</a>';
-    printf(
-      '<input type="text" name="lnp[lnd_address]" id="lnp_lnd_address" value="%s" autocomplete="off" /><br>%s',
-      esc_attr($this->options['lnd_address']),
-      $help
-    );
-  }
-  public function field_lnd_macaroon()
-  {
-    printf(
-      '<input type="text" name="lnp[lnd_macaroon]" id="lnp_lnd_macaroon" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['lnd_macaroon']),
-      'Invoices macaroon in HEX format'
-    );
-  }
-  public function field_lnd_cert()
-  {
-    printf(
-      '<input type="text" name="lnp[lnd_cert]" value="%s" id="lnp_lnd_cert" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['lnd_cert']),
-      'TLS Certificate'
-    );
-  }
-  public function field_lnbits_apikey()
-  {
-    printf(
-      '<input type="text" name="lnp[lnbits_apikey]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['lnbits_apikey']),
-      'LNbits Invoice/read key'
-    );
-  }
-  public function field_lnaddress_address()
-  {
-    printf(
-      '<input type="text" name="lnp[lnaddress_address]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['lnaddress_address']),
-      'Lightning Address (e.g. you@payaddress.co) - only works if the vistor supports WebLN!'
-    );
-  }
-  public function field_lndhub_url()
-  {
-    printf(
-      '<input type="text" name="lnp[lndhub_url]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['lndhub_url']),
-      'Lndhub Url'
-    );
-  }
-  public function field_lndhub_login()
-  {
-    printf(
-      '<input type="text" name="lnp[lndhub_login]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['lndhub_login']),
-      'Lndhub Login'
-    );
-  }
-  public function field_lndhub_password()
-  {
-    printf(
-      '<input type="password" name="lnp[lndhub_password]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['lndhub_password']),
-      'Lndhub Password'
-    );
-  }
-  public function field_paywall_text()
-  {
-    printf(
-      '<input type="text" name="lnp[paywall_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['paywall_text']),
-      'Paywall text (use %s for the amount)'
-    );
-  }
-  public function field_paywall_button_text()
-  {
-    printf(
-      '<input type="text" name="lnp[button_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['button_text']),
-      'Button text'
-    );
-  }
-  public function field_paywall_amount()
-  {
-    printf(
-      '<input type="number" name="lnp[amount]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['amount']),
-      'Amount in sats per article'
-    );
-  }
-  public function field_paywall_total()
-  {
-    printf(
-      '<input type="number" name="lnp[total]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['total']),
-      'Total amount to collect. After that amount the article will be free'
-    );
-  }
-  public function field_paywall_timeout()
-  {
-    printf(
-      '<input type="number" name="lnp[timeout]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['timeout']),
-      'Make the article free X days after it is published'
-    );
-  }
-  public function field_paywall_timein()
-  {
-    printf(
-      '<input type="number" name="lnp[timein]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['timein']),
-      'Enable the paywall x days after the article is published'
-    );
-  }
-  public function field_paywall_all_amount()
-  {
-    printf(
-      '<input type="number" name="lnp[all_amount]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['all_amount']),
-      'Amount for all articles'
-    );
-  }
-  public function field_paywall_all_days()
-  {
-    printf(
-      '<input type="number" name="lnp[all_days]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['all_days']),
-      'How many days should all articles be available'
-    );
-  }
-  public function field_paywall_all_confirmation()
-  {
-    printf(
-      '<input type="text" name="lnp[all_confirmation]" value="%s" autocomplete="off" /><br><label>%s</label>',
-      esc_attr($this->options['all_confirmation']),
-      'Confirmation text for all article payments'
-    );
-  }
-  public function field_paywall_lnurl_rss()
-  {
-    printf(
-      '<input type="checkbox" name="lnp[lnurl_rss]" value="1" %s/><br><label>%s</label>',
-      empty($this->options['lnurl_rss']) ? '' : 'checked',
-      'Add lightning payment details to RSS items'
-    );
-  }
-  public function field_paywall_disable_in_rss()
-  {
-    printf(
-      '<input type="checkbox" name="lnp[disable_paywall_in_rss]" value="1" %s/><br><label>%s</label>',
-      empty($this->options['disable_paywall_in_rss']) ? '' : 'checked',
-      'Disable paywall in RSS items / show full content in RSS.'
-    );
+    foreach ($this->settingsPages as $page) {
+      $page->initFields();
+    }
   }
 }
 
