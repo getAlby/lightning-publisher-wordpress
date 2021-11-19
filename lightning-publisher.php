@@ -21,6 +21,7 @@ require_once 'admin/connections.php';
 require_once 'admin/paywall.php';
 require_once 'admin/help.php';
 require_once 'admin/balance.php';
+require_once 'database-handler.php';
 
 use \tkijewski\lnurl;
 use \Firebase\JWT\JWT;
@@ -40,7 +41,11 @@ class WP_LN_Paywall
       new BalancePage($this),
       new HelpPage($this)
     );
-    
+
+    $this->database_handler = new DatabaseHandler();
+
+    add_action('init', array($this->database_handler, 'init'));
+
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
     add_filter('the_content',        array($this, 'ln_paywall_filter'));
@@ -332,7 +337,7 @@ class WP_LN_Paywall
   protected static function extract_ln_shortcode($content)
   {
     if (!preg_match('/\[ln(.+)\]/i', $content, $m)) {
-        return;
+      return;
     }
     return shortcode_parse_atts($m[1]);
   }
@@ -341,7 +346,7 @@ class WP_LN_Paywall
   {
     $ln_shortcode_data = self::extract_ln_shortcode($content);
     if (!$ln_shortcode_data) {
-        return null;
+      return null;
     }
 
     return [
