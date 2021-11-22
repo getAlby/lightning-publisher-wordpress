@@ -30,12 +30,11 @@ class DatabaseHandler
         dbDelta($sql);
     }
 
-    public function store_invoice($post_id, $payment_hash, $payment_request, $amount, $currency)
+    public function store_invoice($post_id, $payment_hash, $payment_request, $amount, $currency, $exchange_rate)
     {
         global $wpdb;
 
         // TODO: implement get exchange rate functionality
-        $exchange_rate = '';
 
         $wpdb->insert(
             $this->table_name,
