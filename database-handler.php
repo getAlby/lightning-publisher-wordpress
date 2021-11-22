@@ -17,7 +17,7 @@ class DatabaseHandler
         post_id bigint(20) NOT NULL,
         payment_hash varchar(256) NOT NULL,
         payment_request varchar(256) NOT NULL,
-        amount_in_satoshi double(30, 20) DEFAULT 0.0 NOT NULL,
+        amount_in_satoshi int(10) DEFAULT 0.0 NOT NULL,
         exchange_rate double(30, 20) DEFAULT 0.0 NOT NULL,
         exchange_currency varchar(10) NOT NULL,
         created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
