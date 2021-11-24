@@ -2,19 +2,17 @@
 
 require_once 'SettingsPage.php';
 
-class PaywallPage implements SettingsPage
+class PaywallPage extends SettingsPage
 {
-    private $settings_path = 'lnp_settings_paywall';
+    protected $settings_path = 'lnp_settings_paywall';
+    protected $option_name = 'lnp_paywall';
 
-    public function __construct($plugin)
-    {
-        $this->plugin = $plugin;
-        $this->options = get_option('lnp');
-    }
+    protected $page_title = 'Lightning Paywall Settings';
+    protected $menu_title = 'Paywall';
 
-    public function initFields()
+    public function init_fields()
     {
-        register_setting('lnp', $this->settings_path);
+        parent::init_fields();
         add_settings_section('paywall', 'Paywall Config', null, $this->settings_path);
         add_settings_field('paywall_text', 'Text', array($this, 'field_paywall_text'), $this->settings_path, 'paywall');
         add_settings_field('paywall_button_text', 'Button', array($this, 'field_paywall_button_text'), $this->settings_path, 'paywall');
@@ -29,10 +27,6 @@ class PaywallPage implements SettingsPage
         add_settings_field('paywall_disable_in_rss', 'Disable paywall in RSS?', array($this, 'field_paywall_disable_in_rss'), $this->settings_path, 'paywall');
     }
 
-
-    public function initPage(){
-        add_submenu_page('lnp_settings', 'Lightning Paywall Settings', 'Paywall', 'manage_options', 'lnp_paywall', array($this, 'renderer'));
-    }
 
     public function renderer()
     {
@@ -54,8 +48,9 @@ class PaywallPage implements SettingsPage
     public function field_paywall_text()
     {
         printf(
-            '<input type="text" name="lnp[paywall_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['paywall_text']),
+            '<input type="text" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('paywall_text'),
+            $this->get_field_value('paywall_text'),
             'Paywall text (use %s for the amount)'
         );
     }
@@ -63,80 +58,90 @@ class PaywallPage implements SettingsPage
     public function field_paywall_button_text()
     {
         printf(
-            '<input type="text" name="lnp[button_text]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['button_text']),
+            '<input type="text" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('button_text'),
+            $this->get_field_value('button_text'),
             'Button text'
         );
     }
     public function field_paywall_amount()
     {
         printf(
-            '<input type="number" name="lnp[amount]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['amount']),
+            '<input type="number" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('amount'),
+            $this->get_field_value('amount'),
             'Amount in sats per article'
         );
     }
     public function field_paywall_total()
     {
         printf(
-            '<input type="number" name="lnp[total]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['total']),
+            '<input type="number" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('total'),
+            $this->get_field_value('total'),
             'Total amount to collect. After that amount the article will be free'
         );
     }
     public function field_paywall_timeout()
     {
         printf(
-            '<input type="number" name="lnp[timeout]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['timeout']),
+            '<input type="number" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('timeout'),
+            $this->get_field_value('timeout'),
             'Make the article free X days after it is published'
         );
     }
     public function field_paywall_timein()
     {
         printf(
-            '<input type="number" name="lnp[timein]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['timein']),
+            '<input type="number" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('timein'),
+            $this->get_field_value('timein'),
             'Enable the paywall x days after the article is published'
         );
     }
     public function field_paywall_all_amount()
     {
         printf(
-            '<input type="number" name="lnp[all_amount]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['all_amount']),
+            '<input type="number" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('all_amount'),
+            $this->get_field_value('all_amount'),
             'Amount for all articles'
         );
     }
     public function field_paywall_all_days()
     {
         printf(
-            '<input type="number" name="lnp[all_days]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['all_days']),
+            '<input type="number" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('all_days'),
+            $this->get_field_value('all_days'),
             'How many days should all articles be available'
         );
     }
     public function field_paywall_all_confirmation()
     {
         printf(
-            '<input type="text" name="lnp[all_confirmation]" value="%s" autocomplete="off" /><br><label>%s</label>',
-            esc_attr($this->options['all_confirmation']),
+            '<input type="text" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('all_confirmation'),
+            $this->get_field_value('all_confirmation'),
             'Confirmation text for all article payments'
         );
     }
     public function field_paywall_lnurl_rss()
     {
         printf(
-            '<input type="checkbox" name="lnp[lnurl_rss]" value="1" %s/><br><label>%s</label>',
-            empty($this->options['lnurl_rss']) ? '' : 'checked',
+            '<input type="checkbox" name="%s" value="1" %s/><br><label>%s</label>',
+            $this->get_field_name('lnurl_rss'), 
+            empty($this->get_field_value('lnurl_rss')) ? '' : 'checked',
             'Add lightning payment details to RSS items'
         );
     }
     public function field_paywall_disable_in_rss()
     {
         printf(
-            '<input type="checkbox" name="lnp[disable_paywall_in_rss]" value="1" %s/><br><label>%s</label>',
-            empty($this->options['disable_paywall_in_rss']) ? '' : 'checked',
+            '<input type="checkbox" name="%s" value="1" %s/><br><label>%s</label>',
+            $this->get_field_name('disable_paywall_in_rss'),
+            empty($this->get_field_value('disable_paywall_in_rss')) ? '' : 'checked',
             'Disable paywall in RSS items / show full content in RSS.'
         );
     }
