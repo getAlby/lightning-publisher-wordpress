@@ -2,25 +2,13 @@
 
 require_once 'SettingsPage.php';
 
-class BalancePage implements SettingsPage
+class BalancePage extends SettingsPage
 {
-    private $settings_path = 'lnp_settings_balances';
+    protected $settings_path = 'lnp_settings_balances';
+    protected $option_name = 'lnp_paywall';
 
-    public function __construct($plugin)
-    {
-        $this->plugin = $plugin;
-        $this->options = get_option('lnp');
-    }
-
-    public function initFields()
-    {
-        register_setting('lnp', $this->settings_path);
-    }
-
-    public function initPage()
-    {
-        add_submenu_page('lnp_settings', 'Lightning Paywall Balances', 'Balance', 'manage_options', 'lnp_balances', array($this, 'renderer'));
-    }
+    protected $page_title = 'Lightning Paywall Balances';
+    protected $menu_title = 'Balance';
 
     public function renderer()
     {

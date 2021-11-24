@@ -32,20 +32,11 @@ class WP_LN_Paywall
 {
   public function __construct()
   {
-    $this->options = get_option('lnp');
     $this->lightningClient = null;
-
-    $this->settingsPages = array(
-      new ConnectionPage($this),
-      new PaywallPage($this),
-      new BalancePage($this),
-      new HelpPage($this)
-    );
 
     $this->database_handler = new DatabaseHandler();
 
     add_action('init', array($this->database_handler, 'init'));
-
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
     add_filter('the_content',        array($this, 'ln_paywall_filter'));
@@ -64,13 +55,21 @@ class WP_LN_Paywall
     add_action('wp_ajax_nopriv_lnp_check_payment_all', array($this, 'ajax_check_payment_all'));
 
     // admin
-    add_action('admin_init', array($this, 'admin_init'));
     add_action('admin_menu', array($this, 'admin_menu'));
+    // initializing admin pages
+    $connection_page = new ConnectionPage($this, 'lnp_settings');
+    $paywall_page = new PaywallPage($this, 'lnp_settings');
+    new BalancePage($this, 'lnp_settings');
+    new HelpPage($this, 'lnp_settings');
+
+    // get page options
+    $this->connection_options = $connection_page->options;
+    $this->paywall_options = $paywall_page->options;
 
     add_action('widgets_init', array($this, 'widget_init'));
     // feed
     // https://code.tutsplus.com/tutorials/extending-the-default-wordpress-rss-feed--wp-27935
-    if (!empty($this->options['lnurl_rss'])) {
+    if (!empty($this->paywall_options['lnurl_rss'])) {
       add_action('init', array($this, 'add_lnurl_endpoints'));
       add_action('template_redirect', array($this, 'lnurl_endpoints'));
       add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
@@ -83,25 +82,25 @@ class WP_LN_Paywall
       return $this->lightningClient;
     }
 
-    if (!empty($this->options['lnd_address'])) {
+    if (!empty($this->connection_options['lnd_address'])) {
       $this->lightningClient = new LND\Client();
-      $this->lightningClient->setAddress(trim($this->options['lnd_address']));
-      $this->lightningClient->setMacarronHex(trim($this->options['lnd_macaroon']));
-      if (!empty($this->options['lnd_cert'])) {
+      $this->lightningClient->setAddress(trim($this->connection_options['lnd_address']));
+      $this->lightningClient->setMacarronHex(trim($this->connection_options['lnd_macaroon']));
+      if (!empty($this->connection_options['lnd_cert'])) {
         $certPath = tempnam(sys_get_temp_dir(), "WPLNP");
-        file_put_contents($certPath, hex2bin($this->options['lnd_cert']));
+        file_put_contents($certPath, hex2bin($this->connection_options['lnd_cert']));
         $this->lightningClient->setTlsCertificatePath($certPath);
       }
-    } elseif (!empty($this->options['lnbits_apikey'])) {
-      $this->lightningClient = new LNbits\Client($this->options['lnbits_apikey']);
-    } elseif (!empty($this->options['lnaddress_address'])) {
+    } elseif (!empty($this->connection_options['lnbits_apikey'])) {
+      $this->lightningClient = new LNbits\Client($this->connection_options['lnbits_apikey']);
+    } elseif (!empty($this->connection_options['lnaddress_address'])) {
       $this->lightningClient = new LightningAddress();
-      $this->lightningClient->setAddress($this->options['lnaddress_address']);
-    } elseif (!empty($this->options['lnaddress_lnurl'])) {
+      $this->lightningClient->setAddress($this->connection_options['lnaddress_address']);
+    } elseif (!empty($this->connection_options['lnaddress_lnurl'])) {
       $this->lightningClient = new LightningAddress();
-      $this->lightningClient->setLnurl($this->options['lnaddress_lnurl']);
-    } elseif (!empty($this->options['lndhub_url']) && !empty($this->options['lndhub_login']) && !empty($this->options['lndhub_password'])) {
-      $this->lightningClient = new LNDHub\Client($this->options['lndhub_url'], $this->options['lndhub_login'], $this->options['lndhub_password']);
+      $this->lightningClient->setLnurl($this->connection_options['lnaddress_lnurl']);
+    } elseif (!empty($this->connection_options['lndhub_url']) && !empty($this->connection_options['lndhub_login']) && !empty($this->connection_options['lndhub_password'])) {
+      $this->lightningClient = new LNDHub\Client($this->connection_options['lndhub_url'], $this->connection_options['lndhub_login'], $this->connection_options['lndhub_password']);
       $this->lightningClient->init();
     }
     return $this->lightningClient;
@@ -268,7 +267,7 @@ class WP_LN_Paywall
       $response_data = ['post_id' => $post_id, 'amount' => $amount];
     } elseif (!empty($_POST['all'])) {
       $memo = get_bloginfo('name');
-      $amount = $this->options['all_amount'];
+      $amount = $this->paywall_options['all_amount'];
       $response_data = ['all' => true, 'amount' => $amount];
     } else {
       return wp_send_json(['error' => 'invalid post'], 404);
@@ -326,8 +325,8 @@ class WP_LN_Paywall
         self::save_as_paid($post_id, $amount);
         wp_send_json($protected, 200);
       } elseif (!empty($jwt->{'all'})) {
-        self::save_paid_all($this->options['all_days']);
-        wp_send_json($this->options['all_confirmation'], 200);
+        self::save_paid_all($this->paywall_options['all_days']);
+        wp_send_json($this->paywall_options['all_confirmation'], 200);
       }
     } else {
       wp_send_json(['settled' => false], 402);
@@ -350,13 +349,13 @@ class WP_LN_Paywall
     }
 
     return [
-      'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->options['paywall_text'],
-      'button_text'  => array_key_exists('button', $ln_shortcode_data) ? $ln_shortcode_data['button'] : $this->options['button_text'],
-      'amount'       => array_key_exists('amount', $ln_shortcode_data) ? (int)$ln_shortcode_data['amount'] : (int)$this->options['amount'],
-      'total'        => array_key_exists('total', $ln_shortcode_data) ? (int)$ln_shortcode_data['total'] : (int)$this->options['total'],
-      'timeout'      => array_key_exists('timeout', $ln_shortcode_data) ? (int)$ln_shortcode_data['timeout'] : (int)$this->options['timeout'],
-      'timein'       => array_key_exists('timein', $ln_shortcode_data) ? (int)$ln_shortcode_data['timein'] : (int)$this->options['timein'],
-      'disable_in_rss' => array_key_exists('disable_in_rss', $ln_shortcode_data) ? true : $this->options['disable_paywall_in_rss'] ?? [],
+      'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->paywall_options['paywall_text'],
+      'button_text'  => array_key_exists('button', $ln_shortcode_data) ? $ln_shortcode_data['button'] : $this->paywall_options['button_text'],
+      'amount'       => array_key_exists('amount', $ln_shortcode_data) ? (int)$ln_shortcode_data['amount'] : (int)$this->paywall_options['amount'],
+      'total'        => array_key_exists('total', $ln_shortcode_data) ? (int)$ln_shortcode_data['total'] : (int)$this->paywall_options['total'],
+      'timeout'      => array_key_exists('timeout', $ln_shortcode_data) ? (int)$ln_shortcode_data['timeout'] : (int)$this->paywall_options['timeout'],
+      'timein'       => array_key_exists('timein', $ln_shortcode_data) ? (int)$ln_shortcode_data['timein'] : (int)$this->paywall_options['timein'],
+      'disable_in_rss' => array_key_exists('disable_in_rss', $ln_shortcode_data) ? true : $this->paywall_options['disable_paywall_in_rss'] ?? [],
     ];
   }
 
@@ -382,7 +381,7 @@ class WP_LN_Paywall
   function widget_init()
   {
     $has_paid = self::has_paid_for_all();
-    register_widget(new LnpWidget($has_paid, $this->options));
+    register_widget(new LnpWidget($has_paid, $this->paywall_options));
   }
 
   // endpoint idea from: https://webdevstudios.com/2015/07/09/creating-simple-json-endpoint-wordpress/
@@ -442,16 +441,6 @@ class WP_LN_Paywall
   public function admin_menu()
   {
     add_menu_page('Lighting Paywall Settings', 'Lighting Paywall', 'manage_options', 'lnp_settings');
-    foreach ($this->settingsPages as $page) {
-      $page->initPage();
-    }
-  }
-
-  public function admin_init()
-  {
-    foreach ($this->settingsPages as $page) {
-      $page->initFields();
-    }
   }
 }
 

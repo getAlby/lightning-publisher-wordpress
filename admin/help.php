@@ -2,25 +2,13 @@
 
 require_once 'SettingsPage.php';
 
-class HelpPage implements SettingsPage
+class HelpPage extends SettingsPage
 {
-    private $settings_path = 'lnp_settings_help';
+    protected $settings_path = 'lnp_settings_help';
+    protected $option_name = 'lnp_paywall';
 
-    public function __construct($plugin)
-    {
-        $this->plugin = $plugin;
-        $this->options = get_option('lnp');
-    }
-
-    public function initFields()
-    {
-        register_setting('lnp', $this->settings_path);
-    }
-
-    public function initPage()
-    {
-        add_submenu_page('lnp_settings', 'Lightning Paywall Help', 'Help', 'manage_options', 'lnp_help', array($this, 'renderer'));
-    }
+    protected $page_title = 'Lightning Paywall Help';
+    protected $menu_title = 'Help';
 
     public function renderer()
     {
