@@ -283,6 +283,7 @@ class WP_LN_Paywall
     ];
 
     $invoice = $this->getLightningClient()->addInvoice($invoice_params);
+    $this->database_handler->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
 
     $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
     $jwt = JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY);
@@ -319,6 +320,7 @@ class WP_LN_Paywall
     // TODO check amount?
     if ($invoice && $invoice['settled']) { // && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
       $post_id = $jwt->{'post_id'};
+      $this->database_handler->update_invoice_status($jwt->{'r_hash'});
       if (!empty($post_id)) {
         $content = get_post_field('post_content', $post_id);
         list($public, $protected) = self::splitPublicProtected($content);
@@ -332,7 +334,6 @@ class WP_LN_Paywall
       wp_send_json(['settled' => false], 402);
     }
   }
-
   protected static function extract_ln_shortcode($content)
   {
     if (!preg_match('/\[ln(.+)\]/i', $content, $m)) {

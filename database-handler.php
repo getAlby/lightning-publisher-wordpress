@@ -15,11 +15,11 @@ class DatabaseHandler
         $sql = "CREATE TABLE $this->table_name (
         id bigint(20) NOT NULL AUTO_INCREMENT,
         post_id bigint(20) NOT NULL,
-        payment_hash varchar(256) NOT NULL,
-        payment_request varchar(256) NOT NULL,
+        payment_hash text NOT NULL,
+        payment_request text NOT NULL,
         amount_in_satoshi int(10) DEFAULT 0.0 NOT NULL,
-        exchange_rate double(30, 20) DEFAULT 0.0 NOT NULL,
-        exchange_currency varchar(10) NOT NULL,
+        exchange_rate int(10) DEFAULT 0.0 NOT NULL,
+        exchange_currency varchar(10) DEFAULT NULL,
         created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
         settled_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
         state tinytext NOT NULL,
@@ -30,25 +30,50 @@ class DatabaseHandler
         dbDelta($sql);
     }
 
+    public function find()
+    {
+        $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->links WHERE link_id = %d", $link_id));
+    }
+
     public function store_invoice($post_id, $payment_hash, $payment_request, $amount, $currency, $exchange_rate)
     {
         global $wpdb;
+        // // TODO: implement get exchange rate functionality
+        try {
+            $wpdb->insert(
+                $this->table_name,
+                array(
+                    'post_id' => $post_id,
+                    'payment_hash' => $payment_hash,
+                    'payment_request' => $payment_request,
+                    'amount_in_satoshi' => $amount,
+                    'exchange_rate' => $exchange_rate,
+                    'exchange_currency' => $currency,
+                    'created_at' => current_time('mysql'),
+                    'settled_at' => current_time('mysql'),
+                    'state' => 'unpaid',
+                )
+            );
+        } catch (Exception $e) {
+        }
+    }
 
-        // TODO: implement get exchange rate functionality
 
-        $wpdb->insert(
-            $this->table_name,
-            array(
-                'post_id' => $post_id,
-                'payment_hash' => $payment_hash,
-                'payment_request' => $payment_request,
-                'amount_in_satoshi' => $amount,
-                'exchange_rate' => $exchange_rate,
-                'exchange_currency' => $currency,
-                'created_at' => current_time('mysql'),
-                'settled_at' => current_time('mysql'),
-                'state' => $state,
-            )
-        );
+    public function update_invoice_status($hash)
+    {
+        global $wpdb;
+        // // TODO: implement get exchange rate functionality
+        try {
+            $wpdb->update(
+                $this->table_name,
+                array(
+                    'state' => 'settled',
+                ),
+                array(
+                    'payment_hash' => $hash,
+                )
+            );
+        } catch (Exception $e) {
+        }
     }
 }
