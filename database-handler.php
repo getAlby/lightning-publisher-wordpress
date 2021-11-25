@@ -59,7 +59,6 @@ class DatabaseHandler
     public function update_invoice_state($hash, $state)
     {
         global $wpdb;
-        // // TODO: implement get exchange rate functionality
         try {
             $wpdb->update(
                 $this->table_name,
