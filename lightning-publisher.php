@@ -320,7 +320,7 @@ class WP_LN_Paywall
     // TODO check amount?
     if ($invoice && $invoice['settled']) { // && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
       $post_id = $jwt->{'post_id'};
-      $this->database_handler->update_invoice_status($jwt->{'r_hash'});
+      $this->database_handler->update_invoice_state($jwt->{'r_hash'}, 'settled');
       if (!empty($post_id)) {
         $content = get_post_field('post_content', $post_id);
         list($public, $protected) = self::splitPublicProtected($content);

@@ -15,7 +15,7 @@ class DatabaseHandler
         $sql = "CREATE TABLE $this->table_name (
         id bigint(20) NOT NULL AUTO_INCREMENT,
         post_id bigint(20) NOT NULL,
-        payment_hash text NOT NULL,
+        payment_hash varchar(256) NOT NULL,
         payment_request text NOT NULL,
         amount_in_satoshi int(10) DEFAULT 0.0 NOT NULL,
         exchange_rate int(10) DEFAULT 0.0 NOT NULL,
@@ -23,16 +23,13 @@ class DatabaseHandler
         created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
         settled_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
         state tinytext NOT NULL,
-        PRIMARY KEY  (id)
+        PRIMARY KEY  (id),
+        KEY post_id (post_id),
+        KEY payment_hash (payment_hash)
         ) $charset_collate;";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
-    }
-
-    public function find()
-    {
-        $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->links WHERE link_id = %d", $link_id));
     }
 
     public function store_invoice($post_id, $payment_hash, $payment_request, $amount, $currency, $exchange_rate)
@@ -59,7 +56,7 @@ class DatabaseHandler
     }
 
 
-    public function update_invoice_status($hash)
+    public function update_invoice_state($hash, $state)
     {
         global $wpdb;
         // // TODO: implement get exchange rate functionality
@@ -67,7 +64,7 @@ class DatabaseHandler
             $wpdb->update(
                 $this->table_name,
                 array(
-                    'state' => 'settled',
+                    'state' => $state,
                 ),
                 array(
                     'payment_hash' => $hash,
