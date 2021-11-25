@@ -14,12 +14,14 @@ window.addEventListener("DOMContentLoaded", function () {
               response.preimage || response.payment_preimage;
           })
           .catch(function (e) {
+            console.error(e);
+            showQRCode(invoice, options);
             stopWatchingForPayment();
           });
         return startWatchingForPayment(invoice);
       })
       .catch(function (err) {
-        console.log(err);
+        console.error(err);
         showQRCode(invoice, options);
         return startWatchingForPayment(invoice);
       });
