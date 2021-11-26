@@ -595,12 +595,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "9e3511bee5efa86e591fb27efb7a894571c7a244"
+                "reference": "c55d23ab371b472342bee943a8bdb9c3cf963a18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/9e3511bee5efa86e591fb27efb7a894571c7a244",
-                "reference": "9e3511bee5efa86e591fb27efb7a894571c7a244",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/c55d23ab371b472342bee943a8bdb9c3cf963a18",
+                "reference": "c55d23ab371b472342bee943a8bdb9c3cf963a18",
                 "shasum": ""
             },
             "require": {
@@ -703,7 +703,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-21T23:15:39+00:00"
+            "time": "2021-11-11T15:47:52+00:00"
         },
         {
             "name": "jorijn/bitcoin-bolt11",
@@ -894,12 +894,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "e342d31526520025ecca5f7eff4a388dffef52b1"
+                "reference": "20b9115efb0b6338ce96e4e118319cf99da52df4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/e342d31526520025ecca5f7eff4a388dffef52b1",
-                "reference": "e342d31526520025ecca5f7eff4a388dffef52b1",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/20b9115efb0b6338ce96e4e118319cf99da52df4",
+                "reference": "20b9115efb0b6338ce96e4e118319cf99da52df4",
                 "shasum": ""
             },
             "require": {
@@ -931,7 +931,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2021-09-05T22:03:57+00:00"
+            "time": "2021-11-26T04:11:29+00:00"
         },
         {
             "name": "octan/lnd-rest",
