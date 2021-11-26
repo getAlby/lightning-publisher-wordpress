@@ -4,11 +4,11 @@ require_once 'SettingsPage.php';
 
 class ConnectionPage extends SettingsPage
 {
-    protected $settings_path = 'lnp_settings';
+    protected $settings_path = 'lnp_settings_connections';
     protected $option_name = 'lnp_connection';
 
-    protected $page_title = 'Lighting Connection Settings';
-    protected $menu_title = 'Lightning Connection';
+    protected $page_title = 'Wallet Settings';
+    protected $menu_title = 'Wallet settings';
 
     public function init_fields()
     {
@@ -37,7 +37,7 @@ class ConnectionPage extends SettingsPage
 
 ?>
         <div class="wrap">
-            <h1>Lightning Connection Settings</h1>
+            <h1>Lightning Wallet Settings</h1>
             <div class="node-info">
                 <?php
                 try {

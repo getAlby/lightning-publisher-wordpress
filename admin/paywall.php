@@ -8,7 +8,7 @@ class PaywallPage extends SettingsPage
     protected $option_name = 'lnp_paywall';
 
     protected $page_title = 'Paywall Settings';
-    protected $menu_title = 'Paywall Settings';
+    protected $menu_title = 'Paywall settings';
 
     public function init_fields()
     {
