@@ -92,7 +92,7 @@ class WP_LN_Paywall
         $this->lightningClient->setTlsCertificatePath($certPath);
       }
     } elseif (!empty($this->connection_options['lnbits_apikey'])) {
-      $this->lightningClient = new LNbits\Client($this->connection_options['lnbits_apikey']);
+      $this->lightningClient = new LNbits\Client($this->connection_options['lnbits_apikey'], $this->connection_options['lnbits_host']);
     } elseif (!empty($this->connection_options['lnaddress_address'])) {
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setAddress($this->connection_options['lnaddress_address']);
