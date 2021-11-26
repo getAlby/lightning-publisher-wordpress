@@ -7,7 +7,7 @@ class HelpPage extends SettingsPage
     protected $settings_path = 'lnp_settings_help';
     protected $option_name = 'lnp_paywall';
 
-    protected $page_title = 'Lightning Paywall Help';
+    protected $page_title = 'Help';
     protected $menu_title = 'Help';
 
     public function renderer()
@@ -27,7 +27,7 @@ class HelpPage extends SettingsPage
                 <li>timein</li>
                 <li>timeout</li>
             </ul>
-            
+
         </div>
 <?php
     }

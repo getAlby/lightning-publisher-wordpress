@@ -7,8 +7,8 @@ class PaywallPage extends SettingsPage
     protected $settings_path = 'lnp_settings_paywall';
     protected $option_name = 'lnp_paywall';
 
-    protected $page_title = 'Lightning Paywall Settings';
-    protected $menu_title = 'Paywall';
+    protected $page_title = 'Paywall Settings';
+    protected $menu_title = 'Paywall Settings';
 
     public function init_fields()
     {
@@ -131,7 +131,7 @@ class PaywallPage extends SettingsPage
     {
         printf(
             '<input type="checkbox" name="%s" value="1" %s/><br><label>%s</label>',
-            $this->get_field_name('lnurl_rss'), 
+            $this->get_field_name('lnurl_rss'),
             empty($this->get_field_value('lnurl_rss')) ? '' : 'checked',
             'Add lightning payment details to RSS items'
         );

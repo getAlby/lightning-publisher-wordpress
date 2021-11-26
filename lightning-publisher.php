@@ -17,10 +17,10 @@ require_once 'vendor/autoload.php';
 require_once 'lightning_address.php';
 
 require_once 'LnpWidget.php';
-require_once 'admin/connections.php';
 require_once 'admin/paywall.php';
-require_once 'admin/help.php';
 require_once 'admin/balance.php';
+require_once 'admin/connections.php';
+require_once 'admin/help.php';
 require_once 'database-handler.php';
 
 use \tkijewski\lnurl;
@@ -57,9 +57,9 @@ class WP_LN_Paywall
     // admin
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
-    $connection_page = new ConnectionPage($this, 'lnp_settings');
     $paywall_page = new PaywallPage($this, 'lnp_settings');
     new BalancePage($this, 'lnp_settings');
+    $connection_page = new ConnectionPage($this, 'lnp_settings');
     new HelpPage($this, 'lnp_settings');
 
     // get page options

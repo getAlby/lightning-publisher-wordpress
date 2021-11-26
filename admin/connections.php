@@ -6,9 +6,9 @@ class ConnectionPage extends SettingsPage
 {
     protected $settings_path = 'lnp_settings';
     protected $option_name = 'lnp_connection';
-    
-    protected $page_title = 'Lighting Paywall Settings';
-    protected $menu_title = 'Connection';
+
+    protected $page_title = 'Lighting Connection Settings';
+    protected $menu_title = 'Lightning Connection';
 
     public function init_fields()
     {
@@ -20,20 +20,21 @@ class ConnectionPage extends SettingsPage
 
         add_settings_section('lnbits', 'LNbits Config', null, $this->settings_path);
         add_settings_field('lnbits_apikey', 'API Key', array($this, 'field_lnbits_apikey'), $this->settings_path, 'lnbits');
+        add_settings_field('lnbits_host', 'Host', array($this, 'field_lnbits_host'), $this->settings_path, 'lnbits');
 
         add_settings_section('lnaddress', 'Lightning Address Config', null, $this->settings_path);
         add_settings_field('lnaddress_address', 'Lightning Address', array($this, 'field_lnaddress_address'), $this->settings_path, 'lnaddress');
 
 
-        add_settings_section('lndhub', 'LNDHub Config', null, $this->settings_path);
-        add_settings_field('lndhub_url', 'Lndhub url', array($this, 'field_lndhub_url'), $this->settings_path, 'lndhub');
-        add_settings_field('lndhub_login', 'Lndhub Login', array($this, 'field_lndhub_login'), $this->settings_path, 'lndhub');
-        add_settings_field('lndhub_password', 'Lndhub Password', array($this, 'field_lndhub_password'), $this->settings_path, 'lndhub');
+        add_settings_section('lndhub', 'LndHub Config', null, $this->settings_path);
+        add_settings_field('lndhub_url', 'LndHub url', array($this, 'field_lndhub_url'), $this->settings_path, 'lndhub');
+        add_settings_field('lndhub_login', 'LndHub Login', array($this, 'field_lndhub_login'), $this->settings_path, 'lndhub');
+        add_settings_field('lndhub_password', 'LndHub Password', array($this, 'field_lndhub_password'), $this->settings_path, 'lndhub');
     }
 
     public function renderer()
     {
-        
+
 ?>
         <div class="wrap">
             <h1>Lightning Connection Settings</h1>
@@ -114,6 +115,15 @@ class ConnectionPage extends SettingsPage
             'LNbits Invoice/read key'
         );
     }
+    public function field_lnbits_host()
+    {
+        printf(
+            '<input type="text" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
+            $this->get_field_name('lnbits_host'),
+            $this->get_field_value('lnbits_host'),
+            'LNbits host (e.g. https://legend.lnbits.com)'
+        );
+    }
     public function field_lnaddress_address()
     {
         printf(
@@ -129,7 +139,7 @@ class ConnectionPage extends SettingsPage
             '<input type="text" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
             $this->get_field_name('lndhub_url'),
             $this->get_field_value('lndhub_url'),
-            'Lndhub Url'
+            'LndHub Host'
         );
     }
     public function field_lndhub_login()
@@ -138,7 +148,7 @@ class ConnectionPage extends SettingsPage
             '<input type="text" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
             $this->get_field_name('lndhub_login'),
             $this->get_field_value('lndhub_login'),
-            'Lndhub Login'
+            'LndHub Login'
         );
     }
     public function field_lndhub_password()
@@ -147,7 +157,7 @@ class ConnectionPage extends SettingsPage
             '<input type="password" name="%s" value="%s" autocomplete="off" /><br><label>%s</label>',
             $this->get_field_name('lndhub_password'),
             $this->get_field_value('lndhub_password'),
-            'Lndhub Password'
+            'LndHub Password'
         );
     }
 }
