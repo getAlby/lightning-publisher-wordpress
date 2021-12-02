@@ -59,7 +59,7 @@ class WP_LN_Paywall
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
     new LNP_Dashboard($this, 'lnp_settings');
-    new BalancePage($this, 'lnp_settings');
+    new BalancePage($this, 'lnp_settings', $this->database_handler);
     $paywall_page = new PaywallPage($this, 'lnp_settings');
     $connection_page = new ConnectionPage($this, 'lnp_settings');
     new HelpPage($this, 'lnp_settings');
