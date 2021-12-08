@@ -61,9 +61,10 @@ class TransactionsTable extends WP_List_Table
             'payment_hash'       => 'Payment Hash',
             'payment_request' => 'Payment Request',
             'amount'        => 'Amount In Satoshi',
-            'exchange_rate'    => 'Exchange Rate',
-            'exchange_currency' => 'Exchange Currency',
+            // 'exchange_rate'    => 'Exchange Rate',
+            // 'exchange_currency' => 'Exchange Currency',
             'state' => 'State',
+            'created_at'=> 'Created At',
             'settled_at' => 'Settled At'
         );
 
@@ -87,7 +88,7 @@ class TransactionsTable extends WP_List_Table
      */
     public function get_sortable_columns()
     {
-        return array('post' => array('post', false), 'state' => array('state', false), 'settled_at' => array('settled_at', false));
+        return array('post' => array('post', false), 'state' => array('state', false), 'created_at' => array('created_at', false), 'settled_at' => array('settled_at', false));
     }
 
     /**
@@ -110,9 +111,10 @@ class TransactionsTable extends WP_List_Table
                 'payment_hash'       => "<span title='$payment->payment_hash'>$payment_hash</span>",
                 'payment_request' => "<span title='$payment->payment_request'>$payment_request</span>",
                 'amount'        => $payment->amount_in_satoshi,
-                'exchange_rate'    => $payment->exchange_rate,
-                'exchange_currency' => $payment->exchange_currency,
+                // 'exchange_rate'    => $payment->exchange_rate,
+                // 'exchange_currency' => $payment->exchange_currency,
                 'state' => $payment->state,
+                'created_at' => $payment->created_at,
                 'settled_at' => $payment->settled_at
             );
         }
@@ -138,6 +140,7 @@ class TransactionsTable extends WP_List_Table
             case 'exchange_rate':
             case 'exchange_currency':
             case 'state':
+            case 'created_at':
             case 'settled_at':
                 return $item[$column_name];
 
@@ -159,8 +162,8 @@ class TransactionsTable extends WP_List_Table
     private function sort_data($a, $b)
     {
         // Set defaults
-        $orderby = 'post';
-        $order = 'asc';
+        $orderby = 'created_at';
+        $order = 'desc';
 
         // If orderby is set, use this as the sort column
         if (!empty($_GET['orderby'])) {
