@@ -59,14 +59,14 @@ class WP_LN_Paywall
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
     new LNP_Dashboard($this, 'lnp_settings');
-    new BalancePage($this, 'lnp_settings');
+    new BalancePage($this, 'lnp_settings', $this->database_handler);
     $paywall_page = new PaywallPage($this, 'lnp_settings');
     $connection_page = new ConnectionPage($this, 'lnp_settings');
     new HelpPage($this, 'lnp_settings');
 
     // get page options
     $this->connection_options = $connection_page->options;
-    $this->paywall_options = $paywall_page->options;
+    $this->paywall_options = $paywall_page->options ?  $paywall_page->options : [];
 
     add_action('widgets_init', array($this, 'widget_init'));
     // feed
@@ -347,18 +347,19 @@ class WP_LN_Paywall
   public function get_paywall_options_for($postId, $content)
   {
     $ln_shortcode_data = self::extract_ln_shortcode($content);
-    if (!$ln_shortcode_data) {
+    if (!$ln_shortcode_data && !is_array($ln_shortcode_data)) {
       return null;
     }
 
+
     return [
-      'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->paywall_options['paywall_text'],
-      'button_text'  => array_key_exists('button', $ln_shortcode_data) ? $ln_shortcode_data['button'] : $this->paywall_options['button_text'],
-      'amount'       => array_key_exists('amount', $ln_shortcode_data) ? (int)$ln_shortcode_data['amount'] : (int)$this->paywall_options['amount'],
-      'total'        => array_key_exists('total', $ln_shortcode_data) ? (int)$ln_shortcode_data['total'] : (int)$this->paywall_options['total'],
-      'timeout'      => array_key_exists('timeout', $ln_shortcode_data) ? (int)$ln_shortcode_data['timeout'] : (int)$this->paywall_options['timeout'],
-      'timein'       => array_key_exists('timein', $ln_shortcode_data) ? (int)$ln_shortcode_data['timein'] : (int)$this->paywall_options['timein'],
-      'disable_in_rss' => array_key_exists('disable_in_rss', $ln_shortcode_data) ? true : $this->paywall_options['disable_paywall_in_rss'] ?? [],
+      'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->paywall_options['paywall_text'] ?? null,
+      'button_text'  => array_key_exists('button', $ln_shortcode_data) ? $ln_shortcode_data['button'] : $this->paywall_options['button_text'] ?? null,
+      'amount'       => array_key_exists('amount', $ln_shortcode_data) ? (int)$ln_shortcode_data['amount'] : (int)($this->paywall_options['amount'] ?? null),
+      'total'        => array_key_exists('total', $ln_shortcode_data) ? (int)$ln_shortcode_data['total'] : (int)($this->paywall_options['total'] ?? null),
+      'timeout'      => array_key_exists('timeout', $ln_shortcode_data) ? (int)$ln_shortcode_data['timeout'] : (int)($this->paywall_options['timeout'] ?? null),
+      'timein'       => array_key_exists('timein', $ln_shortcode_data) ? (int)$ln_shortcode_data['timein'] : (int)($this->paywall_options['timein'] ?? null),
+      'disable_in_rss' => array_key_exists('disable_in_rss', $ln_shortcode_data) ? true : $this->paywall_options['disable_paywall_in_rss'] ?? [] ?? null,
     ];
   }
 

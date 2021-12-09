@@ -21,7 +21,7 @@ class DatabaseHandler
         exchange_rate int(10) DEFAULT 0 NOT NULL,
         exchange_currency varchar(10) DEFAULT NULL,
         created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        settled_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        settled_at datetime DEFAULT NULL,
         state tinytext NOT NULL,
         PRIMARY KEY  (id),
         KEY post_id (post_id),
@@ -47,7 +47,6 @@ class DatabaseHandler
                     'exchange_rate' => $exchange_rate,
                     'exchange_currency' => $currency,
                     'created_at' => current_time('mysql'),
-                    'settled_at' => current_time('mysql'),
                     'state' => 'unpaid',
                 )
             );
@@ -64,6 +63,7 @@ class DatabaseHandler
                 $this->table_name,
                 array(
                     'state' => $state,
+                    'settled_at' => current_time('mysql'),
                 ),
                 array(
                     'payment_hash' => $hash,
@@ -71,5 +71,11 @@ class DatabaseHandler
             );
         } catch (Exception $e) {
         }
+    }
+
+    public function get_payments()
+    {
+        global $wpdb;
+        return $wpdb->get_results("SELECT * FROM $this->table_name");
     }
 }
