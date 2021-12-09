@@ -34,7 +34,7 @@ class TransactionsTable extends WP_List_Table
         $data = $this->table_data();
         usort($data, array(&$this, 'sort_data'));
 
-        $perPage = 2;
+        $perPage = 25;
         $currentPage = $this->get_pagenum();
         $totalItems = count($data);
 
