@@ -73,9 +73,18 @@ class DatabaseHandler
         }
     }
 
-    public function get_payments()
+    public function get_payments($page, $items_per_page)
     {
         global $wpdb;
-        return $wpdb->get_results("SELECT * FROM $this->table_name");
+        $offset = ($page - 1) * $items_per_page;
+        $query = "SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
+        
+        return $wpdb->get_results($query);
+    }
+
+    public function total_payment_count()
+    {
+        global $wpdb;
+        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");
     }
 }

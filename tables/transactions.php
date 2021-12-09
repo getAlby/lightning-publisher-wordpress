@@ -31,12 +31,13 @@ class TransactionsTable extends WP_List_Table
         $hidden = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
 
-        $data = $this->table_data();
-        usort($data, array(&$this, 'sort_data'));
 
         $perPage = 25;
         $currentPage = $this->get_pagenum();
-        $totalItems = count($data);
+        $totalItems = $this->database_handler->total_payment_count();
+
+        $data = $this->table_data($currentPage, $perPage);
+        usort($data, array(&$this, 'sort_data'));
 
         $this->set_pagination_args(array(
             'total_items' => $totalItems,
@@ -64,7 +65,7 @@ class TransactionsTable extends WP_List_Table
             // 'exchange_rate'    => 'Exchange Rate',
             // 'exchange_currency' => 'Exchange Currency',
             'state' => 'State',
-            'created_at'=> 'Created At',
+            'created_at' => 'Created At',
             'settled_at' => 'Settled At'
         );
 
@@ -96,10 +97,10 @@ class TransactionsTable extends WP_List_Table
      *
      * @return Array
      */
-    private function table_data()
+    private function table_data($page, $perPage)
     {
         $data = array();
-        $payments = $this->database_handler->get_payments();
+        $payments = $this->database_handler->get_payments($page, $perPage);
         foreach ($payments as $payment) {
             $post = get_post($payment->post_id);
             $link = get_permalink($post);
