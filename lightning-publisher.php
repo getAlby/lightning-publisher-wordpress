@@ -55,6 +55,8 @@ class WP_LN_Paywall
     add_action('wp_ajax_lnp_check_payment_all', array($this, 'ajax_check_payment_all'));
     add_action('wp_ajax_nopriv_lnp_check_payment_all', array($this, 'ajax_check_payment_all'));
 
+    add_action('wp_ajax_create_lnp_hub_account', array($this, 'create_lnp_hub_account'));
+
     // admin
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
@@ -445,6 +447,11 @@ class WP_LN_Paywall
   public function admin_menu()
   {
     add_menu_page('Lighting Paywall', 'Lighting Paywall', 'manage_options', 'lnp_settings');
+  }
+
+  public function create_lnp_hub_account(){
+    $account = LNDHub\Client::createWallet('https://wallets.getalby.com', "bluewallet");
+    wp_send_json($account);
   }
 }
 
