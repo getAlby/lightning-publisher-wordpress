@@ -8,7 +8,7 @@
         "octan/lnd-rest": "dev-master",
         "octan/lnbits": "dev-master",
         "octan/lndhub": "dev-main",
-        "firebase/php-jwt": "dev-master",
+        "firebase/php-jwt": "dev-main",
         "tkijewski/php-lnurl": "dev-master",
         "jorijn/bitcoin-bolt11": "dev-master"
     },

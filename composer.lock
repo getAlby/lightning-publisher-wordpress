@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b0f7e4b7b8004a2c0c29ec8d018f5f1",
+    "content-hash": "de33604a240bb3f6c7eb5ad9d13242e6",
     "packages": [
         {
             "name": "bitwasp/bech32",
@@ -51,70 +51,6 @@
                 "source": "https://github.com/Bit-Wasp/bech32/tree/more-tests"
             },
             "time": "2018-02-05T22:23:47+00:00"
-        },
-        {
-            "name": "bitwasp/bitcoin",
-            "version": "1.0.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Bit-Wasp/bitcoin-php.git",
-                "reference": "670063be60655500a327d5d470d6eba0d77c6941"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Bit-Wasp/bitcoin-php/zipball/670063be60655500a327d5d470d6eba0d77c6941",
-                "reference": "670063be60655500a327d5d470d6eba0d77c6941",
-                "shasum": ""
-            },
-            "require": {
-                "bitwasp/bech32": "^0.0.1",
-                "bitwasp/buffertools": "^0.5.0",
-                "composer/semver": "^1.4.0|^3.2.0",
-                "lastguest/murmurhash": "v2.0.0",
-                "mdanter/ecc": "^0.5.0",
-                "php-64bit": ">=7.0",
-                "pleonasm/merkle-tree": "1.0.0"
-            },
-            "require-dev": {
-                "bitwasp/bitcoinconsensus": "v3.0.0",
-                "bitwasp/secp256k1-php": "^v0.2.0",
-                "ext-json": "*",
-                "nbobtc/bitcoind-php": "v2.0.2",
-                "phpunit/phpunit": "^5.4.0",
-                "squizlabs/php_codesniffer": "^2.0.0"
-            },
-            "suggest": {
-                "ext-bitcoinconsensus": "The bitcoinconsensus library for safest possible script verification",
-                "ext-secp256k1": "The secp256k1 library for fast and safe elliptic curve operations"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "BitWasp\\Bitcoin\\": "src/"
-                },
-                "files": [
-                    "src/Script/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Unlicense"
-            ],
-            "authors": [
-                {
-                    "name": "Thomas Kerin",
-                    "homepage": "https://thomaskerin.io",
-                    "role": "Author"
-                }
-            ],
-            "description": "PHP Bitcoin library with functions for transactions, signatures, serialization, Random/Deterministic ECDSA keys, blocks, RPC bindings",
-            "homepage": "https://github.com/bit-wasp/bitcoin-php",
-            "support": {
-                "issues": "https://github.com/Bit-Wasp/bitcoin-php/issues",
-                "source": "https://github.com/Bit-Wasp/bitcoin-php/tree/1.0"
-            },
-            "time": "2021-01-16T21:13:16+00:00"
         },
         {
             "name": "bitwasp/buffertools",
@@ -248,24 +184,24 @@
         },
         {
             "name": "fgrosse/phpasn1",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fgrosse/PHPASN1.git",
-                "reference": "20299033c35f4300eb656e7e8e88cf52d1d6694e"
+                "reference": "eef488991d53e58e60c9554b09b1201ca5ba9296"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fgrosse/PHPASN1/zipball/20299033c35f4300eb656e7e8e88cf52d1d6694e",
-                "reference": "20299033c35f4300eb656e7e8e88cf52d1d6694e",
+                "url": "https://api.github.com/repos/fgrosse/PHPASN1/zipball/eef488991d53e58e60c9554b09b1201ca5ba9296",
+                "reference": "eef488991d53e58e60c9554b09b1201ca5ba9296",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.0"
+                "php": "~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~6.3",
-                "satooshi/php-coveralls": "~2.0"
+                "php-coveralls/php-coveralls": "~2.0",
+                "phpunit/phpunit": "^6.3 || ^7.0 || ^8.0"
             },
             "suggest": {
                 "ext-bcmath": "BCmath is the fallback extension for big integer calculations",
@@ -317,22 +253,22 @@
             ],
             "support": {
                 "issues": "https://github.com/fgrosse/PHPASN1/issues",
-                "source": "https://github.com/fgrosse/PHPASN1/tree/v2.3.0"
+                "source": "https://github.com/fgrosse/PHPASN1/tree/v2.4.0"
             },
-            "time": "2021-04-24T19:01:55+00:00"
+            "time": "2021-12-11T12:41:06+00:00"
         },
         {
             "name": "firebase/php-jwt",
-            "version": "dev-master",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "83b609028194aa042ea33b5af2d41a7427de80e6"
+                "reference": "fbe639489d3348ff6e6d91f80b15198b39dc9217"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/83b609028194aa042ea33b5af2d41a7427de80e6",
-                "reference": "83b609028194aa042ea33b5af2d41a7427de80e6",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fbe639489d3348ff6e6d91f80b15198b39dc9217",
+                "reference": "fbe639489d3348ff6e6d91f80b15198b39dc9217",
                 "shasum": ""
             },
             "require": {
@@ -375,9 +311,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v5.5.1"
+                "source": "https://github.com/firebase/php-jwt/tree/main"
             },
-            "time": "2021-11-08T20:18:51+00:00"
+            "time": "2021-12-01T22:06:59+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -385,12 +321,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "868b3571a039f0ebc11ac8f344f4080babe2cb94"
+                "reference": "c1fd316f0a0f3325ed1e7cdbe61030418b868f9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/868b3571a039f0ebc11ac8f344f4080babe2cb94",
-                "reference": "868b3571a039f0ebc11ac8f344f4080babe2cb94",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c1fd316f0a0f3325ed1e7cdbe61030418b868f9f",
+                "reference": "c1fd316f0a0f3325ed1e7cdbe61030418b868f9f",
                 "shasum": ""
             },
             "require": {
@@ -399,7 +335,7 @@
                 "guzzlehttp/psr7": "^1.8.3 || ^2.1",
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-client": "^1.0",
-                "symfony/deprecation-contracts": "^2.2"
+                "symfony/deprecation-contracts": "^2.2 || ^3.0"
             },
             "provide": {
                 "psr/http-client-implementation": "1.0"
@@ -486,7 +422,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.4.0"
+                "source": "https://github.com/guzzle/guzzle/tree/master"
             },
             "funding": [
                 {
@@ -502,7 +438,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-18T09:52:00+00:00"
+            "time": "2021-12-13T16:13:08+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -595,12 +531,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "c55d23ab371b472342bee943a8bdb9c3cf963a18"
+                "reference": "085fb093e038ab0c4f11da732e89cdd47d7586b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/c55d23ab371b472342bee943a8bdb9c3cf963a18",
-                "reference": "c55d23ab371b472342bee943a8bdb9c3cf963a18",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/085fb093e038ab0c4f11da732e89cdd47d7586b0",
+                "reference": "085fb093e038ab0c4f11da732e89cdd47d7586b0",
                 "shasum": ""
             },
             "require": {
@@ -703,7 +639,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-11T15:47:52+00:00"
+            "time": "2021-12-13T16:16:06+00:00"
         },
         {
             "name": "jorijn/bitcoin-bolt11",
@@ -711,20 +647,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jorijn/bitcoin-bolt11.git",
-                "reference": "f34a712369348cbfce4d56046a9a64f613164622"
+                "reference": "65b0ff56d6b6ca2c05a3d4597c9468f6bb2c6f55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jorijn/bitcoin-bolt11/zipball/f34a712369348cbfce4d56046a9a64f613164622",
-                "reference": "f34a712369348cbfce4d56046a9a64f613164622",
+                "url": "https://api.github.com/repos/Jorijn/bitcoin-bolt11/zipball/65b0ff56d6b6ca2c05a3d4597c9468f6bb2c6f55",
+                "reference": "65b0ff56d6b6ca2c05a3d4597c9468f6bb2c6f55",
                 "shasum": ""
             },
             "require": {
                 "bitwasp/bech32": "^0.0.1",
-                "bitwasp/bitcoin": "^1.0",
                 "ext-bcmath": "*",
                 "ext-gmp": "*",
-                "php": "^7.3"
+                "php": "^7.3|^8.0",
+                "protonlabs/bitcoin": "1.0.x-dev"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.17",
@@ -757,30 +693,30 @@
             ],
             "support": {
                 "issues": "https://github.com/Jorijn/bitcoin-bolt11/issues",
-                "source": "https://github.com/Jorijn/bitcoin-bolt11/tree/master"
+                "source": "https://github.com/Jorijn/bitcoin-bolt11/tree/v0.2.0"
             },
-            "time": "2021-02-06T08:39:11+00:00"
+            "time": "2021-12-07T11:15:47+00:00"
         },
         {
             "name": "lastguest/murmurhash",
-            "version": "2.0.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lastguest/murmurhash-php.git",
-                "reference": "4fb7516f67e695e5d7fa129d1bbb925ec0ebe408"
+                "reference": "0150ba26fb7025d1f936983a167cdc74149f87c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lastguest/murmurhash-php/zipball/4fb7516f67e695e5d7fa129d1bbb925ec0ebe408",
-                "reference": "4fb7516f67e695e5d7fa129d1bbb925ec0ebe408",
+                "url": "https://api.github.com/repos/lastguest/murmurhash-php/zipball/0150ba26fb7025d1f936983a167cdc74149f87c8",
+                "reference": "0150ba26fb7025d1f936983a167cdc74149f87c8",
                 "shasum": ""
             },
             "require": {
-                "php": "^7"
+                "php": "^7||^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.6.3",
-                "phpunit/phpunit": "^5"
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^7||^9"
             },
             "type": "library",
             "autoload": {
@@ -808,31 +744,31 @@
             ],
             "support": {
                 "issues": "https://github.com/lastguest/murmurhash-php/issues",
-                "source": "https://github.com/lastguest/murmurhash-php/tree/master"
+                "source": "https://github.com/lastguest/murmurhash-php/tree/2.1.1"
             },
-            "time": "2017-10-10T15:16:12+00:00"
+            "time": "2021-04-13T16:23:45+00:00"
         },
         {
             "name": "mdanter/ecc",
-            "version": "0.5.x-dev",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpecc/phpecc.git",
-                "reference": "b95f25cc1bacc83a9f0ccd375900b7cfd343029e"
+                "reference": "34e2eec096bf3dcda814e8f66dd91ae87a2db7cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpecc/phpecc/zipball/b95f25cc1bacc83a9f0ccd375900b7cfd343029e",
-                "reference": "b95f25cc1bacc83a9f0ccd375900b7cfd343029e",
+                "url": "https://api.github.com/repos/phpecc/phpecc/zipball/34e2eec096bf3dcda814e8f66dd91ae87a2db7cd",
+                "reference": "34e2eec096bf3dcda814e8f66dd91ae87a2db7cd",
                 "shasum": ""
             },
             "require": {
                 "ext-gmp": "*",
                 "fgrosse/phpasn1": "^2.0",
-                "php": "^7.0"
+                "php": "^7.0||^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.0",
+                "phpunit/phpunit": "^6.0||^8.0||^9.0",
                 "squizlabs/php_codesniffer": "^2.0",
                 "symfony/yaml": "^2.6|^3.0"
             },
@@ -884,9 +820,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpecc/phpecc/issues",
-                "source": "https://github.com/phpecc/phpecc/tree/v0.5.2"
+                "source": "https://github.com/phpecc/phpecc/tree/v1.0.0"
             },
-            "time": "2018-12-03T18:17:01+00:00"
+            "time": "2021-01-16T19:42:14+00:00"
         },
         {
             "name": "octan/lnbits",
@@ -984,12 +920,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lndhub-php.git",
-                "reference": "e43a108f20018d6c0d125c2a9d109acd2b192b37"
+                "reference": "085380aab628cd51bdd056091cf544b85e8b61ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/e43a108f20018d6c0d125c2a9d109acd2b192b37",
-                "reference": "e43a108f20018d6c0d125c2a9d109acd2b192b37",
+                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/085380aab628cd51bdd056091cf544b85e8b61ce",
+                "reference": "085380aab628cd51bdd056091cf544b85e8b61ce",
                 "shasum": ""
             },
             "require": {
@@ -1024,29 +960,28 @@
                 "source": "https://github.com/bumi/lndhub-php/tree/main",
                 "issues": "https://github.com/bumi/lndhub-php/issues"
             },
-            "time": "2021-11-08T23:06:54+00:00"
+            "time": "2021-12-10T21:38:19+00:00"
         },
         {
             "name": "pleonasm/merkle-tree",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pleonasm/merkle-tree.git",
-                "reference": "9ddc9d0a0e396750fada378f3aa90f6c02dd56a1"
+                "reference": "6abdf5aacd79b6d502f944c96edd1a896ef6039b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pleonasm/merkle-tree/zipball/9ddc9d0a0e396750fada378f3aa90f6c02dd56a1",
-                "reference": "9ddc9d0a0e396750fada378f3aa90f6c02dd56a1",
+                "url": "https://api.github.com/repos/pleonasm/merkle-tree/zipball/6abdf5aacd79b6d502f944c96edd1a896ef6039b",
+                "reference": "6abdf5aacd79b6d502f944c96edd1a896ef6039b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "ext-xdebug": ">=2.2.0",
-                "phpunit/php-invoker": ">=1.0.0,<1.2.0",
-                "phpunit/phpunit": "3.7.19",
+                "phpunit/php-invoker": "*",
+                "phpunit/phpunit": "^5.7",
                 "satooshi/php-coveralls": "*@dev",
                 "squizlabs/php_codesniffer": "*"
             },
@@ -1062,7 +997,7 @@
             ],
             "authors": [
                 {
-                    "name": "Matthew Nagi",
+                    "name": "Matt Nagi",
                     "email": "matthew.nagi@base-2.net"
                 }
             ],
@@ -1071,7 +1006,70 @@
                 "issues": "https://github.com/pleonasm/merkle-tree/issues",
                 "source": "https://github.com/pleonasm/merkle-tree/tree/master"
             },
-            "time": "2013-05-22T20:46:20+00:00"
+            "time": "2017-02-10T15:26:01+00:00"
+        },
+        {
+            "name": "protonlabs/bitcoin",
+            "version": "1.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ProtonMail/bitcoin-php.git",
+                "reference": "eec844967e5a0d3b4c108d8a6ad0ad9594f9bb50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ProtonMail/bitcoin-php/zipball/eec844967e5a0d3b4c108d8a6ad0ad9594f9bb50",
+                "reference": "eec844967e5a0d3b4c108d8a6ad0ad9594f9bb50",
+                "shasum": ""
+            },
+            "require": {
+                "bitwasp/bech32": "^0.0.1",
+                "bitwasp/buffertools": "^0.5.0",
+                "composer/semver": "^1.4.0|^3.2.0",
+                "lastguest/murmurhash": "^v2.0.0",
+                "mdanter/ecc": "^0.5.0|^1.0.0",
+                "php-64bit": ">=7.0",
+                "pleonasm/merkle-tree": "~1.0.0"
+            },
+            "require-dev": {
+                "bitwasp/bitcoinconsensus": "v3.0.0",
+                "bitwasp/secp256k1-php": "^v0.2.0",
+                "ext-json": "*",
+                "nbobtc/bitcoind-php": "v2.0.2",
+                "phpunit/phpunit": "^5.4.0",
+                "squizlabs/php_codesniffer": "^2.0.0"
+            },
+            "suggest": {
+                "ext-bitcoinconsensus": "The bitcoinconsensus library for safest possible script verification",
+                "ext-secp256k1": "The secp256k1 library for fast and safe elliptic curve operations"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BitWasp\\Bitcoin\\": "src/"
+                },
+                "files": [
+                    "src/Script/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Kerin",
+                    "homepage": "https://thomaskerin.io",
+                    "role": "Author"
+                }
+            ],
+            "description": "PHP Bitcoin library with functions for transactions, signatures, serialization, Random/Deterministic ECDSA keys, blocks, RPC bindings",
+            "homepage": "https://github.com/bit-wasp/bitcoin-php",
+            "support": {
+                "source": "https://github.com/ProtonMail/bitcoin-php/tree/1.0"
+            },
+            "time": "2021-09-20T17:01:50+00:00"
         },
         {
             "name": "psr/http-client",
