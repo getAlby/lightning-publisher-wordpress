@@ -70,6 +70,8 @@ class ConnectionPage extends SettingsPage
                             document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
                         });
 
+                        if (!document.getElementById('lndhub_create_account')) return;
+                        
                         document.getElementById('lndhub_create_account').addEventListener('click', function(e) {
                             e.preventDefault();
                             const button = e.target;
