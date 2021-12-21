@@ -30,7 +30,9 @@ class ConnectionPage extends SettingsPage
         add_settings_field('lndhub_url', 'LndHub Url', array($this, 'field_lndhub_url'), $this->settings_path, 'lndhub');
         add_settings_field('lndhub_login', 'LndHub Login', array($this, 'field_lndhub_login'), $this->settings_path, 'lndhub');
         add_settings_field('lndhub_password', 'LndHub Password', array($this, 'field_lndhub_password'), $this->settings_path, 'lndhub');
-        add_settings_field('lndhub_generate', "Don't have a wallet ?", array($this, 'field_lndhub_generate'), $this->settings_path, 'lndhub');
+        if (!$this->plugin->getLightningClient() || !$this->plugin->getLightningClient()->isConnectionValid()) {
+            add_settings_field('lndhub_generate', "Don't have a wallet ?", array($this, 'field_lndhub_generate'), $this->settings_path, 'lndhub');
+        }
     }
 
     public function renderer()
@@ -69,6 +71,7 @@ class ConnectionPage extends SettingsPage
                         });
 
                         document.getElementById('lndhub_create_account').addEventListener('click', function(e) {
+                            e.preventDefault();
                             const button = e.target;
                             button.innerHTML = "Generating.....";
                             button.disabled = true;
@@ -84,14 +87,12 @@ class ConnectionPage extends SettingsPage
                                 .then((response) => response.json())
                                 .then((response) => {
                                     console.log(response);
-                                    document.getElementById('lndhub_url').innerHTML = response.url;
-                                    document.getElementById('lndhub_login').innerHTML = response.login;
-                                    document.getElementById('lndhub_password').innerHTML = response.password;
+                                    document.getElementById('lndhub_url').value = response.url;
+                                    document.getElementById('lndhub_login').value = response.login;
+                                    document.getElementById('lndhub_password').value = response.password;
                                     button.innerHTML = "Generated";
-                                    // button.disabled = false;
-                                    // .submit();
-                                    document.getElementById("wallet_settings_form").dispatchEvent(new Event('submit'));
-                                })
+                                    document.getElementById("submit").click();
+                                }).catch((e) => console.error(e))
                         });
                     });
                 </script>

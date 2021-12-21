@@ -449,8 +449,9 @@ class WP_LN_Paywall
     add_menu_page('Lighting Paywall', 'Lighting Paywall', 'manage_options', 'lnp_settings');
   }
 
-  public function create_lnp_hub_account(){
-    $account = LNDHub\Client::createWallet('https://wallets.getalby.com', "bluewallet");
+  public function create_lnp_hub_account()
+  {
+    $account = LNDHub\Client::createWallet("https://wallets.getalby.com", "bluewallet");
     wp_send_json($account);
   }
 }
