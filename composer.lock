@@ -312,17 +312,18 @@
             "time": "2021-12-11T12:41:06+00:00"
         },
         {
+           
             "name": "firebase/php-jwt",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816"
+                "reference": "fbe639489d3348ff6e6d91f80b15198b39dc9217"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/edda0f9ee45b8367699804f792a9be6d5175e816",
-                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fbe639489d3348ff6e6d91f80b15198b39dc9217",
+                "reference": "fbe639489d3348ff6e6d91f80b15198b39dc9217",
                 "shasum": ""
             },
             "require": {
@@ -367,7 +368,7 @@
                 "issues": "https://github.com/firebase/php-jwt/issues",
                 "source": "https://github.com/firebase/php-jwt/tree/main"
             },
-            "time": "2021-12-30T19:00:10+00:00"
+            "time": "2021-12-01T22:06:59+00:00"
         },
         {
             "name": "graham-campbell/result-type",

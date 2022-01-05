@@ -102,7 +102,7 @@ class WP_LN_Paywall
       $this->lightningClient->setAddress($this->connection_options['lnaddress_address']);
     } elseif (!empty($this->connection_options['btcpay_host'])) {
       $this->lightningClient = new BTCPay\Client($this->connection_options['btcpay_host'], $this->connection_options['btcpay_apikey'], $this->connection_options['btcpay_store_id']);
-      $this->lightningClient->init(); 
+      $this->lightningClient->init();
     } elseif (!empty($this->connection_options['lnaddress_lnurl'])) {
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setLnurl($this->connection_options['lnaddress_lnurl']);
@@ -293,7 +293,7 @@ class WP_LN_Paywall
     $this->database_handler->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
 
     $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
-    $jwt = JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY);
+    $jwt = JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  'HS256');
 
     $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
     //wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'amount' => $paywall_options['amount'], 'payment_request' => $invoice['payment_request']]);
