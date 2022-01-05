@@ -8,6 +8,7 @@
         "octan/lnd-rest": "dev-master",
         "octan/lnbits": "dev-master",
         "octan/lndhub": "dev-main",
+        "octan/btcpay": "dev-main",
         "firebase/php-jwt": "dev-main",
         "tkijewski/php-lnurl": "dev-master",
         "jorijn/bitcoin-bolt11": "dev-master"
@@ -15,6 +16,7 @@
     "repositories": [
       { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" },
       { "type": "vcs", "url": "https://github.com/bumi/lnbits-php" },
-      { "type": "vcs", "url": "https://github.com/bumi/lndhub-php" }
+      { "type": "vcs", "url": "https://github.com/bumi/lndhub-php" },
+      { "type": "vcs", "url": "https://github.com/octangroup/btcpay-php" }
     ]
 }

@@ -100,6 +100,9 @@ class WP_LN_Paywall
     } elseif (!empty($this->connection_options['lnaddress_address'])) {
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setAddress($this->connection_options['lnaddress_address']);
+    } elseif (!empty($this->connection_options['btcpay_host'])) {
+      $this->lightningClient = new BTCPay\Client($this->connection_options['btcpay_host'], $this->connection_options['btcpay_apikey'], $this->connection_options['btcpay_store_id']);
+      $this->lightningClient->init(); 
     } elseif (!empty($this->connection_options['lnaddress_lnurl'])) {
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setLnurl($this->connection_options['lnaddress_lnurl']);
