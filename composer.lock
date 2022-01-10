@@ -312,18 +312,17 @@
             "time": "2021-12-11T12:41:06+00:00"
         },
         {
-           
             "name": "firebase/php-jwt",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "fbe639489d3348ff6e6d91f80b15198b39dc9217"
+                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fbe639489d3348ff6e6d91f80b15198b39dc9217",
-                "reference": "fbe639489d3348ff6e6d91f80b15198b39dc9217",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/edda0f9ee45b8367699804f792a9be6d5175e816",
+                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816",
                 "shasum": ""
             },
             "require": {
@@ -368,7 +367,7 @@
                 "issues": "https://github.com/firebase/php-jwt/issues",
                 "source": "https://github.com/firebase/php-jwt/tree/main"
             },
-            "time": "2021-12-01T22:06:59+00:00"
+            "time": "2021-12-30T19:00:10+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -948,12 +947,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/octangroup/btcpay-php.git",
-                "reference": "b4f9b9533a1941b2599161323b7bf045ce05e5e1"
+                "reference": "d34be3809002e306e079ebf755698ca7d2f96ac4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/octangroup/btcpay-php/zipball/b4f9b9533a1941b2599161323b7bf045ce05e5e1",
-                "reference": "b4f9b9533a1941b2599161323b7bf045ce05e5e1",
+                "url": "https://api.github.com/repos/octangroup/btcpay-php/zipball/d34be3809002e306e079ebf755698ca7d2f96ac4",
+                "reference": "d34be3809002e306e079ebf755698ca7d2f96ac4",
                 "shasum": ""
             },
             "require": {
@@ -990,7 +989,7 @@
                 "source": "https://github.com/octangroup/btcpay-php/tree/main",
                 "issues": "https://github.com/octangroup/btcpay-php/issues"
             },
-            "time": "2022-01-05T17:38:18+00:00"
+            "time": "2022-01-10T17:26:46+00:00"
         },
         {
             "name": "octan/lnbits",
