@@ -13,20 +13,27 @@ class HelpPage extends SettingsPage
     public function renderer()
     {
 ?>
-<div class="wrap">
+        <div class="wrap">
             <h1>Lightning Paywall Help</h1>
         </div>
         <div class="wrap">
-        <h3>Shortcodes</h3>
+            <h3>Shortcodes</h3>
             <p>
                 To configure each article the following shortcode attributes are available:
             </p>
-            <ul>
-                <li>amount</li>
-                <li>total</li>
-                <li>timein</li>
-                <li>timeout</li>
-            </ul>
+            <blockquote>
+                <ul>
+                    <li>amount</li>
+                    <li>total</li>
+                    <li>timein</li>
+                    <li>timeout</li>
+                </ul>
+            </blockquote>
+
+            <h3>Usage</h3>
+            <blockquote>
+                <p>[lnd-SHORT_CODE] eg: [lnd-amount]</p>
+            </blockquote>
 
         </div>
 <?php

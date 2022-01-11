@@ -56,4 +56,42 @@ abstract class SettingsPage
         if (!isset($this->options[$name])) return '';
         return  esc_attr($this->options[$name]);
     }
+
+    protected function input_field($name, $label, $type = 'text', $autocomplete = false)
+    {
+        printf(
+            '<input id="%s" type="%s" autocomplete="%s" name="%s" value="%s"  /><br><label>%s</label>',
+            $name,
+            $type,
+            $autocomplete ? 'on' : 'off',
+            $this->get_field_name($name),
+            $this->get_field_value($name),
+            $label
+        );
+    }
+
+    public function create_input_field($args = [])
+    {
+        $this->input_field($args['key'], $args['label'], $args['type'] ?? 'text', $args['autocomplete'] ?? false);
+    }
+
+    protected function add_section($data = [])
+    {
+        add_settings_section($data['key'], $data['title'], null, $this->settings_path);
+    }
+
+    protected function add_input_field($data = [])
+    {
+        add_settings_field($data['key'], $data['name'], array($this, 'create_input_field'), $this->settings_path, $data['section'], $data);
+    }
+
+    protected function add_custom_field($data = [], $callback, $args = [])
+    {
+        add_settings_field($data['key'], $data['name'], $callback, $this->settings_path, $data['section'], $args);
+    }
+
+    protected function add_custom_input_field($data = [], $callback)
+    {
+        add_settings_field($data['key'], $data['name'], $callback, $this->settings_path, $data['section'], $data);
+    }
 }
