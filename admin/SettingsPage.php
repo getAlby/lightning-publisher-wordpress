@@ -89,4 +89,9 @@ abstract class SettingsPage
     {
         add_settings_field($data['key'], $data['name'], $callback, $this->settings_path, $data['section'], $args);
     }
+
+    protected function add_custom_input_field($data = [], $callback)
+    {
+        add_settings_field($data['key'], $data['name'], $callback, $this->settings_path, $data['section'], $data);
+    }
 }

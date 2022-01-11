@@ -947,12 +947,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/octangroup/btcpay-php.git",
-                "reference": "d34be3809002e306e079ebf755698ca7d2f96ac4"
+                "reference": "10b5252c9049bc73c1c11cf5dd3bcd698a0ec0b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/octangroup/btcpay-php/zipball/d34be3809002e306e079ebf755698ca7d2f96ac4",
-                "reference": "d34be3809002e306e079ebf755698ca7d2f96ac4",
+                "url": "https://api.github.com/repos/octangroup/btcpay-php/zipball/10b5252c9049bc73c1c11cf5dd3bcd698a0ec0b8",
+                "reference": "10b5252c9049bc73c1c11cf5dd3bcd698a0ec0b8",
                 "shasum": ""
             },
             "require": {
@@ -989,7 +989,7 @@
                 "source": "https://github.com/octangroup/btcpay-php/tree/main",
                 "issues": "https://github.com/octangroup/btcpay-php/issues"
             },
-            "time": "2022-01-10T17:26:46+00:00"
+            "time": "2022-01-11T15:27:47+00:00"
         },
         {
             "name": "octan/lnbits",

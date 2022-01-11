@@ -23,6 +23,24 @@ class ConnectionPage extends SettingsPage
         $this->lnaddress_section();
 
         $this->lndhub_section();
+
+        $this->navigation();
+    }
+
+
+    public function navigation()
+    {
+        $section = 'connection-types';
+        $this->add_section([
+            'key' => $section,
+            'title' => ''
+        ]);
+
+        $this->add_custom_field([
+            'key' => 'connection_type_lnd',
+            'name' => null,
+            'section' => $section
+        ], array($this, 'field_connection_types'));
     }
 
     public function lnd_section()
@@ -176,6 +194,8 @@ class ConnectionPage extends SettingsPage
     }
 
 
+
+
     public function field_lndhub_generate()
     {
         printf(
@@ -184,6 +204,108 @@ class ConnectionPage extends SettingsPage
         );
     }
 
+    public function field_connection_types()
+    {
+        echo '<div class="wp-lnp-card__container">';
+        $this->connection_card('lnd', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/lnd.png', 'Lnd', 'Connect using lndhub');
+        $this->connection_card('btcpay', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/lndhub.png', 'LndHub (BlueWallet)', 'Connect using lndhub');
+        $this->connection_card('lnbits', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/lnbits.png', 'LNbits', 'Connect to your LNbits account');
+        $this->connection_card('lnaddress', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/satsymbol-black.png', 'Lightning Address Config', 'Connect using Lightning Address Config');
+        $this->connection_card('lndhub', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/alby.png', 'Create a new wallet', 'We create and manage a lightning wallet for you');
+        echo '</div>';
+    }
+
+
+    public function connection_card($id, $image, $title, $subtitle)
+    {
+        printf(
+            '<div data-section="%s" class="wp-lnp-card">
+                <div class="wp-lnp-card__header">
+                    <img src="%s" class="wp-lnp-card__image" />
+                </div>
+                <div class="wp-lnp-card__body">
+                    <h4 class="wp-lnp-card__title">%s</h4>
+                    <p class="wp-lnp-card__text">%s</p>
+                </div>
+            </div>',
+            $id,
+            $image,
+            $title,
+            $subtitle
+        );
+    }
+
+    public function get_section_class($section, $iterator)
+    {
+        if ($section['id'] === 'connection-types') {
+            return '';
+        }
+        if ($this->plugin->lightningClientType) {
+            return $this->plugin->lightningClientType !==  $section['id'] ? 'wp-lnp-section__hidden' : '';
+        }
+        return $iterator > 0 ? 'wp-lnp-section__hidden' : '';
+    }
+
+    function do_settings_sections($page)
+    {
+        global $wp_settings_sections, $wp_settings_fields;
+
+        if (!isset($wp_settings_sections[$page])) {
+            return;
+        }
+
+        $i = 0;
+        echo $this->plugin->lightningClientType;
+
+        foreach ((array) $wp_settings_sections[$page] as $section) {
+            $class = $this->get_section_class($section, $i);
+
+            echo "<div id='{$section['id']}' class='wp-lnp-section {$class}'>";
+
+            if ($section['title']) {
+                echo "<h2>{$section['title']}</h2>\n";
+            }
+
+            if ($section['callback']) {
+                call_user_func($section['callback'], $section);
+            }
+
+            if (!isset($wp_settings_fields) || !isset($wp_settings_fields[$page]) || !isset($wp_settings_fields[$page][$section['id']])) {
+                continue;
+            }
+
+            if ($section['id'] === 'connection-types') {
+                echo '<div>';
+                $this->do_settings_fields($page, $section['id']);
+                echo '</div>';
+            } else {
+                echo '<table class="form-table" role="presentation">';
+                do_settings_fields($page, $section['id']);
+                echo '</table>';
+            }
+
+
+            echo '</div>';
+            $i++;
+        }
+    }
+
+    public function do_settings_fields($page, $section)
+    {
+        global $wp_settings_fields;
+
+        if (!isset($wp_settings_fields[$page][$section])) {
+            return;
+        }
+
+        foreach ((array) $wp_settings_fields[$page][$section] as $field) {
+            call_user_func($field['callback'], $field['args']);
+        }
+    }
+
+    public function get_active_section()
+    {
+    }
 
     public function renderer()
     {
@@ -194,7 +316,7 @@ class ConnectionPage extends SettingsPage
             <div class="node-info">
                 <?php
                 try {
-                    
+
                     if ($this->plugin->getLightningClient() && $this->plugin->getLightningClient()->isConnectionValid()) {
                         $node_info = $this->plugin->getLightningClient()->getInfo();
                         echo "Connected to: " . $node_info['alias'] . ' - ' . $node_info['identity_pubkey'];
@@ -220,6 +342,20 @@ class ConnectionPage extends SettingsPage
                             document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
                             document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
                         });
+                        const list = document.querySelectorAll('.wp-lnp-card');
+                        const sections = document.querySelectorAll('.wp-lnp-section');
+                        list.forEach(el => el.addEventListener('click', e => {
+                            e.preventDefault();
+                            const current = el.attributes['data-section'].value;
+                            sections.forEach(section => {
+                                console.log(section.id);
+                                if (section.id !== 'connection-types' && current !== section.id) {
+                                    return section.style.display = 'none';
+                                }
+                                console.log(section.id);
+                                return section.style.display = 'block';
+                            });
+                        }));
 
                         if (!document.getElementById('lndhub_create_account')) return;
 
@@ -251,7 +387,7 @@ class ConnectionPage extends SettingsPage
                 </script>
                 <?php
                 settings_fields($this->settings_path);
-                do_settings_sections($this->settings_path);
+                $this->do_settings_sections($this->settings_path);
                 submit_button();
                 ?>
             </form>

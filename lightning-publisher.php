@@ -34,6 +34,7 @@ class WP_LN_Paywall
   public function __construct()
   {
     $this->lightningClient = null;
+    $this->lightningClientType = null;
 
     $this->database_handler = new DatabaseHandler();
 
@@ -78,6 +79,7 @@ class WP_LN_Paywall
       add_action('template_redirect', array($this, 'lnurl_endpoints'));
       add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
     }
+    add_action('admin_enqueue_scripts', array($this, 'load_custom_wp_admin_style'));
   }
 
   public function getLightningClient()
@@ -87,6 +89,7 @@ class WP_LN_Paywall
     }
 
     if (!empty($this->connection_options['lnd_address'])) {
+      $this->lightningClientType = 'lnd';
       $this->lightningClient = new LND\Client();
       $this->lightningClient->setAddress(trim($this->connection_options['lnd_address']));
       $this->lightningClient->setMacarronHex(trim($this->connection_options['lnd_macaroon']));
@@ -96,17 +99,22 @@ class WP_LN_Paywall
         $this->lightningClient->setTlsCertificatePath($certPath);
       }
     } elseif (!empty($this->connection_options['lnbits_apikey'])) {
+      $this->lightningClientType = 'lnbits';
       $this->lightningClient = new LNbits\Client($this->connection_options['lnbits_apikey'], $this->connection_options['lnbits_host']);
     } elseif (!empty($this->connection_options['lnaddress_address'])) {
+      $this->lightningClientType = 'lnaddress';
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setAddress($this->connection_options['lnaddress_address']);
     } elseif (!empty($this->connection_options['btcpay_host'])) {
+      $this->lightningClientType = 'btcpay';
       $this->lightningClient = new BTCPay\Client($this->connection_options['btcpay_host'], $this->connection_options['btcpay_apikey'], $this->connection_options['btcpay_store_id']);
       $this->lightningClient->init();
     } elseif (!empty($this->connection_options['lnaddress_lnurl'])) {
+      $this->lightningClientType = 'lnaddress';
       $this->lightningClient = new LightningAddress();
       $this->lightningClient->setLnurl($this->connection_options['lnaddress_lnurl']);
     } elseif (!empty($this->connection_options['lndhub_url']) && !empty($this->connection_options['lndhub_login']) && !empty($this->connection_options['lndhub_password'])) {
+      $this->lightningClientType = 'lndhub';
       $this->lightningClient = new LNDHub\Client($this->connection_options['lndhub_url'], $this->connection_options['lndhub_login'], $this->connection_options['lndhub_password']);
       $this->lightningClient->init();
     }
@@ -456,6 +464,15 @@ class WP_LN_Paywall
   {
     $account = LNDHub\Client::createWallet("https://wallets.getalby.com", "bluewallet");
     wp_send_json($account);
+  }
+
+  public function load_custom_wp_admin_style($hook)
+  {
+    // $hook is string value given add_menu_page function.
+    // if ($hook != 'toplevel_page_mypluginname') {
+    //   return;
+    // }
+    wp_enqueue_style('custom_wp_admin_css', plugins_url('css/admin.css', __FILE__));
   }
 }
 
