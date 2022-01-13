@@ -37,7 +37,6 @@ abstract class SettingsPage
     public function sanitize($inputs)
     {
         $new_input = array();
-        echo json_encode($inputs);
         foreach ($inputs as $key => $input) {
             if (isset($input)) {
                 $new_input[$key] = sanitize_text_field($input);

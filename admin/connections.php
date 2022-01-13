@@ -183,7 +183,7 @@ class ConnectionPage extends SettingsPage
         ]);
 
 
-        if (!$this->plugin->getLightningClient() || !$this->plugin->getLightningClient()->isConnectionValid()) {
+        if ($this->plugin->lightningClientType !== 'lndhub') {
 
             $this->add_custom_field([
                 'key' => 'ndhub_generate',
@@ -258,7 +258,7 @@ class ConnectionPage extends SettingsPage
 
         foreach ((array) $wp_settings_sections[$page] as $section) {
             if ($section['id'] === 'connection-types') return;
-            
+
             $class = $this->get_section_class($section, $i);
 
             echo "<div id='{$section['id']}' class='wp-lnp-section {$class}'>";
@@ -299,10 +299,6 @@ class ConnectionPage extends SettingsPage
         foreach ((array) $wp_settings_fields[$page][$section] as $field) {
             call_user_func($field['callback'], $field['args']);
         }
-    }
-
-    public function get_active_section()
-    {
     }
 
     public function renderer()
