@@ -207,11 +207,11 @@ class ConnectionPage extends SettingsPage
     public function field_connection_types()
     {
         echo '<div class="wp-lnp-card__container">';
-        $this->connection_card('lnd', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/lnd.png', 'Lnd', 'Connect using lndhub');
-        $this->connection_card('btcpay', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/lndhub.png', 'LndHub (BlueWallet)', 'Connect using lndhub');
-        $this->connection_card('lnbits', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/lnbits.png', 'LNbits', 'Connect to your LNbits account');
-        $this->connection_card('lnaddress', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/satsymbol-black.png', 'Lightning Address Config', 'Connect using Lightning Address Config');
-        $this->connection_card('lndhub', 'https://raw.githubusercontent.com/getAlby/lightning-browser-extension/master/static/assets/icons/alby.png', 'Create a new wallet', 'We create and manage a lightning wallet for you');
+        $this->connection_card('lnd', $this->plugin->get_file_url('img/lnd.png'), 'Lnd', 'Connect using lndhub');
+        $this->connection_card('btcpay', $this->plugin->get_file_url('img/BTCPay_Icon_with_background.png'), 'LndHub (BlueWallet)', 'Connect using lndhub');
+        $this->connection_card('lnbits', $this->plugin->get_file_url('img/lnbits.png'), 'LNbits', 'Connect to your LNbits account');
+        $this->connection_card('lnaddress', $this->plugin->get_file_url('img/satsymbol-black.png'), 'Lightning Address Config', 'Connect using Lightning Address Config');
+        $this->connection_card('lndhub', $this->plugin->get_file_url('img/alby.png'), 'Create a new wallet', 'We create and manage a lightning wallet for you');
         echo '</div>';
     }
 
@@ -255,9 +255,10 @@ class ConnectionPage extends SettingsPage
         }
 
         $i = 0;
-        echo $this->plugin->lightningClientType;
 
         foreach ((array) $wp_settings_sections[$page] as $section) {
+            if ($section['id'] === 'connection-types') return;
+            
             $class = $this->get_section_class($section, $i);
 
             echo "<div id='{$section['id']}' class='wp-lnp-section {$class}'>";
@@ -283,10 +284,7 @@ class ConnectionPage extends SettingsPage
                 do_settings_fields($page, $section['id']);
                 echo '</table>';
             }
-
-
             echo '</div>';
-            $i++;
         }
     }
 
@@ -389,6 +387,7 @@ class ConnectionPage extends SettingsPage
                 settings_fields($this->settings_path);
                 $this->do_settings_sections($this->settings_path);
                 submit_button();
+                $this->do_settings_fields($this->settings_path, 'connection-types');
                 ?>
             </form>
         </div>

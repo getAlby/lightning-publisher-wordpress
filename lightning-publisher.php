@@ -474,6 +474,11 @@ class WP_LN_Paywall
     // }
     wp_enqueue_style('custom_wp_admin_css', plugins_url('css/admin.css', __FILE__));
   }
+
+  public function get_file_url($path)
+  {
+    return plugins_url($path, __FILE__);
+  }
 }
 
 new WP_LN_Paywall();
