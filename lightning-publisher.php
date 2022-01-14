@@ -25,9 +25,10 @@ require_once 'admin/help.php';
 require_once 'database-handler.php';
 
 use \tkijewski\lnurl;
-use \Firebase\JWT\JWT;
+use \Firebase\JWT;
 
 define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
+define('WP_LN_PAYWALL_JWT_ALGORITHM', 'HS256');
 
 class WP_LN_Paywall
 {
@@ -197,14 +198,14 @@ class WP_LN_Paywall
 
       array_push($paid_post_ids, $post_id);
     }
-    $jwt = JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY);
+    $jwt = JWT\JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
     setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
   }
 
   public static function save_paid_all($days)
   {
     $paid_post_ids = self::get_paid_post_ids();
-    $jwt = JWT::encode(array('all_until' => time() + $days * 24 * 60 * 60, 'post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY);
+    $jwt = JWT\JWT::encode(array('all_until' => time() + $days * 24 * 60 * 60, 'post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
     setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
   }
 
@@ -218,7 +219,7 @@ class WP_LN_Paywall
     }
     if (empty($wplnp)) return false;
     try {
-      $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
+      $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
       return $jwt->{'all_until'} > time();
     } catch (Exception $e) {
       //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
@@ -236,7 +237,7 @@ class WP_LN_Paywall
     }
     if (empty($wplnp)) return [];
     try {
-      $jwt = JWT::decode($wplnp, WP_LN_PAYWALL_JWT_KEY, array('HS256'));
+      $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
       $paid_post_ids = $jwt->{'post_ids'};
       if (!is_array($paid_post_ids)) return [];
 
@@ -301,7 +302,7 @@ class WP_LN_Paywall
     $this->database_handler->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
 
     $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
-    $jwt = JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  'HS256');
+    $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
 
     $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
     //wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'amount' => $paywall_options['amount'], 'payment_request' => $invoice['payment_request']]);
@@ -318,7 +319,7 @@ class WP_LN_Paywall
       return wp_send_json(['settled' => false], 404);
     }
     try {
-      $jwt = JWT::decode($_POST['token'], WP_LN_PAYWALL_JWT_KEY, array('HS256'));
+      $jwt = JWT\JWT::decode($_POST['token'], new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
     } catch (Exception $e) {
       return wp_send_json(['settled' => false], 404);
     }
