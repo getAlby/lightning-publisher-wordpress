@@ -181,37 +181,17 @@ class ConnectionPage extends SettingsPage
             'section' => $section,
             'type' => 'password'
         ]);
-
-
-        if ($this->plugin->lightningClientType !== 'lndhub') {
-
-            $this->add_custom_field([
-                'key' => 'ndhub_generate',
-                'name' => 'Don\'t have a wallet ?',
-                'section' => $section
-            ], array($this, 'field_lndhub_generate'));
-        }
-    }
-
-
-
-
-    public function field_lndhub_generate()
-    {
-        printf(
-            '<button id="lndhub_create_account" class="button button-primary" type="button">%s</button>',
-            'Generate Wallet'
-        );
     }
 
     public function field_connection_types()
     {
         echo '<div class="wp-lnp-card__container">';
         $this->connection_card('lnd', $this->plugin->get_file_url('img/lnd.png'), 'Lnd', 'Connect using lndhub');
-        $this->connection_card('btcpay', $this->plugin->get_file_url('img/BTCPay_Icon_with_background.png'), 'LndHub (BlueWallet)', 'Connect using lndhub');
+        $this->connection_card('lndhub', $this->plugin->get_file_url('img/lndhub.png'), 'LndHub (BlueWallet)', 'Connect using lndhub');
         $this->connection_card('lnbits', $this->plugin->get_file_url('img/lnbits.png'), 'LNbits', 'Connect to your LNbits account');
         $this->connection_card('lnaddress', $this->plugin->get_file_url('img/satsymbol-black.png'), 'Lightning Address Config', 'Connect using Lightning Address Config');
-        $this->connection_card('lndhub', $this->plugin->get_file_url('img/alby.png'), 'Create a new wallet', 'We create and manage a lightning wallet for you');
+        $this->connection_card('btcpay', $this->plugin->get_file_url('img/BTCPay_Icon_with_background.png'), 'BTC Pay', 'Connect using BTCPay Server');
+        $this->connection_card('lndhub_create_account', $this->plugin->get_file_url('img/alby.png'), 'Create a new wallet', 'We create and manage a lightning wallet for you');
         echo '</div>';
     }
 
@@ -235,15 +215,25 @@ class ConnectionPage extends SettingsPage
         );
     }
 
-    public function get_section_class($section, $iterator)
+    public function render_current_section($page)
     {
-        if ($section['id'] === 'connection-types') {
-            return '';
+        global $wp_settings_sections;
+
+        if (!isset($wp_settings_sections[$page])) {
+            return;
         }
-        if ($this->plugin->lightningClientType) {
-            return $this->plugin->lightningClientType !==  $section['id'] ? 'wp-lnp-section__hidden' : '';
+
+        $type = $this->plugin->lightningClientType;
+        $i = 0;
+        foreach ((array) $wp_settings_sections[$page] as $section) {
+
+            if (!isset($type) && $i !== 0) continue;
+
+            if (isset($type) && $type !== $section['id']) continue;
+
+            $this->render_section($page, $section, false);
+            break;
         }
-        return $iterator > 0 ? 'wp-lnp-section__hidden' : '';
     }
 
     function do_settings_sections($page)
@@ -254,38 +244,42 @@ class ConnectionPage extends SettingsPage
             return;
         }
 
-        $i = 0;
 
         foreach ((array) $wp_settings_sections[$page] as $section) {
-            if ($section['id'] === 'connection-types') return;
-
-            $class = $this->get_section_class($section, $i);
-
-            echo "<div id='{$section['id']}' class='wp-lnp-section {$class}'>";
-
-            if ($section['title']) {
-                echo "<h2>{$section['title']}</h2>\n";
-            }
-
-            if ($section['callback']) {
-                call_user_func($section['callback'], $section);
-            }
-
-            if (!isset($wp_settings_fields) || !isset($wp_settings_fields[$page]) || !isset($wp_settings_fields[$page][$section['id']])) {
-                continue;
-            }
-
-            if ($section['id'] === 'connection-types') {
-                echo '<div>';
-                $this->do_settings_fields($page, $section['id']);
-                echo '</div>';
-            } else {
-                echo '<table class="form-table" role="presentation">';
-                do_settings_fields($page, $section['id']);
-                echo '</table>';
-            }
-            echo '</div>';
+            if ($section['id'] === 'connection-types') continue;
+            $this->render_section($page, $section, true);
         }
+    }
+
+    public function render_section($page, $section, $hide)
+    {
+        global $wp_settings_fields;
+        $class = $hide ? 'wp-lnp-section__hidden' : '';
+
+        echo "<div id='{$section['id']}' class='wp-lnp-section {$class}'>";
+
+        if ($section['title']) {
+            echo "<h2>{$section['title']}</h2>\n";
+        }
+
+        if ($section['callback']) {
+            call_user_func($section['callback'], $section);
+        }
+
+        if (!isset($wp_settings_fields) || !isset($wp_settings_fields[$page]) || !isset($wp_settings_fields[$page][$section['id']])) {
+            return;
+        }
+
+        if ($section['id'] === 'connection-types') {
+            echo '<div>';
+            $this->do_settings_fields($page, $section['id']);
+            echo '</div>';
+        } else {
+            echo '<table class="form-table" role="presentation">';
+            do_settings_fields($page, $section['id']);
+            echo '</table>';
+        }
+        echo '</div>';
     }
 
     public function do_settings_fields($page, $section)
@@ -295,7 +289,6 @@ class ConnectionPage extends SettingsPage
         if (!isset($wp_settings_fields[$page][$section])) {
             return;
         }
-
         foreach ((array) $wp_settings_fields[$page][$section] as $field) {
             call_user_func($field['callback'], $field['args']);
         }
@@ -324,6 +317,43 @@ class ConnectionPage extends SettingsPage
             </div>
             <form id="wallet_settings_form" method="post" action="options.php">
                 <script>
+                    let generating_lndhub_account = false;
+
+                    function lndhubCreateAccount(card) {
+
+                        if (generating_lndhub_account) return;
+
+                        generating_lndhub_account = true;
+
+                        const image = card.getElementsByTagName('img')[0];
+                        image.classList.add('wp-lnp-card__image--grayscale');
+                        const title = card.getElementsByTagName('h4')[0];
+                        const subtitle = card.getElementsByTagName('p')[0];
+                        title.innerHTML = "Generating.....";
+                        subtitle.innerHTML = "We are generating an account for you";
+                        const data = new FormData();
+
+                        data.append('action', 'create_lnp_hub_account');
+
+                        fetch("<?php echo get_site_url(); ?>/wp-admin/admin-ajax.php", {
+                                method: "POST",
+                                credentials: 'same-origin',
+                                body: data
+                            })
+                            .then((response) => response.json())
+                            .then((response) => {
+                                console.log(response);
+                                document.getElementById('lndhub_url').value = response.url;
+                                document.getElementById('lndhub_login').value = response.login;
+                                document.getElementById('lndhub_password').value = response.password;
+                                title.innerHTML = "Generated";
+                                subtitle.innerHTML = "Your account has been generated";
+                                document.getElementById("submit").click();
+                                image.classList.remove('wp-lnp-card--disabled');
+                                image.classList.remove('wp-lnp-card__image--grayscale');
+                            }).catch((e) => console.error(e))
+                    }
+
                     window.addEventListener("DOMContentLoaded", function() {
                         document.getElementById('load_from_lndconnect').addEventListener('click', function(e) {
                             e.preventDefault();
@@ -336,56 +366,44 @@ class ConnectionPage extends SettingsPage
                             document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
                             document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
                         });
+
                         const list = document.querySelectorAll('.wp-lnp-card');
-                        const sections = document.querySelectorAll('.wp-lnp-section');
+                        const sections = document.querySelectorAll('.wp-lnp-section__hidden');
+                        const fieldsContainer = document.getElementById('wp-lnp-fields');
+                        const sectionsContent = {};
+                        sections.forEach(section => {
+                            sectionsContent[section.id] = section.innerHTML;
+                            section.remove();
+                        });
                         list.forEach(el => el.addEventListener('click', e => {
                             e.preventDefault();
                             const current = el.attributes['data-section'].value;
-                            sections.forEach(section => {
-                                console.log(section.id);
-                                if (section.id !== 'connection-types' && current !== section.id) {
-                                    return section.style.display = 'none';
-                                }
-                                console.log(section.id);
-                                return section.style.display = 'block';
-                            });
+                            if (current === 'lndhub_create_account') {
+                                fieldsContainer.innerHTML = sectionsContent['lndhub'];
+                                lndhubCreateAccount(el);
+                                return;
+                            }
+                            fieldsContainer.innerHTML = sectionsContent[current];
                         }));
 
-                        if (!document.getElementById('lndhub_create_account')) return;
 
-                        document.getElementById('lndhub_create_account').addEventListener('click', function(e) {
-                            e.preventDefault();
-                            const button = e.target;
-                            button.innerHTML = "Generating.....";
-                            button.disabled = true;
-                            const data = new FormData();
-
-                            data.append('action', 'create_lnp_hub_account');
-
-                            fetch("<?php echo get_site_url(); ?>/wp-admin/admin-ajax.php", {
-                                    method: "POST",
-                                    credentials: 'same-origin',
-                                    body: data
-                                })
-                                .then((response) => response.json())
-                                .then((response) => {
-                                    console.log(response);
-                                    document.getElementById('lndhub_url').value = response.url;
-                                    document.getElementById('lndhub_login').value = response.login;
-                                    document.getElementById('lndhub_password').value = response.password;
-                                    button.innerHTML = "Generated";
-                                    document.getElementById("submit").click();
-                                }).catch((e) => console.error(e))
-                        });
                     });
                 </script>
                 <?php
                 settings_fields($this->settings_path);
-                $this->do_settings_sections($this->settings_path);
+
+                echo '<div id="wp-lnp-fields">';
+
+                $this->render_current_section($this->settings_path);
+
+                echo '</div>';
                 submit_button();
-                $this->do_settings_fields($this->settings_path, 'connection-types');
                 ?>
             </form>
+            <?php
+            $this->do_settings_sections($this->settings_path);
+            $this->do_settings_fields($this->settings_path, 'connection-types');
+            ?>
         </div>
 <?php
     }
