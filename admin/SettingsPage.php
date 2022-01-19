@@ -59,14 +59,19 @@ abstract class SettingsPage
     protected function input_field($name, $label, $type = 'text', $autocomplete = false)
     {
         printf(
-            '<input id="%s" type="%s" autocomplete="%s" name="%s" value="%s"  /><br><label>%s</label>',
+            '<input id="%s" type="%s" autocomplete="%s" name="%s" value="%s"  />',
             $name,
             $type,
             $autocomplete ? 'on' : 'off',
             $this->get_field_name($name),
-            $this->get_field_value($name),
-            $label
+            $this->get_field_value($name)
         );
+        if ($type !== 'hidden') {
+            printf(
+                '<br><label>%s</label>',
+                $label
+            );
+        }
     }
 
     public function create_input_field($args = [])
