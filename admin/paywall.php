@@ -24,6 +24,7 @@ class PaywallPage extends SettingsPage
         add_settings_field('paywall_all_period', 'Days available', array($this, 'field_paywall_all_days'), $this->settings_path, 'paywall');
         add_settings_field('paywall_all_confirmation', 'Confirmation text', array($this, 'field_paywall_all_confirmation'), $this->settings_path, 'paywall');
         add_settings_field('paywall_lnurl_rss', 'Add LNURL to RSS items', array($this, 'field_paywall_lnurl_rss'), $this->settings_path, 'paywall');
+        add_settings_field('paywall_lnurl_meta_tag', 'Add LNURL Meta tag', array($this, 'field_paywall_lnurl_meta_tag'), $this->settings_path, 'paywall');
         add_settings_field('paywall_disable_in_rss', 'Disable paywall in RSS?', array($this, 'field_paywall_disable_in_rss'), $this->settings_path, 'paywall');
     }
 
@@ -125,6 +126,15 @@ class PaywallPage extends SettingsPage
             $this->get_field_name('all_confirmation'),
             $this->get_field_value('all_confirmation'),
             'Confirmation text for all article payments'
+        );
+    }
+    public function field_paywall_lnurl_meta_tag()
+    {
+        printf(
+            '<input type="checkbox" name="%s" value="1" %s/><br><label>%s</label>',
+            $this->get_field_name('lnurl_meta_tag'),
+            empty($this->get_field_value('lnurl_meta_tag')) ? '' : 'checked',
+            'Add lightning meta tag'
         );
     }
     public function field_paywall_lnurl_rss()
