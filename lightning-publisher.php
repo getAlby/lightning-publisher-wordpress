@@ -81,6 +81,7 @@ class WP_LN_Paywall
       add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
     }
     add_action('admin_enqueue_scripts', array($this, 'load_custom_wp_admin_style'));
+    add_action('wp_head', array($this, 'hook_meta_tags'));
   }
 
   public function getLightningClient()
@@ -466,6 +467,16 @@ class WP_LN_Paywall
     $account = LNDHub\Client::createWallet("https://wallets.getalby.com", "bluewallet");
     wp_send_json($account);
   }
+
+
+  public function hook_meta_tags()
+  {
+    if (!empty($this->paywall_options['lnurl_meta_tag']) && $this->paywall_options['lnurl_meta_tag']) {
+      $url = get_site_url(null, '/?lnurl=pay');
+      echo '<meta name="lightning" content="lnurlp:' . $url . '" />';
+    }
+  }
+
 
   public function load_custom_wp_admin_style($hook)
   {
