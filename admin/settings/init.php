@@ -6,7 +6,10 @@ defined('WPINC') || die;
 abstract class SettingsPage
 {
     protected $settings_path;
+    protected $template_html;
     protected $option_name;
+    protected $sections;
+    protected $form_fields;
 
     public $options;
     public $plugin;
@@ -17,16 +20,22 @@ abstract class SettingsPage
 
     public function __construct($plugin, $page)
     {
-        $this->plugin  = $plugin;
-        $this->page    = $page;
-        $this->options = get_option($this->option_name);
+        $this->plugin      = $plugin;
+        $this->page        = $page;
+        $this->options     = get_option($this->option_name);
+        $this->form_fields = array();
         
         $this->set_translations();
         
-        add_action('admin_menu', array($this, 'init_page'));
-        add_action('admin_init', array($this, 'init_fields'));
+        add_action( 'admin_menu', array($this, 'init_page') );
+        add_action( 'admin_init', array($this, 'init_fields') );
     }
 
+
+    /**
+     * Add Menu Item page
+     * @return [type] [description]
+     */
     public function init_page()
     {
         add_submenu_page(
@@ -41,6 +50,8 @@ abstract class SettingsPage
 
     public function init_fields()
     {
+
+        if ()
         register_setting(
             $this->settings_path,
             $this->option_name, 
@@ -48,7 +59,14 @@ abstract class SettingsPage
         );
     }
 
-    abstract public function renderer();
+    public function renderer() {
+
+        if ( empty($this->template_html) )
+            return;
+
+        // Include HTML file
+        include $this->get_template_path($this->template_html);
+    }
 
     public function sanitize($inputs)
     {
@@ -131,14 +149,108 @@ abstract class SettingsPage
     }
 
 
-    protected function get_page_title() {
+    protected function get_page_title()
+    {
         return $this->page_title;
     }
 
-    protected function get_menu_title() {
+    protected function get_menu_title()
+    {
         return $this->menu_title;
     }
 
 
     protected function set_translations() {}
+
+
+
+    /**
+     * Generate markup output for <input> element
+     * 
+     * @param  string $option_name [description]
+     * @param  array   $args        [description]
+     * 
+     * @return misc
+     */
+    public function get_input( $option_name = '', $args = array() )
+    {
+        /**
+         * Deafult values that will be merged with $args
+         */
+        $defaults = array(
+            'type'         => 'text',
+            'class'        => 'regular-text',
+            'name'         => $this->get_field_name($option_name),
+            'value'        => $this->get_field_value($option_name),
+            'placeholder'  => '',
+            'autocomplete' => 'off',
+            'label'        => '',
+            'description'  => ''
+        );
+
+        
+        // Merge args with defaults and filter empty values
+        $parsed_args = wp_parse_args($args, $defaults);
+        $parsed_args = array_filter($parsed_args);
+
+        
+        /**
+         * Checkbox specifc
+         */
+        if ( 'checkbox' == $parsed_args['type'] )
+        {
+            // Don't add autocomplete arg to checkbox
+            unset($parsed_args['autocomplete']);
+        }
+        
+        // HTML output
+        $output = array('<input');
+        
+        /**
+         * Will append args as input element attributes
+         * Eg: <input type="text" etc...
+         */
+        foreach ( $parsed_args as $arg => $val )
+        {
+            // Don't create markup for these args
+            if ( in_array($arg, array('label', 'description')) )
+                continue;
+
+            // Append everything else
+            $output[] = sprintf(
+                '%s="%s"',
+                $arg,
+                $val
+            );
+        }
+
+        /**
+         * For checkbox type we want to display label inline with input element
+         */
+        if ( 'checkbox' != $parsed_args['type'] )
+        {
+            $output[] = '<br>';
+        }
+
+        // Append label
+        $output[] = sprintf(
+            '<label>%s</label>',
+            esc_attr($parsed_args['label'])
+        );
+
+        /**
+         * Additional description if provided
+         * Extra "help" instructions block below the field
+         */
+        if ( ! empty($parsed_args['description']) )
+        {
+            $output[] = sprintf(
+                '<div class="description">%s</div>',
+                esc_attr($parsed_args['description'])
+            );
+        }
+
+        // Generate and return input field html output
+        return join(' ', $output);
+    }
 }
