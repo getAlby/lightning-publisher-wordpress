@@ -1,6 +1,9 @@
 <?php
 
-require_once 'SettingsPage.php';
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
+require_once 'init.php';
 
 class LNP_Dashboard extends SettingsPage
 {

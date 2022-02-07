@@ -56,3 +56,11 @@
 .wp-lnp-section__hidden {
   display: none;
 }
+
+
+/**
+ * Tabs
+ */
+.wpln .tab-content:not(.tab-content-active) {
+  display: none;
+}

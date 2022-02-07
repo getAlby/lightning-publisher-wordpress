@@ -1,6 +1,6 @@
 <?php
 
-require_once 'SettingsPage.php';
+require_once 'init.php';
 
 class HelpPage extends SettingsPage
 {

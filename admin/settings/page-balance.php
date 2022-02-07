@@ -1,7 +1,8 @@
 <?php
 
-require_once 'SettingsPage.php';
-require_once __DIR__ . '/' . '../tables/transactions.php';
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
 class BalancePage extends SettingsPage
 {
     protected $settings_path = 'lnp_settings_balances';

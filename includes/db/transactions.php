@@ -1,5 +1,8 @@
 <?php
 
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
 if (!class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/screen.php');
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
@@ -152,7 +155,9 @@ class TransactionsTable extends WP_List_Table
 
     protected function handle_row_actions($item, $column_name, $primary)
     {
-        return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details') . '</span></button>' : '';
+        return $column_name === $primary
+            ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details') . '</span></button>'
+            : '';
     }
 
     /**
@@ -164,7 +169,7 @@ class TransactionsTable extends WP_List_Table
     {
         // Set defaults
         $orderby = 'created_at';
-        $order = 'desc';
+        $order   = 'desc';
 
         // If orderby is set, use this as the sort column
         if (!empty($_GET['orderby'])) {

@@ -6,29 +6,43 @@
     Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
     Author:
     Author URI:
+    Text Domain: wp-lightning-paywall
 
     Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
 */
 
 if (!defined('ABSPATH')) exit;
 
+// Composer dependencies
 require_once 'vendor/autoload.php';
 
-require_once 'lightning_address.php';
+// Custom Tables
+require_once 'includes/db/database-handler.php';
+require_once 'includes/db/transactions.php';
 
-require_once 'LnpWidget.php';
-require_once 'admin/dashboard.php';
-require_once 'admin/balance.php';
-require_once 'admin/paywall.php';
-require_once 'admin/connections.php';
-require_once 'admin/help.php';
-require_once 'database-handler.php';
+// Settings 
+require_once 'admin/settings/init.php';
+require_once 'admin/settings/page-dashboard.php';
+require_once 'admin/settings/page-balance.php';
+require_once 'admin/settings/page-paywall.php';
+require_once 'admin/settings/page-connections.php';
+require_once 'admin/settings/page-help.php';
+
+// Widgets
+require_once 'admin/widgets/lnp-widget.php';
+
+// Includes
+require_once 'lightning-address.php';
 
 use \tkijewski\lnurl;
 use \Firebase\JWT;
 
 define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
 define('WP_LN_PAYWALL_JWT_ALGORITHM', 'HS256');
+define('WP_LN_ROOT_PATH', untrailingslashit(plugin_dir_path( __FILE__ )) );
+define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url( __FILE__ )) );
+
+
 
 class WP_LN_Paywall
 {
@@ -257,13 +271,30 @@ class WP_LN_Paywall
   /**
    * Register scripts and styles
    */
-  public function enqueue_script()
-  {
-    wp_enqueue_script('webln', plugins_url('js/webln.min.js', __FILE__));
-    wp_enqueue_script('ln-paywall', plugins_url('js/publisher.js', __FILE__));
-    wp_enqueue_style('ln-paywall', plugins_url('css/publisher.css', __FILE__));
-    wp_localize_script('ln-paywall', 'LN_Paywall', array(
-      'ajax_url'   => admin_url('admin-ajax.php'),
+  public function enqueue_script() {
+
+    wp_enqueue_style(
+      'wpln/admin-css',
+      WP_LN_ROOT_URI . '/assets/css/admin.css'
+    );
+
+    wp_enqueue_script(
+      'wpln/webln-js',
+      WP_LN_ROOT_URI . '/assets/js/webln.min.js'
+    );
+
+    wp_enqueue_script(
+      'wpln/paywall-js',
+      WP_LN_ROOT_URI . '/assets/js/publisher.js'
+    );
+
+    wp_enqueue_script(
+      'wpln/paywall-js',
+      WP_LN_ROOT_URI . '/assets/css/publisher.css'
+    );
+
+    wp_localize_script( 'wpln/paywall-js', 'LN_Paywall', array(
+      'ajax_url' => admin_url('admin-ajax.php'),
     ));
   }
 
@@ -473,7 +504,15 @@ class WP_LN_Paywall
     // if ($hook != 'toplevel_page_mypluginname') {
     //   return;
     // }
-    wp_enqueue_style('custom_wp_admin_css', plugins_url('css/admin.css', __FILE__));
+    wp_enqueue_style(
+      'wpln/admin-css',
+      WP_LN_ROOT_URI . '/assets/css/admin.css'
+    );
+
+    wp_enqueue_script(
+      'wpln/admin-js',
+      WP_LN_ROOT_URI . '/assets/js/admin.js'
+    );
   }
 
   public function get_file_url($path)

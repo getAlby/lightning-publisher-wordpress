@@ -1,6 +1,7 @@
 <?php
 
-require_once 'SettingsPage.php';
+// If this file is called directly, abort.
+defined('WPINC') || die;
 
 class ConnectionPage extends SettingsPage
 {
