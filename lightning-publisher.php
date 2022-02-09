@@ -43,16 +43,6 @@ define('WP_LN_ROOT_PATH', untrailingslashit(plugin_dir_path( __FILE__ )) );
 define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url( __FILE__ )) );
 
 
-add_action('update_option', function($a, $b, $c) {
-
-  echo '<pre>';
-  print_r($_POST);
-  print_r($a);
-  print_r($b);
-  print_r($c);
-  echo '</pre>';
-
-}, 10, 3);
 
 
 
@@ -106,7 +96,9 @@ class WP_LN_Paywall
       add_action('template_redirect', array($this, 'lnurl_endpoints'));
       add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
     }
-    add_action('admin_enqueue_scripts', array($this, 'load_custom_wp_admin_style'));    
+
+    add_action('admin_enqueue_scripts', array($this, 'load_custom_wp_admin_style'));
+    add_action('wp_head', array($this, 'hook_meta_tags'));
   }
 
   public function getLightningClient()
@@ -509,6 +501,16 @@ class WP_LN_Paywall
     $account = LNDHub\Client::createWallet("https://wallets.getalby.com", "bluewallet");
     wp_send_json($account);
   }
+
+
+  public function hook_meta_tags()
+  {
+    if (!empty($this->paywall_options['lnurl_meta_tag']) && $this->paywall_options['lnurl_meta_tag']) {
+      $url = get_site_url(null, '/?lnurl=pay');
+      echo '<meta name="lightning" content="lnurlp:' . $url . '" />';
+    }
+  }
+
 
   public function load_custom_wp_admin_style($hook)
   {
