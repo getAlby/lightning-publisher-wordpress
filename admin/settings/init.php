@@ -8,7 +8,8 @@ abstract class SettingsPage
     protected $settings_path;
     protected $template_html;
     protected $option_name;
-    protected $sections;
+    
+    protected $tabs;
     protected $form_fields;
 
     public $options;
@@ -18,14 +19,15 @@ abstract class SettingsPage
     protected $page_title;
     protected $menu_title;
 
-    public function __construct($plugin, $page)
+    public function __construct($plugin = false, $page = '')
     {
         $this->plugin      = $plugin;
         $this->page        = $page;
-        $this->options     = get_option($this->option_name);
+        $this->options     = array();
         $this->form_fields = array();
         
         $this->set_translations();
+        $this->set_options();
         
         add_action( 'admin_menu', array($this, 'init_page') );
         add_action( 'admin_init', array($this, 'init_fields') );
@@ -40,8 +42,8 @@ abstract class SettingsPage
     {
         add_submenu_page(
             $this->page,
-            $this->get_page_title(),
-            $this->get_menu_title(),
+            $this->page_title,
+            $this->menu_title,
             'manage_options',
             $this->settings_path,
             array($this, 'renderer')
@@ -50,15 +52,62 @@ abstract class SettingsPage
 
     public function init_fields()
     {
+        // Register Tabbed sections
+        // This will regi
+        if ( is_array($this->tabs) )
+        {
+            foreach( $this->tabs as $id => $label )
+            {
+                // Register new settings group
+                register_setting(
+                    "wpln_page_{$this->option_name}_{$id}",
+                    "{$this->option_name}_{$id}",
+                    // array($this, 'sanitize')
+                );
 
-        if ()
-        register_setting(
-            $this->settings_path,
-            $this->option_name, 
-            array($this, 'sanitize')
-        );
+                // Create section
+                add_settings_section(
+                    "{$this->option_name}_section_{$id}",
+                    $label,
+                    null,
+                    "wpln_page_{$this->option_name}_{$id}",
+                );
+            }
+        }
+        else
+        {
+            // Settings page without tabs
+            register_setting(
+                $this->settings_path,
+                $this->option_name, 
+                array($this, 'sanitize')
+            );
+        }
+
+        // Load form fields
+        $this->set_form_fields();
+        $this->set_options();
+
+        // Register fields
+        foreach( $this->form_fields as $args )
+        {
+            add_settings_field(
+                $args['field']['name'],
+                $args['field']['label'],
+                array($this, 'get_input'),
+                "wpln_page_{$this->option_name}_" . $args['tab'],
+                "{$this->option_name}_section_"  . $args['tab'],
+                array(
+                    'args' => $args
+                ),
+            );
+        }
     }
 
+
+    /**
+     * Load options page HTML template 
+     */
     public function renderer() {
 
         if ( empty($this->template_html) )
@@ -68,14 +117,18 @@ abstract class SettingsPage
         include $this->get_template_path($this->template_html);
     }
 
+
     public function sanitize($inputs)
     {
         $new_input = array();
 
-        foreach ($inputs as $key => $input)
+        if ( is_array( $inputs) )
         {
-            if (isset($input)) {
-                $new_input[$key] = sanitize_text_field($input);
+            foreach ($inputs as $key => $input)
+            {
+                if (isset($input)) {
+                    $new_input[$key] = sanitize_text_field($input);
+                }
             }
         }
 
@@ -87,12 +140,30 @@ abstract class SettingsPage
         return $this->option_name[$name];
     }
 
+    
     public function get_field_value($name)
     {
-        if (!isset($this->options[$name]))
+        $options = $this->options;
+
+        if ( !isset($options[$name]) && ! isset($name['tab']) )
             return '';
 
-        return esc_attr($this->options[$name]);
+        if (isset($options[$name]))
+            return $options[$name];
+
+        if ( isset($name['tab']) )
+        {
+            $tab_options = $options[ $name['tab'] ]:
+            $field_name  = $name['field']['name'];
+
+            if ( isset( $tab_options[ $field_name ] ) )
+            {
+                return $tab_options[ $field_name ];
+            }
+
+        }
+
+        return '';
     }
 
     protected function input_field($name, $label, $type = 'text', $autocomplete = false)
@@ -161,7 +232,28 @@ abstract class SettingsPage
 
 
     protected function set_translations() {}
+    protected function set_form_fields() {}
 
+
+    /**
+     * Load all options for current settings page from DB
+     */
+    protected function set_options() {
+
+        if ( is_array($this->tabs) )
+        {
+            $this->options = array();
+
+            foreach ( $this->tabs as $id => $label )
+            {
+                $this->options[ $id ] = get_option("{$this->option_name}_{$id}", array());
+            }
+        }
+        else
+        {
+            $this->options = get_option($this->option_name);
+        }
+    }
 
 
     /**
@@ -172,16 +264,22 @@ abstract class SettingsPage
      * 
      * @return misc
      */
-    public function get_input( $option_name = '', $args = array() )
+    public function get_input( $field_args = array() )
     {
+        // error_log(print_r($option_name, true));
+        // error_log(print_r($args, true));
+
+        $args = $field_args['args'];
+        $name = $args['field']['name'];
+
         /**
          * Deafult values that will be merged with $args
          */
         $defaults = array(
             'type'         => 'text',
             'class'        => 'regular-text',
-            'name'         => $this->get_field_name($option_name),
-            'value'        => $this->get_field_value($option_name),
+            'name'         => '',
+            'value'        => $this->get_field_value($args),
             'placeholder'  => '',
             'autocomplete' => 'off',
             'label'        => '',
@@ -190,7 +288,7 @@ abstract class SettingsPage
 
         
         // Merge args with defaults and filter empty values
-        $parsed_args = wp_parse_args($args, $defaults);
+        $parsed_args = wp_parse_args($args['field'], $defaults);
         $parsed_args = array_filter($parsed_args);
 
         
@@ -216,6 +314,18 @@ abstract class SettingsPage
             if ( in_array($arg, array('label', 'description')) )
                 continue;
 
+            // Append name attribute into array
+            if ( 'name' == $arg )
+            {
+                $output[] = sprintf(
+                    'name="%s[%s]"',
+                    $args['tab'],
+                    $val
+                );
+
+                continue;
+            }
+
             // Append everything else
             $output[] = sprintf(
                 '%s="%s"',
@@ -224,19 +334,20 @@ abstract class SettingsPage
             );
         }
 
+        // Close input
+        $output[] = '/>';
+
         /**
          * For checkbox type we want to display label inline with input element
          */
-        if ( 'checkbox' != $parsed_args['type'] )
+        if ( 'checkbox' == $parsed_args['type'] )
         {
-            $output[] = '<br>';
+            // Append label
+            $output[] = sprintf(
+                '<label>%s</label>',
+                esc_attr($parsed_args['label'])
+            );
         }
-
-        // Append label
-        $output[] = sprintf(
-            '<label>%s</label>',
-            esc_attr($parsed_args['label'])
-        );
 
         /**
          * Additional description if provided
@@ -245,12 +356,12 @@ abstract class SettingsPage
         if ( ! empty($parsed_args['description']) )
         {
             $output[] = sprintf(
-                '<div class="description">%s</div>',
+                '<p class="description">%s</p>',
                 esc_attr($parsed_args['description'])
             );
         }
 
         // Generate and return input field html output
-        return join(' ', $output);
+        echo join(' ', $output);
     }
 }

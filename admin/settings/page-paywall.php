@@ -9,32 +9,30 @@ class PaywallPage extends SettingsPage
     protected $template_html = 'settings/page-paywall.php';
     protected $option_name   = 'lnp_paywall';
 
-    protected $page_title;
-    protected $menu_title;
+    public $page_title;
+    public $menu_title;
+
+    public function zconstruct()
+    {
+        // Menu Item label
+        $this->page_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
+        $this->menu_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
+
+        
+
+        // parent::__construct();
+    }
 
     public function init_fields()
     {
-        // parent::init_fields();
-
-        // Tabbed sections
-        $this->sections = array(
+        // Tabs
+        $this->tabs   = array(
             'pricing'      => __( 'Pricing', 'wp-lightning-paywall' ),
             'restrictions' => __( 'Restrictions', 'wp-lightning-paywall' ),
             'integrations' => __( 'Integrations', 'wp-lightning-paywall' ),
         );
 
-        // Register Tabbed sections
-        foreach( $this->sections as $id => $label )
-        {
-            add_settings_section(
-                'paywall_' . $id,
-                $label,
-                null,
-                'wpln_paywall_' . $id
-            );
-        }
-
-        $this->init_form_fields();
+        parent::init_fields();
     }
 
 
@@ -43,6 +41,7 @@ class PaywallPage extends SettingsPage
      */
     protected function set_translations()
     {
+        // Menu Item label
         $this->page_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
         $this->menu_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
     }
@@ -51,7 +50,7 @@ class PaywallPage extends SettingsPage
     /**
      * Array of form fields available on this page
      */
-    public function init_form_fields() {
+    public function set_form_fields() {
 
         /**
          * Fields 
@@ -62,8 +61,7 @@ class PaywallPage extends SettingsPage
          * Fields for section: Pricing
          */
         $fields[] = array(
-            'page'    => 'wpln_paywall_pricing',
-            'section' => 'paywall_pricing',
+            'tab'     => 'pricing',
             'field'   => array(
                 'label'       => __( 'Text', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_text',
@@ -72,8 +70,7 @@ class PaywallPage extends SettingsPage
         );
 
         $fields[] = array(
-            'page'    => 'wpln_paywall_pricing',
-            'section' => 'paywall_pricing',
+            'tab'     => 'pricing',
             'field'   => array(
                 'label' => __( 'Button Label', 'wp-lightning-paywall' ),
                 'name'  => 'paywall_button_text',
@@ -81,8 +78,7 @@ class PaywallPage extends SettingsPage
         );
 
         $fields[] = array(
-            'page'    => 'wpln_paywall_pricing',
-            'section' => 'paywall_pricing',
+            'tab'     => 'pricing',
             'field'   => array(
                 'label'       => __( 'Amount', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_amount',
@@ -91,8 +87,7 @@ class PaywallPage extends SettingsPage
         );    
 
         $fields[] = array(
-            'page'    => 'wpln_paywall_pricing',
-            'section' => 'paywall_pricing',
+            'tab'     => 'pricing',
             'field'   => array(
                 'label'       => __( 'Total', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_total',
@@ -105,8 +100,7 @@ class PaywallPage extends SettingsPage
          * Fields for section: Pricing
          */
         $fields[] = array(
-            'page'    => 'wpln_paywall_restrictions',
-            'section' => 'paywall_restrictions',
+            'tab'     => 'restrictions',
             'field'   => array(
                 'label'       => __( 'Timeout', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_timeout',
@@ -115,8 +109,7 @@ class PaywallPage extends SettingsPage
         );
 
         $fields[] = array(
-            'page'    => 'wpln_paywall_restrictions',
-            'section' => 'paywall_restrictions',
+            'tab'     => 'restrictions',
             'field'   => array(
                 'label'       => __( 'Timein', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_timein',
@@ -125,8 +118,7 @@ class PaywallPage extends SettingsPage
         );
 
         $fields[] = array(
-            'page'    => 'wpln_paywall_restrictions',
-            'section' => 'paywall_restrictions',
+            'tab'     => 'restrictions',
             'field'   => array(
                 'label'       => __( 'Days available', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_all_period',
@@ -135,8 +127,7 @@ class PaywallPage extends SettingsPage
         );
 
         $fields[] = array(
-            'page'    => 'wpln_paywall_restrictions',
-            'section' => 'paywall_restrictions',
+            'tab'     => 'restrictions',
             'field'   => array(
                 'label'       => __( 'Confirmation text', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_all_confirmation',
@@ -149,8 +140,7 @@ class PaywallPage extends SettingsPage
          * Fields for section: Pricing
          */
         $fields[] = array(
-            'page'    => 'wpln_paywall_integrations',
-            'section' => 'paywall_integrations',
+            'tab'     => 'integrations',
             'field'   => array(
                 'label'       => __( 'Add LNURL to RSS items', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_lnurl_rss',
@@ -159,8 +149,7 @@ class PaywallPage extends SettingsPage
         );
 
         $fields[] = array(
-            'page'    => 'wpln_paywall_integrations',
-            'section' => 'paywall_integrations',
+            'tab'     => 'integrations',
             'field'   => array(
                 'label'       => __( 'Disable paywall in RSS?', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_disable_in_rss',

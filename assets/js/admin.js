@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", function () {
     /**
      * Tabbed content settings page
      */
-    const tabNav = [].slice.call( document.querySelectorAll('.nav-tab') );
+    const tabNav = [].slice.call( document.querySelectorAll('.nav-tabz') );
 
     if ( tabNav.length )
     {

@@ -8,15 +8,20 @@ $active = isset($_GET['tab'])
     ? $_GET['tab']
     : 'pricing';
 
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
 ?>
 
 <div class="wrap wpln">
     <div class="tabbed-content">
         <h2 class="nav-tab-wrapper">
-            <?php foreach ( $this->sections as $id => $label)
+            <?php foreach ( $this->tabs as $id => $label)
             {
                 printf(
-                    '<a href="#%s" class="%s">%s</a>',
+                    '<a href="%s?page=%s&tab=%s" class="%s">%s</a>',
+                    admin_url('admin.php'),
+                    sanitize_text_field($_GET['page']),
                     $id,
                     ($id == $active) ? 'nav-tab nav-tab-active' : 'nav-tab',
                     $label
@@ -26,24 +31,12 @@ $active = isset($_GET['tab'])
 
         <div class="tab-content-wrapper">
             <form method="post" action="options.php">
-                <?php foreach ( $this->sections as $id => $label) : 
+                <?php
 
-                    $cssClass = ($id == $active)
-                        ? 'tab-content tab-content-active'
-                        : 'tab-content';
-                    ?>
+                settings_fields("wpln_page_{$this->option_name}_{$active}");
+                do_settings_sections("wpln_page_{$this->option_name}_{$active}");
 
-                    <div
-                        id="<?php echo $id; ?>"
-                        class="<?php echo $cssClass; ?>">
-                        <?php
-
-                        settings_fields('wpln_paywall_' . $id);
-                        do_settings_sections('wpln_paywall_' . $id);
-
-                        ?>
-                    </div>
-                <?php endforeach; ?>
+                ?>
 
                 <div class="button-row">
                     <?php submit_button(); ?>
