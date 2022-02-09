@@ -153,7 +153,7 @@ abstract class SettingsPage
 
         if ( isset($name['tab']) )
         {
-            $tab_options = $options[ $name['tab'] ]:
+            $tab_options = $options[ $name['tab'] ];
             $field_name  = $name['field']['name'];
 
             if ( isset( $tab_options[ $field_name ] ) )
