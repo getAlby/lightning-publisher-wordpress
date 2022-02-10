@@ -8,9 +8,6 @@ $active = isset($_GET['tab'])
     ? $_GET['tab']
     : 'pricing';
 
-echo '<pre>';
-print_r($_POST);
-echo '</pre>';
 ?>
 
 <div class="wrap wpln">
