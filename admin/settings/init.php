@@ -52,23 +52,27 @@ abstract class SettingsPage
 
     public function init_fields()
     {
+        // Load form fields
+        $this->set_form_fields();
+        $this->set_options();
+
         // Register Tabbed sections
-        // This will regi
+        // This will register tabs as sections 
         if ( is_array($this->tabs) )
         {
-            foreach( $this->tabs as $id => $label )
+            foreach( $this->tabs as $id => $args )
             {
                 // Register new settings group
                 register_setting(
                     "wpln_page_{$this->option_name}_{$id}",
                     "{$this->option_name}_{$id}",
-                    // array($this, 'sanitize')
+                    array($this, 'sanitize')
                 );
 
                 // Create section
                 add_settings_section(
                     "{$this->option_name}_section_{$id}",
-                    $label,
+                    $args['title'],
                     null,
                     "wpln_page_{$this->option_name}_{$id}",
                 );
@@ -83,10 +87,6 @@ abstract class SettingsPage
                 array($this, 'sanitize')
             );
         }
-
-        // Load form fields
-        $this->set_form_fields();
-        $this->set_options();
 
         // Register fields
         foreach( $this->form_fields as $args )
@@ -137,37 +137,22 @@ abstract class SettingsPage
 
     public function get_field_name($name)
     {
-        return $this->option_name[$name];
+        return "$this->option_name[$name]";
     }
 
     
     public function get_field_value($name)
     {
-        $options = $this->options;
-
-        if ( !isset($options[$name]) && ! isset($name['tab']) )
+        if ( ! isset($this->options[$name]) )
             return '';
 
-        if (isset($options[$name]))
-            return $options[$name];
 
-        if ( isset($name['tab']) )
-        {
-            $tab_options = $options[ $name['tab'] ];
-            $field_name  = $name['field']['name'];
-
-            if ( isset( $tab_options[ $field_name ] ) )
-            {
-                return $tab_options[ $field_name ];
-            }
-
-        }
-
-        return '';
+        return esc_attr($this->options[$name]);
     }
 
     protected function input_field($name, $label, $type = 'text', $autocomplete = false)
     {
+
         printf(
             '<input id="%s" type="%s" autocomplete="%s" name="%s" value="%s" />',
             $name,
@@ -240,19 +225,19 @@ abstract class SettingsPage
      */
     protected function set_options() {
 
-        if ( is_array($this->tabs) )
-        {
-            $this->options = array();
+        $option_name = $this->option_name;
 
-            foreach ( $this->tabs as $id => $label )
-            {
-                $this->options[ $id ] = get_option("{$this->option_name}_{$id}", array());
-            }
-        }
-        else
+        // Load options for current tab only
+        if ( $this->tabs )
         {
-            $this->options = get_option($this->option_name);
+            $tab = isset($_GET['tab'])
+                ? $_GET['tab']
+                : key($this->tabs);
+
+            $option_name = "{$this->option_name}_{$tab}";
         }
+
+        $this->options = get_option($option_name, array() );
     }
 
 

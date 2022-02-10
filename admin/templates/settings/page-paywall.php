@@ -13,7 +13,7 @@ $active = isset($_GET['tab'])
 <div class="wrap wpln">
     <div class="tabbed-content">
         <h2 class="nav-tab-wrapper">
-            <?php foreach ( $this->tabs as $id => $label)
+            <?php foreach ( $this->tabs as $id => $args)
             {
                 printf(
                     '<a href="%s?page=%s&tab=%s" class="%s">%s</a>',
@@ -21,7 +21,7 @@ $active = isset($_GET['tab'])
                     sanitize_text_field($_GET['page']),
                     $id,
                     ($id == $active) ? 'nav-tab nav-tab-active' : 'nav-tab',
-                    $label
+                    $args['title']
                 );
             } ?>
         </h2>

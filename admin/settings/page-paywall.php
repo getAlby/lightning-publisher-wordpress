@@ -12,24 +12,20 @@ class PaywallPage extends SettingsPage
     public $page_title;
     public $menu_title;
 
-    public function zconstruct()
-    {
-        // Menu Item label
-        $this->page_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
-        $this->menu_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
-
-        
-
-        // parent::__construct();
-    }
-
+  
     public function init_fields()
     {
         // Tabs
         $this->tabs   = array(
-            'pricing'      => __( 'Pricing', 'wp-lightning-paywall' ),
-            'restrictions' => __( 'Restrictions', 'wp-lightning-paywall' ),
-            'integrations' => __( 'Integrations', 'wp-lightning-paywall' ),
+            'pricing' => array(
+                'title' => __( 'Pricing', 'wp-lightning-paywall' ),
+            ),
+            'restrictions' => array(
+                'title' => __( 'Restrictions', 'wp-lightning-paywall' ),
+            ),
+            'integrations' => array(
+                'title' => __( 'Integrations', 'wp-lightning-paywall' ),
+            ),
         );
 
         parent::init_fields();
@@ -81,6 +77,7 @@ class PaywallPage extends SettingsPage
             'tab'     => 'pricing',
             'field'   => array(
                 'label'       => __( 'Amount', 'wp-lightning-paywall' ),
+                'type'        => 'number',
                 'name'        => 'paywall_amount',
                 'description' => __( 'Amount in SATS per article', 'wp-lightning-paywall'),
             ),
@@ -91,6 +88,7 @@ class PaywallPage extends SettingsPage
             'field'   => array(
                 'label'       => __( 'Total', 'wp-lightning-paywall' ),
                 'name'        => 'paywall_total',
+                'type'        => 'number',
                 'description' => __( 'Total amount to collect. After that amount the article will be free', 'wp-lightning-paywall'),
             ),
         );
