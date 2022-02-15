@@ -54,7 +54,6 @@ abstract class SettingsPage
     {
         // Load form fields
         $this->set_form_fields();
-        $this->set_options();
 
         // Register Tabbed sections
         // This will register tabs as sections 
@@ -141,11 +140,16 @@ abstract class SettingsPage
     }
 
     
-    public function get_field_value($name)
+    public function get_field_value( $field )
     {
-        if ( ! isset($this->options[$name]) )
-            return '';
+        $name = is_array($field)
+            ? $field['field']['name']
+            : $field;
 
+        if ( ! isset($this->options[$name]) )
+        {
+            return '';
+        }
 
         return esc_attr($this->options[$name]);
     }
@@ -237,7 +241,7 @@ abstract class SettingsPage
             $option_name = "{$this->option_name}_{$tab}";
         }
 
-        $this->options = get_option($option_name, array() );
+        $this->options = get_option($option_name);
     }
 
 
