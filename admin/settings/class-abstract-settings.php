@@ -3,7 +3,7 @@
 // If this file is called directly, abort.
 defined('WPINC') || die;
 
-abstract class SettingsPage
+abstract class LNP_SettingsPage
 {
     protected $settings_path;
     protected $template_html;
@@ -59,21 +59,21 @@ abstract class SettingsPage
         // This will register tabs as sections 
         if ( is_array($this->tabs) )
         {
+            // Register new settings group
+            register_setting(
+                "{$this->option_name}",
+                "{$this->option_name}",
+                array($this, 'sanitize')
+            );
+
+            // Create sections on a page
             foreach( $this->tabs as $id => $args )
             {
-                // Register new settings group
-                register_setting(
-                    "wpln_page_{$this->option_name}_{$id}",
-                    "{$this->option_name}_{$id}",
-                    array($this, 'sanitize')
-                );
-
-                // Create section
                 add_settings_section(
                     "{$this->option_name}_section_{$id}",
                     $args['title'],
                     null,
-                    "wpln_page_{$this->option_name}_{$id}",
+                    "{$this->option_name}",
                 );
             }
         }
@@ -94,7 +94,7 @@ abstract class SettingsPage
                 $args['field']['name'],
                 $args['field']['label'],
                 array($this, 'get_input'),
-                "wpln_page_{$this->option_name}_" . $args['tab'],
+                $this->option_name,
                 "{$this->option_name}_section_"  . $args['tab'],
                 array(
                     'args' => $args
@@ -152,6 +152,93 @@ abstract class SettingsPage
         }
 
         return esc_attr($this->options[$name]);
+    }
+
+
+
+    /**
+     * Display all sections from a page as tabs
+     * @param  [type] $active [description]
+     * @return [type]         [description]
+     */
+    public function do_tabs_settings_section( $active ) {
+
+        foreach ( $this->tabs as $id => $args) 
+        {
+            // Open Tab
+            printf(
+                '<div id="%s" class="tab-content%s">',
+                $id,
+                ($id == $active) ? ' tab-content-active' : '',
+            );
+
+            // Open Table
+            echo '<table class="form-table" role="presentation">';
+
+            // Render fields
+            $this->do_section_settings_fields( $id );
+
+            // Cloase table and tab
+            echo '</table></div>';
+        }
+    }
+
+
+    /**
+     * Display settings field from a page section in WP style
+     * 
+     * @param  [type] $tab_id [description]
+     * @return [type]         [description]
+     */
+    public function do_section_settings_fields( $tab_id = '' ) {
+
+        global $wp_settings_fields;
+        
+        $page    = $this->option_name;
+        $section = "{$this->option_name}_section_{$tab_id}";
+
+        if (!isset($wp_settings_fields[$page][$section])) {
+            return;
+        }
+
+        echo '<table class="form-table" role="presentation">';
+
+        foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $field )
+        {
+            $class = '';
+     
+            if ( ! empty( $field['args']['class'] ) )
+            {
+                $class = sprintf(
+                    ' class="%s"',
+                    esc_attr( $field['args']['class'] )
+                );
+            }
+     
+            echo "<tr{$class}>";
+     
+            if ( ! empty( $field['args']['label_for'] ) )
+            {
+                printf(
+                    '<th scope="row"><label for="%s">%s</label></th>',
+                    esc_attr( $field['args']['label_for'] ),
+                    $field['title']
+                );
+            }
+            else {
+
+                printf(
+                    '<th scope="row">%s</th>',
+                    $field['title']
+                );
+            }
+     
+            echo '<td>';
+            call_user_func( $field['callback'], $field['args'] );
+            echo '</td></tr>';
+        }
+
+        echo '</table>';
     }
 
     protected function input_field($name, $label, $type = 'text', $autocomplete = false)
@@ -308,7 +395,7 @@ abstract class SettingsPage
             {
                 $output[] = sprintf(
                     'name="%s[%s]"',
-                    $args['tab'],
+                    $this->option_name,
                     $val
                 );
 

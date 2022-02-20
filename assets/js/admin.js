@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", function () {
     /**
      * Tabbed content settings page
      */
-    const tabNav = [].slice.call( document.querySelectorAll('.nav-tabz') );
+    const tabNav = [].slice.call( document.querySelectorAll('.lnp .nav-tab') );
 
     if ( tabNav.length )
     {
@@ -39,8 +39,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
                 // Activate clicked tab
                 const tabActive = document.querySelector( menuItem.hash );
-
-                console.dir(tabActive);
 
                 if ( tabActive )
                 {

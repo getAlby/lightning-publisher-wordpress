@@ -3,28 +3,24 @@
 // If this file is called directly, abort.
 defined('WPINC') || die;
 
-class PaywallPage extends SettingsPage
+class LNP_PaywallPage extends LNP_SettingsPage
 {
     protected $settings_path = 'lnp_settings_paywall';
     protected $template_html = 'settings/page-paywall.php';
     protected $option_name   = 'lnp_paywall';
-
-    public $page_title;
-    public $menu_title;
-
   
     public function init_fields()
     {
         // Tabs
         $this->tabs   = array(
             'pricing' => array(
-                'title' => __( 'Pricing', 'wp-lightning-paywall' ),
+                'title' => __( 'Pricing', 'lnp-alby' ),
             ),
             'restrictions' => array(
-                'title' => __( 'Restrictions', 'wp-lightning-paywall' ),
+                'title' => __( 'Restrictions', 'lnp-alby' ),
             ),
             'integrations' => array(
-                'title' => __( 'Integrations', 'wp-lightning-paywall' ),
+                'title' => __( 'Integrations', 'lnp-alby' ),
             ),
         );
 
@@ -38,8 +34,8 @@ class PaywallPage extends SettingsPage
     protected function set_translations()
     {
         // Menu Item label
-        $this->page_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
-        $this->menu_title = __( 'Paywall Settings', 'wp-lightning-paywall' );
+        $this->page_title = __( 'Paywall Settings', 'lnp-alby' );
+        $this->menu_title = __( 'Paywall Settings', 'lnp-alby' );
     }
 
 
@@ -59,16 +55,16 @@ class PaywallPage extends SettingsPage
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label'       => __( 'Text', 'wp-lightning-paywall' ),
+                'label'       => __( 'Text', 'lnp-alby' ),
                 'name'        => 'paywall_text',
-                'description' => __( 'Paywall text (use %s for the amount)', 'wp-lightning-paywall'),
+                'description' => __( 'Paywall text (use %s for the amount)', 'lnp-alby'),
             ),
         );
 
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label' => __( 'Button Label', 'wp-lightning-paywall' ),
+                'label' => __( 'Button Label', 'lnp-alby' ),
                 'name'  => 'paywall_button_text',
             ),
         );
@@ -76,20 +72,20 @@ class PaywallPage extends SettingsPage
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label'       => __( 'Amount', 'wp-lightning-paywall' ),
+                'label'       => __( 'Amount', 'lnp-alby' ),
                 'type'        => 'number',
                 'name'        => 'paywall_amount',
-                'description' => __( 'Amount in SATS per article', 'wp-lightning-paywall'),
+                'description' => __( 'Amount in SATS per article', 'lnp-alby'),
             ),
         );    
 
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label'       => __( 'Total', 'wp-lightning-paywall' ),
+                'label'       => __( 'Total', 'lnp-alby' ),
                 'name'        => 'paywall_total',
                 'type'        => 'number',
-                'description' => __( 'Total amount to collect. After that amount the article will be free', 'wp-lightning-paywall'),
+                'description' => __( 'Total amount to collect. After that amount the article will be free', 'lnp-alby'),
             ),
         );
         
@@ -100,36 +96,36 @@ class PaywallPage extends SettingsPage
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Timeout', 'wp-lightning-paywall' ),
+                'label'       => __( 'Timeout', 'lnp-alby' ),
                 'name'        => 'paywall_timeout',
-                'description' => __( 'Make the article free X days after it is published', 'wp-lightning-paywall'),
+                'description' => __( 'Make the article free X days after it is published', 'lnp-alby'),
             ),
         );
 
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Timein', 'wp-lightning-paywall' ),
+                'label'       => __( 'Timein', 'lnp-alby' ),
                 'name'        => 'paywall_timein',
-                'description' => __( 'Enable the paywall N days after the article is published', 'wp-lightning-paywall'),
+                'description' => __( 'Enable the paywall N days after the article is published', 'lnp-alby'),
             ),
         );
 
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Days available', 'wp-lightning-paywall' ),
+                'label'       => __( 'Days available', 'lnp-alby' ),
                 'name'        => 'paywall_all_period',
-                'description' => __( 'How many days should all articles be available', 'wp-lightning-paywall'),
+                'description' => __( 'How many days should all articles be available', 'lnp-alby'),
             ),
         );
 
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Confirmation text', 'wp-lightning-paywall' ),
+                'label'       => __( 'Confirmation text', 'lnp-alby' ),
                 'name'        => 'paywall_all_confirmation',
-                'description' => __( 'Confirmation text for all article payments', 'wp-lightning-paywall'),
+                'description' => __( 'Confirmation text for all article payments', 'lnp-alby'),
             ),
         );
 
@@ -140,18 +136,18 @@ class PaywallPage extends SettingsPage
         $fields[] = array(
             'tab'     => 'integrations',
             'field'   => array(
-                'label'       => __( 'Add LNURL to RSS items', 'wp-lightning-paywall' ),
+                'label'       => __( 'Add LNURL to RSS items', 'lnp-alby' ),
                 'name'        => 'paywall_lnurl_rss',
-                'description' => __( 'Add lightning payment details to RSS items', 'wp-lightning-paywall'),
+                'description' => __( 'Add lightning payment details to RSS items', 'lnp-alby'),
             ),
         );
 
         $fields[] = array(
             'tab'     => 'integrations',
             'field'   => array(
-                'label'       => __( 'Disable paywall in RSS?', 'wp-lightning-paywall' ),
+                'label'       => __( 'Disable paywall in RSS?', 'lnp-alby' ),
                 'name'        => 'paywall_disable_in_rss',
-                'description' => __( 'Disable paywall in RSS items / show full content in RSS.', 'wp-lightning-paywall'),
+                'description' => __( 'Disable paywall in RSS items / show full content in RSS.', 'lnp-alby'),
             ),
         );
 

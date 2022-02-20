@@ -3,14 +3,11 @@
 // If this file is called directly, abort.
 defined('WPINC') || die;
 
-class ConnectionPage extends SettingsPage
+class LNP_ConnectionPage extends LNP_SettingsPage
 {
     protected $settings_path = 'lnp_settings_connections';
     protected $template_html = 'settings/page-connections.php';
-    protected $option_name = 'lnp_connection';
-
-    protected $page_title = 'Wallet Settings';
-    protected $menu_title = 'Wallet settings';
+    protected $option_name   = 'lnp_connection';
 
     public function init_fields()
     {
@@ -29,6 +26,16 @@ class ConnectionPage extends SettingsPage
         $this->lndhub_create_account_section();
 
         $this->navigation();
+    }
+
+    /**
+     * Make menu item/page title translatable
+     */
+    protected function set_translations()
+    {
+        // Menu Item label
+        $this->page_title = __( 'Wallet Settings', 'lnp-alby' );
+        $this->menu_title = __( 'Wallet Settings', 'lnp-alby' );
     }
 
 

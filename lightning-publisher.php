@@ -1,17 +1,22 @@
 <?php
-/*
-    Plugin Name: Lightning Paywall
-    Version:     0.0.1
-    Plugin URI:
-    Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
-    Author:
-    Author URI:
-    Text Domain: wp-lightning-paywall
 
-    Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
-*/
+// If this file is called directly, abort.
+defined('WPINC') || die;
 
-if (!defined('ABSPATH')) exit;
+/**
+ * 
+ * Plugin Name: Lightning Paywall
+ * Version:     0.0.1
+ * Plugin URI:
+ * Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
+ * Author:
+ * Author URI:
+ * Text Domain: lnp-alby
+ *
+ * Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
+ * 
+ */
+
 
 // Composer dependencies
 require_once 'vendor/autoload.php';
@@ -21,12 +26,12 @@ require_once 'includes/db/database-handler.php';
 require_once 'includes/db/transactions.php';
 
 // Settings 
-require_once 'admin/settings/init.php';
-require_once 'admin/settings/page-dashboard.php';
-require_once 'admin/settings/page-balance.php';
-require_once 'admin/settings/page-paywall.php';
-require_once 'admin/settings/page-connections.php';
-require_once 'admin/settings/page-help.php';
+require_once 'admin/settings/class-abstract-settings.php';
+require_once 'admin/settings/class-dashboard.php';
+require_once 'admin/settings/class-balance.php';
+require_once 'admin/settings/class-paywall.php';
+require_once 'admin/settings/class-connections.php';
+require_once 'admin/settings/class-help.php';
 
 // Widgets
 require_once 'admin/widgets/lnp-widget.php';
@@ -37,7 +42,7 @@ require_once 'lightning-address.php';
 use \tkijewski\lnurl;
 use \Firebase\JWT;
 
-define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
+define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'lnp-alby', AUTH_KEY));
 define('WP_LN_PAYWALL_JWT_ALGORITHM', 'HS256');
 define('WP_LN_ROOT_PATH', untrailingslashit(plugin_dir_path( __FILE__ )) );
 define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url( __FILE__ )) );
@@ -53,7 +58,7 @@ class WP_LN_Paywall
     $this->lightningClient = null;
     $this->lightningClientType = null;
 
-    $this->database_handler = new DatabaseHandler();
+    $this->database_handler = new LNP_DatabaseHandler();
 
     add_action('init', array($this->database_handler, 'init'));
     // frontend
@@ -79,10 +84,10 @@ class WP_LN_Paywall
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
     new LNP_Dashboard($this, 'lnp_settings');
-    new BalancePage($this, 'lnp_settings', $this->database_handler);
-    $paywall_page = new PaywallPage($this, 'lnp_settings');
-    $connection_page = new ConnectionPage($this, 'lnp_settings');
-    new HelpPage($this, 'lnp_settings');
+    new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
+    $paywall_page = new LNP_PaywallPage($this, 'lnp_settings');
+    $connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
+    new LNP_HelpPage($this, 'lnp_settings');
 
     // get page options
     $this->connection_options = $connection_page->options;

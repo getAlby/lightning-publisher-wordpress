@@ -61,6 +61,11 @@
 /**
  * Tabs
  */
-.wpln .tab-content:not(.tab-content-active) {
+.lnp .tab-content:not(.tab-content-active) {
   display: none;
+}
+
+.lnp .nav-tab:focus {
+  outline: none;
+  box-shadow: none;
 }

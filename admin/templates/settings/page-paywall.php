@@ -8,17 +8,19 @@ $active = isset($_GET['tab'])
     ? $_GET['tab']
     : 'pricing';
 
-?>
 
-<div class="wrap wpln">
+global $wp_settings_fields; ?>
+
+<div class="wrap lnp">
+    
+    <?php settings_errors(); ?>
+
     <div class="tabbed-content">
         <h2 class="nav-tab-wrapper">
             <?php foreach ( $this->tabs as $id => $args)
             {
                 printf(
-                    '<a href="%s?page=%s&tab=%s" class="%s">%s</a>',
-                    admin_url('admin.php'),
-                    sanitize_text_field($_GET['page']),
+                    '<a href="#%s" class="%s">%s</a>',
                     $id,
                     ($id == $active) ? 'nav-tab nav-tab-active' : 'nav-tab',
                     $args['title']
@@ -28,16 +30,15 @@ $active = isset($_GET['tab'])
 
         <div class="tab-content-wrapper">
             <form method="post" action="options.php">
-                <?php
 
-                settings_fields("wpln_page_{$this->option_name}_{$active}");
-                do_settings_sections("wpln_page_{$this->option_name}_{$active}");
+                <?php 
+                
+                $this->do_tabs_settings_section($active);
 
+                settings_fields("{$this->option_name}");
+                submit_button();
+                
                 ?>
-
-                <div class="button-row">
-                    <?php submit_button(); ?>
-                </div>
             </form>
         </div>
     </div>

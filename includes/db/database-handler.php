@@ -1,6 +1,6 @@
 <?php
 
-class DatabaseHandler
+class LNP_DatabaseHandler
 {
     private $table_name;
 
