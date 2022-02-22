@@ -1,17 +1,11 @@
 <?php
 
 // If this file is called directly, abort.
-defined('WPINC') || die;
-
-?>
+defined('WPINC') || die; ?>
 
 <div class="wrap lnp">
     
     <h1><?php echo $this->get_page_title(); ?></h1>
-
-    <div class="node-info">
-        <?php $this->get_lnd_address_node_info(); ?>
-    </div>
     
     <div class="tabbed-content">
         
@@ -23,8 +17,9 @@ defined('WPINC') || die;
                 <?php 
 
                 $this->do_tabs_settings_section();
-                settings_fields($this->option_name);
+                settings_fields($this->settings_path);
                 submit_button();
+                
                 ?>
             </form>
         </div>
@@ -67,6 +62,18 @@ defined('WPINC') || die;
     }
 
     window.addEventListener("DOMContentLoaded", function() {
+
+        /**
+         * Create a new wallet
+         */
+        const newWallet = document.getElementById("create_lndhub_account");
+
+        if ( newWallet )
+        {
+            newWallet.addEventListener("click", lndhubCreateAccount);    
+        }
+        
+        
         
         const connectLNDButton = document.getElementById('load_from_lndconnect');
 
@@ -86,27 +93,5 @@ defined('WPINC') || die;
                 document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
             });
         }
-
-        const list = document.querySelectorAll('.wp-lnp-card');
-        const sections = document.querySelectorAll('.wp-lnp-section__hidden');
-        const fieldsContainer = document.getElementById('wp-lnp-fields');
-        const sectionsContent = {};
-        sections.forEach(section => {
-            sectionsContent[section.id] = section.innerHTML;
-            section.remove();
-        });
-        const submitButton = document.getElementById('submit');
-        list.forEach(el => el.addEventListener('click', e => {
-            e.preventDefault();
-            const current = el.attributes['data-section'].value;
-            fieldsContainer.innerHTML = sectionsContent[current];
-            if (current === 'lndhub_create_account') {
-                submitButton.style.display = 'none';
-                document.getElementById("create_lndhub_account").addEventListener("click", lndhubCreateAccount);
-                return;
-            }
-            document.getElementById("create_lndhub_account").removeEventListener("click", lndhubCreateAccount);
-            submitButton.style.display = 'block';
-        }));
     });
 </script>

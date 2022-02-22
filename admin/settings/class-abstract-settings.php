@@ -199,6 +199,13 @@ abstract class LNP_SettingsPage
                     : '',
             );
 
+            if ( ! empty($args['description']) )
+            {
+                echo wpautop( $args['description'] );
+            }
+
+            do_action( "lnp_tab_before_{$id}" );
+
             // Open Table
             echo '<table class="form-table" role="presentation">';
 
@@ -207,6 +214,8 @@ abstract class LNP_SettingsPage
 
             // Cloase table and tab
             echo '</table></div>';
+
+            do_action( "lnp_tab_after_{$id}" );
         }
     }
 
@@ -316,18 +325,17 @@ abstract class LNP_SettingsPage
 
 
 
-    protected function add_admin_notice( $message, $type = 'info' ) {
+    public function add_admin_notice( $message = NULL, $type = 'info' ) {
 
-        add_action( 'admin_notices', function ( $message, $type ) {
-            
-            $class = 'notice notice-' . $type;
- 
-            printf(
-                '<div class="%1$s"><p>%2$s</p></div>',
-                esc_attr( $class ),
-                esc_html( $message )
-            );
-        }, 10, 2);
+        if ( NULL === $message )
+            return;
+
+        $class = 'notice notice-' . $type;
+        printf(
+            '<div class="%1$s"><p>%2$s</p></div>',
+            esc_attr( $class ),
+            esc_html( $message )
+        );
     }
 
 
@@ -395,6 +403,11 @@ abstract class LNP_SettingsPage
                 $output[] = sprintf(
                     'name="%s[%s]"',
                     $this->option_name,
+                    $val
+                );
+
+                $output[] = sprintf(
+                    'id="%s"',
                     $val
                 );
 

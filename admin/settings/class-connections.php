@@ -17,6 +17,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         // Menu Item label
         $this->page_title = __( 'Wallet Settings', 'lnp-alby' );
         $this->menu_title = __( 'Wallet Settings', 'lnp-alby' );
+
+        add_action('admin_notices', array($this, 'get_lnd_address_node_info'));
+        add_action('lnp_tab_before_alby', array($this, 'render_tab_alby_wallet'));
     }
 
 
@@ -30,12 +33,12 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         // Tabs
         $this->tabs = array(
             'lnd' => array(
-                'title'       => __('LNDhub', 'lnp-alby' ),
-                'description' => __('Connect using LNDhub', 'lnp-alby'),
+                'title'       => __('LndHUB', 'lnp-alby' ),
+                'description' => __('Connect using LndHUB', 'lnp-alby'),
             ),
             'lndhub' => array(
-                'title'       => __('LndHub (BlueWallet)', 'lnp-alby' ),
-                'description' => __('Connect using LNDhub', 'lnp-alby'),
+                'title'       => __('LndHUB (BlueWallet)', 'lnp-alby' ),
+                'description' => __('Connect using LndHUB', 'lnp-alby'),
             ),
             'lnbits' => array(
                 'title'       => __('LNbits', 'lnp-alby' ),
@@ -48,6 +51,10 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'lnaddress' => array(
                 'title'       => __('LN Address', 'lnp-alby' ),
                 'description' => __('Connect using Lightning Address Config', 'lnp-alby'),
+            ),
+            'alby' => array(
+                'title'       => __('New Wallet', 'lnp-alby' ),
+                'description' => __('We create and manage a lightning wallet for you', 'lnp-alby'),
             ),
         );
 
@@ -202,6 +209,22 @@ class LNP_ConnectionPage extends LNP_SettingsPage
 
 
 
+    /**
+     * Generate Alby
+     */
+    public function render_tab_alby_wallet() {
+
+        printf(
+            '<div>
+                <button id="%s" type="button" class="button button-secondary">%s</button>
+             </div>',
+            'create_lndhub_account',
+            __('Create Wallet', 'lnp-alby')
+        );
+    }
+
+
+
     public function get_lnd_address_node_info() {
 
         try {
@@ -224,7 +247,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             else {
 
                 $type    = 'error';
-                $message = __('Not connected', 'lnp-alby');
+                $message = __('Wallet not connected', 'lnp-alby');
             }
         }
         catch (Exception $e) {
@@ -232,7 +255,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             $type    = 'error';
             $message = sprintf(
                 '%s %s',
-                __('Not connected', 'lnp-alby'),
+                __('Connection Error, please check log for details', 'lnp-alby'),
                 $e
             );
         }
