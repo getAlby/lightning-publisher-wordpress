@@ -10,11 +10,10 @@ defined('WPINC') || die; ?>
 
         <div class="tab-content-wrapper">
             <form method="post" action="options.php">
-
                 <?php 
 
                 $this->do_tabs_settings_section($active);
-                settings_fields($this->option_name);
+                settings_fields($this->settings_path);
                 submit_button();
                 
                 ?>
