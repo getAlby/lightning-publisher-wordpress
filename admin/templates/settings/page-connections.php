@@ -5,55 +5,30 @@ defined('WPINC') || die;
 
 ?>
 
-<div class="wrap">
-    <h1>Lightning Wallet Settings</h1>
+<div class="wrap lnp">
+    
+    <h1><?php echo $this->get_page_title(); ?></h1>
+
     <div class="node-info">
-        <?php
-        try {
-
-            if (
-                $this->plugin->getLightningClient()
-                && $this->plugin->getLightningClient()->isConnectionValid()
-            ) {
-                
-                $node_info = $this->plugin->getLightningClient()->getInfo();
-                
-                printf(
-                    '%s %s - %s',
-                    __('Connected to:', 'lnp-alby'),
-                    $node_info['alias'],
-                    $node_info['identity_pubkey']
-                );
-            }
-            else {
-                _e('Not connected', 'lnp-alby');
-            }
-        }
-        catch (Exception $e) {
-            printf(
-                '%s %s',
-                __('Not connected', 'lnp-alby'),
-                $e
-            );
-        }
-        ?>
+        <?php $this->get_lnd_address_node_info(); ?>
     </div>
-    <form id="wallet_settings_form" method="post" action="options.php">
-        <?php
-        settings_fields($this->settings_path);
+    
+    <div class="tabbed-content">
+        
+        <?php $this->do_tabs_settings_section_nav(); ?>
 
-        echo '<div id="wp-lnp-fields">';
+        <div class="tab-content-wrapper">
+            <form method="post" action="options.php">
 
-        $this->render_current_section($this->settings_path);
+                <?php 
 
-        echo '</div>';
-        submit_button();
-        ?>
-    </form>
-    <?php
-    $this->do_settings_sections($this->settings_path);
-    $this->do_settings_fields($this->settings_path, 'connection-types');
-    ?>
+                $this->do_tabs_settings_section();
+                settings_fields($this->option_name);
+                submit_button();
+                ?>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -69,7 +44,7 @@ defined('WPINC') || die;
         generating_lndhub_account = true;
 
         button.disabled = true;
-        button.innerHTML = <?php _e("Generating...", 'lnp-alby'); ?>
+        button.innerHTML = <?php _e('"Generating...";', 'lnp-alby'); ?>
 
         const data = new FormData();
 
@@ -93,19 +68,24 @@ defined('WPINC') || die;
 
     window.addEventListener("DOMContentLoaded", function() {
         
-        document.getElementById('load_from_lndconnect')
-            .addEventListener('click', function(e) {
+        const connectLNDButton = document.getElementById('load_from_lndconnect');
+
+        if ( connectLNDButton )
+        {
+            connectLNDButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                var lndConnectUrl = prompt(<?php _e('Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)', 'lnp-alby'); ?>);
-            if (!lndConnectUrl) {
-                return;
-            }
-            var url = new URL(lndConnectUrl);
-            document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
-            document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
-            document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
-        });
+                    
+                var lndConnectUrl = prompt(<?php _e('"Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)"', 'lnp-alby'); ?>);
+
+                if (!lndConnectUrl) {
+                    return;
+                }
+                var url = new URL(lndConnectUrl);
+                document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
+                document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
+                document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
+            });
+        }
 
         const list = document.querySelectorAll('.wp-lnp-card');
         const sections = document.querySelectorAll('.wp-lnp-section__hidden');

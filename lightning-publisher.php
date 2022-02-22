@@ -31,6 +31,7 @@ require_once 'admin/settings/class-dashboard.php';
 require_once 'admin/settings/class-balance.php';
 require_once 'admin/settings/class-paywall.php';
 require_once 'admin/settings/class-connections.php';
+require_once 'admin/settings/class-connections-old.php';
 require_once 'admin/settings/class-help.php';
 
 // Widgets

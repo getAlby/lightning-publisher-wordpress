@@ -55,17 +55,17 @@ abstract class LNP_SettingsPage
         // Load form fields
         $this->set_form_fields();
 
+        // Settings page without tabs
+        register_setting(
+            $this->settings_path,
+            $this->option_name, 
+            array($this, 'sanitize')
+        );
+
         // Register Tabbed sections
         // This will register tabs as sections 
-        if ( is_array($this->tabs) )
+        if ( ! empty($this->tabs) )
         {
-            // Register new settings group
-            register_setting(
-                "{$this->option_name}",
-                "{$this->option_name}",
-                array($this, 'sanitize')
-            );
-
             // Create sections on a page
             foreach( $this->tabs as $id => $args )
             {
@@ -76,15 +76,6 @@ abstract class LNP_SettingsPage
                     "{$this->option_name}",
                 );
             }
-        }
-        else
-        {
-            // Settings page without tabs
-            register_setting(
-                $this->settings_path,
-                $this->option_name, 
-                array($this, 'sanitize')
-            );
         }
 
         // Register fields
@@ -111,6 +102,8 @@ abstract class LNP_SettingsPage
 
         if ( empty($this->template_html) )
             return;
+
+        settings_errors();
 
         // Include HTML file
         include $this->get_template_path($this->template_html);
@@ -155,13 +148,45 @@ abstract class LNP_SettingsPage
     }
 
 
+    public function get_active_tab_id() {
+
+        return isset($_GET['tab'])
+            ? sanitize_text_field($_GET['tab'])
+            : key($this->tabs);
+    }
+
 
     /**
      * Display all sections from a page as tabs
-     * @param  [type] $active [description]
-     * @return [type]         [description]
      */
-    public function do_tabs_settings_section( $active ) {
+    public function do_tabs_settings_section_nav() {
+
+        $active   = $this->get_active_tab_id();
+        $output   = array();
+        $output[] = '<h2 class="nav-tab-wrapper">';
+        
+        foreach ( $this->tabs as $id => $args)
+        {
+            $output[] = sprintf(
+                '<a href="#%s" class="%s">%s</a>',
+                $id,
+                ($id == $active) ? 'nav-tab nav-tab-active' : 'nav-tab',
+                $args['title']
+            );
+        }
+
+        $output[] = '</h2>';
+
+        echo join('', $output);
+    }
+
+
+    /**
+     * Display all sections from a page as tabs
+     */
+    public function do_tabs_settings_section() {
+
+        $active = $this->get_active_tab_id();
 
         foreach ( $this->tabs as $id => $args) 
         {
@@ -169,7 +194,9 @@ abstract class LNP_SettingsPage
             printf(
                 '<div id="%s" class="tab-content%s">',
                 $id,
-                ($id == $active) ? ' tab-content-active' : '',
+                ($id == $active)
+                    ? ' tab-content-active'
+                    : '',
             );
 
             // Open Table
@@ -241,50 +268,6 @@ abstract class LNP_SettingsPage
         echo '</table>';
     }
 
-    protected function input_field($name, $label, $type = 'text', $autocomplete = false)
-    {
-
-        printf(
-            '<input id="%s" type="%s" autocomplete="%s" name="%s" value="%s" />',
-            $name,
-            $type,
-            $autocomplete ? 'on' : 'off',
-            $this->get_field_name($name),
-            $this->get_field_value($name)
-        );
-        if ($type !== 'hidden') {
-            printf(
-                '<br><label>%s</label>',
-                $label
-            );
-        }
-    }
-
-    public function create_input_field($args = [])
-    {
-        $this->input_field($args['key'], $args['label'], $args['type'] ?? 'text', $args['autocomplete'] ?? false);
-    }
-
-    protected function add_section($data = [])
-    {
-        add_settings_section($data['key'], $data['title'], null, $this->settings_path);
-    }
-
-    protected function add_input_field($data = [])
-    {
-        add_settings_field($data['key'], $data['name'], array($this, 'create_input_field'), $this->settings_path, $data['section'], $data);
-    }
-
-    protected function add_custom_field($data = [], $callback, $args = [])
-    {
-        add_settings_field($data['key'], $data['name'], $callback, $this->settings_path, $data['section'], $args);
-    }
-
-    protected function add_custom_input_field($data = [], $callback)
-    {
-        add_settings_field($data['key'], $data['name'], $callback, $this->settings_path, $data['section'], $data);
-    }
-
 
     protected function get_template_path( $filename = false ) {
 
@@ -329,6 +312,22 @@ abstract class LNP_SettingsPage
         }
 
         $this->options = get_option($option_name);
+    }
+
+
+
+    protected function add_admin_notice( $message, $type = 'info' ) {
+
+        add_action( 'admin_notices', function ( $message, $type ) {
+            
+            $class = 'notice notice-' . $type;
+ 
+            printf(
+                '<div class="%1$s"><p>%2$s</p></div>',
+                esc_attr( $class ),
+                esc_html( $message )
+            );
+        }, 10, 2);
     }
 
 
@@ -433,7 +432,7 @@ abstract class LNP_SettingsPage
         {
             $output[] = sprintf(
                 '<p class="description">%s</p>',
-                esc_attr($parsed_args['description'])
+                $parsed_args['description']
             );
         }
 
