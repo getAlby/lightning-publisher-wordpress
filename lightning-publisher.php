@@ -48,9 +48,6 @@ define('WP_LN_ROOT_PATH', untrailingslashit(plugin_dir_path( __FILE__ )) );
 define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url( __FILE__ )) );
 
 
-
-
-
 class WP_LN_Paywall
 {
   public function __construct()

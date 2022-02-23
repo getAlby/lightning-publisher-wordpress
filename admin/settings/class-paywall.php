@@ -55,8 +55,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label'       => __( 'Text', 'lnp-alby' ),
                 'name'        => 'paywall_text',
+                'label'       => __( 'Text', 'lnp-alby' ),
                 'description' => __( 'Paywall text (use %s for the amount)', 'lnp-alby'),
             ),
         );
@@ -64,17 +64,17 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label' => __( 'Button Label', 'lnp-alby' ),
                 'name'  => 'paywall_button_text',
+                'label' => __( 'Button Label', 'lnp-alby' ),
             ),
         );
 
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label'       => __( 'Amount', 'lnp-alby' ),
                 'type'        => 'number',
                 'name'        => 'paywall_amount',
+                'label'       => __( 'Amount', 'lnp-alby' ),
                 'description' => __( 'Amount in SATS per article', 'lnp-alby'),
             ),
         );    
@@ -82,9 +82,9 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
-                'label'       => __( 'Total', 'lnp-alby' ),
-                'name'        => 'paywall_total',
                 'type'        => 'number',
+                'name'        => 'paywall_total',
+                'label'       => __( 'Total', 'lnp-alby' ),                
                 'description' => __( 'Total amount to collect. After that amount the article will be free', 'lnp-alby'),
             ),
         );
@@ -96,17 +96,19 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Timeout', 'lnp-alby' ),
+                'type'        => 'number',
                 'name'        => 'paywall_timeout',
-                'description' => __( 'Make the article free X days after it is published', 'lnp-alby'),
+                'label'       => __( 'Timeout', 'lnp-alby' ),
+                'description' => __( 'Make the article free N days after it is published', 'lnp-alby'),
             ),
         );
 
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Timein', 'lnp-alby' ),
+                'type'        => 'number',
                 'name'        => 'paywall_timein',
+                'label'       => __( 'Timein', 'lnp-alby' ),
                 'description' => __( 'Enable the paywall N days after the article is published', 'lnp-alby'),
             ),
         );
@@ -114,8 +116,9 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Days available', 'lnp-alby' ),
+                'type'        => 'number',
                 'name'        => 'paywall_all_period',
+                'label'       => __( 'Days available', 'lnp-alby' ),
                 'description' => __( 'How many days should all articles be available', 'lnp-alby'),
             ),
         );
@@ -123,8 +126,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'restrictions',
             'field'   => array(
-                'label'       => __( 'Confirmation text', 'lnp-alby' ),
                 'name'        => 'paywall_all_confirmation',
+                'label'       => __( 'Confirmation text', 'lnp-alby' ),
                 'description' => __( 'Confirmation text for all article payments', 'lnp-alby'),
             ),
         );
@@ -136,8 +139,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'integrations',
             'field'   => array(
-                'label'       => __( 'Add LNURL to RSS items', 'lnp-alby' ),
                 'name'        => 'paywall_lnurl_rss',
+                'label'       => __( 'Add LNURL to RSS items', 'lnp-alby' ),
                 'description' => __( 'Add lightning payment details to RSS items', 'lnp-alby'),
             ),
         );
@@ -145,8 +148,9 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'integrations',
             'field'   => array(
-                'label'       => __( 'Disable paywall in RSS?', 'lnp-alby' ),
+                'type'        => 'checkbox',
                 'name'        => 'paywall_disable_in_rss',
+                'label'       => __( 'Disable paywall in RSS?', 'lnp-alby' ),
                 'description' => __( 'Disable paywall in RSS items / show full content in RSS.', 'lnp-alby'),
             ),
         );

@@ -1,3 +1,19 @@
+/**
+ * Tabs
+ */
+.lnp .tab-content:not(.tab-content-active) {
+  display: none;
+}
+
+.lnp .nav-tab:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+/**
+ * Cards in connections page
+ */
 .wp-lnp-card__container {
   display: flex;
   padding: 1.25rem 1.25rem;
@@ -47,25 +63,4 @@
 .wp-lnp-card__text {
   font-weight: 300;
   font-size: 14px;
-}
-
-.wp-lnp-section {
-  display: block;
-}
-
-.wp-lnp-section__hidden {
-  display: none;
-}
-
-
-/**
- * Tabs
- */
-.lnp .tab-content:not(.tab-content-active) {
-  display: none;
-}
-
-.lnp .nav-tab:focus {
-  outline: none;
-  box-shadow: none;
 }

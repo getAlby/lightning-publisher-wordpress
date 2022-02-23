@@ -29,7 +29,6 @@ class LNP_ConnectionPage extends LNP_SettingsPage
      */
     public function init_fields()
     {
-        
         // Tabs
         $this->tabs = array(
             'lnd' => array(
@@ -78,9 +77,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lnd',
             'field'   => array(
-                'label'       => __( 'Address', 'lnp-alby' ),
-                'name'        => 'lnd_address',
                 'type'        => 'url',
+                'name'        => 'lnd_address',
+                'label'       => __( 'Address', 'lnp-alby' ),
                 'description' => __( 'e.g. https://127.0.0.1:8080 - or <a href="#" id="load_from_lndconnect">click here to load details from a lndconnect</a>', 'lnp-alby'),
             ),
         );
@@ -88,8 +87,8 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lnd',
             'field'   => array(
-                'label'       => __( 'Macaroon', 'lnp-alby' ),
                 'name'        => 'lnd_macaroon',
+                'label'       => __( 'Macaroon', 'lnp-alby' ),
                 'description' => __( 'Invoices macaroon in HEX format', 'lnp-alby'),
             ),
         );
@@ -97,8 +96,8 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lnd',
             'field'   => array(
-                'label'       => __( 'TLS Certificate', 'lnp-alby' ),
                 'name'        => 'lnd_cert',
+                'label'       => __( 'TLS Certificate', 'lnp-alby' ),
                 'description' => __( 'TLS Certificate', 'lnp-alby'),
             ),
         );
@@ -110,9 +109,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lndhub',
             'field'   => array(
-                'label'       => __( 'LndHub Url', 'lnp-alby' ),
-                'name'        => 'lndhub_url',
                 'type'        => 'url',
+                'name'        => 'lndhub_url',
+                'label'       => __( 'LndHub Url', 'lnp-alby' ),
                 'description' => __( 'LndHub Host', 'lnp-alby'),
             ),
         );
@@ -120,8 +119,8 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lndhub',
             'field'   => array(
-                'label'       => __( 'Login', 'lnp-alby' ),
                 'name'        => 'lndhub_login',
+                'label'       => __( 'Login', 'lnp-alby' ),
                 'description' => __( 'LndHub Login', 'lnp-alby'),
             ),
         );
@@ -129,21 +128,22 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lndhub',
             'field'   => array(
-                'label'       => __( 'Password', 'lnp-alby' ),
-                'name'        => 'lndhub_password',
                 'type'        => 'password',
+                'name'        => 'lndhub_password',
+                'label'       => __( 'Password', 'lnp-alby' ),
                 'description' => __( 'LndHub Password', 'lnp-alby'),
             ),
         );
 
+        
         /**
          * LNBits
          */
         $fields[] = array(
             'tab'     => 'lnbits',
             'field'   => array(
-                'label'       => __( 'API Key', 'lnp-alby' ),
                 'name'        => 'lnbits_apikey',
+                'label'       => __( 'API Key', 'lnp-alby' ),
                 'description' => __( 'LNbits Invoice/read key', 'lnp-alby'),
             ),
         );
@@ -151,9 +151,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lnbits',
             'field'   => array(
-                'label'       => __( 'Host', 'lnp-alby' ),
-                'name'        => 'lnbits_host',
                 'type'        => 'url',
+                'name'        => 'lnbits_host',
+                'label'       => __( 'Host', 'lnp-alby' ),
                 'description' => __( 'LNbits host (e.g. https://legend.lnbits.com)', 'lnp-alby'),
             ),
         );
@@ -165,9 +165,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'btcpay',
             'field'   => array(
-                'label'       => __( 'Host', 'lnp-alby' ),
-                'name'        => 'btcpay_host',
                 'type'        => 'url',
+                'name'        => 'btcpay_host',
+                'label'       => __( 'Host', 'lnp-alby' ),
                 'description' => __( 'BtcPay Host', 'lnp-alby'),
             ),
         );
@@ -175,8 +175,8 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'btcpay',
             'field'   => array(
-                'label'       => __( 'API Key', 'lnp-alby' ),
                 'name'        => 'btcpay_apikey',
+                'label'       => __( 'API Key', 'lnp-alby' ),
                 'description' => __( 'BtcPay Api Key', 'lnp-alby'),
             ),
         );
@@ -184,8 +184,8 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'btcpay',
             'field'   => array(
-                'label'       => __( 'Store ID', 'lnp-alby' ),
                 'name'        => 'btcpay_store_id',
+                'label'       => __( 'Store ID', 'lnp-alby' ),
                 'description' => __( 'BtcPay Store ID', 'lnp-alby'),
             ),
         );
@@ -197,8 +197,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'lnaddress',
             'field'   => array(
-                'label'       => __( 'Lightning Address', 'lnp-alby' ),
+                'type'        => 'email',
                 'name'        => 'lnaddress_address',
+                'label'       => __( 'Lightning Address', 'lnp-alby' ),
                 'description' => __( 'Lightning Address (e.g. you@payaddress.co) - only works if the vistor supports WebLN!', 'lnp-alby'),
             ),
         );
@@ -226,6 +227,12 @@ class LNP_ConnectionPage extends LNP_SettingsPage
 
 
     public function get_lnd_address_node_info() {
+
+        // Don't run check on other settings pages
+        if ( ! $this->is_current_page() )
+        {
+            return;
+        }
 
         try {
 
