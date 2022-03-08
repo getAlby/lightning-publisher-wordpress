@@ -85,15 +85,20 @@ class WP_LN_Paywall
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
     new LNP_Dashboard($this, 'lnp_settings');
-    new LNP_DonationPage($this, 'lnp_settings');
     new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
-    $paywall_page = new LNP_PaywallPage($this, 'lnp_settings');
+
+    $paywall_page    = new LNP_PaywallPage($this, 'lnp_settings');
     $connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
+    $donation_page   = new LNP_DonationPage($this, 'lnp_settings');
+
     new LNP_HelpPage($this, 'lnp_settings');
 
     // get page options
     $this->connection_options = $connection_page->options;
     $this->paywall_options = $paywall_page->options ?  $paywall_page->options : [];
+
+    // Anything that goes on frontend
+    new LNP_Public( $this );
 
     add_action('widgets_init', array($this, 'widget_init'));
     // feed

@@ -50,9 +50,9 @@ class LNP_DonationPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'checkbox_group',
                 'name'        => 'donations_enabled_for',
-                'values'      => $this->get_post_types(),
+                'options'     => $this->get_post_types(),
                 'label'       => __( 'Auto add donation box', 'lnp-alby' ),
-                'description' => __( 'Enable this option to automatically append donation block to end of each post, for selected post type', 'lnp-alby'),
+                'description' => __( 'Enable this option to automatically append donation block to end of each post, for selected post type. You can still manually add donation box with shortcode or Gutenberg block', 'lnp-alby'),
             ),
         );
 
@@ -61,13 +61,13 @@ class LNP_DonationPage extends LNP_SettingsPage
          * Values for field: Placement
          * Make it readable
          */
-        $values   = array();
-        $values[] = array(
+        $options   = array();
+        $options[] = array(
             'value' => 'above',
             'label' => __( 'Above content', 'lnp-alby' ),
         );
 
-        $values[] = array(
+        $options[] = array(
             'value' => 'below',
             'label' => __( 'Below content', 'lnp-alby' ),
         );
@@ -77,7 +77,7 @@ class LNP_DonationPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'checkbox_group',
                 'name'        => 'donations_autoadd',
-                'values'      => $values,
+                'options'     => $options,
                 'label'       => __( 'Placement', 'lnp-alby' ),
                 'description' => __( 'Where to add donation box', 'lnp-alby'),
             ),
@@ -101,17 +101,17 @@ class LNP_DonationPage extends LNP_SettingsPage
          * Docs:
          * @link https://developer.wordpress.org/reference/functions/get_post_types/
          */
-        $types  = get_post_types(array('public' => true), 'objects');
-        $values = array();
+        $types   = get_post_types(array('public' => true), 'objects');
+        $options = array();
 
         foreach ( $types as $type )
         {
-            $values[] = array(
+            $options[] = array(
                 'label' => $type->label,
                 'value' => $type->name,
             );
         }
 
-        return $values;
+        return $options;
     }
 }

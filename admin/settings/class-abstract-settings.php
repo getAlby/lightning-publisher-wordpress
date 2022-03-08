@@ -142,12 +142,17 @@ abstract class LNP_SettingsPage
             ? $field['field']['name']
             : $field;
 
-        if ( ! isset($this->options[$name]) )
+        if ( ! isset($this->options[$name]) || empty($name) )
         {
             return '';
         }
 
-        return esc_attr($this->options[$name]);
+        $value = $this->options[$name];
+
+        if ( is_string($value) )
+            return esc_attr( $value );
+
+        return $value;
     }
 
 
@@ -535,7 +540,7 @@ abstract class LNP_SettingsPage
         $skip   = array('label', 'description');
         $output = array();
 
-        foreach ( $field['values'] as $input )
+        foreach ( $field['options'] as $input )
         {
             // Start <label> wrap
             $output[] = sprintf(
@@ -567,6 +572,12 @@ abstract class LNP_SettingsPage
                 $field['name'],
                 $input['value']
             );
+
+            // Mark field as checked
+            if ( array_key_exists($input['value'], $field['value']) )
+            {
+                $output[] = 'checked="checked"';
+            }
 
             // Close input
             $output[] = '>';
