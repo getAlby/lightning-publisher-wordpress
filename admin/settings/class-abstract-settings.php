@@ -412,6 +412,20 @@ abstract class LNP_SettingsPage
         $parsed_args = wp_parse_args($args['field'], $defaults);
         $parsed_args = array_filter($parsed_args);
 
+
+        /**
+         * Special field: Checkbox group
+         */
+        if ( 'checkbox_group' == $parsed_args['type'] )
+        {
+            $output = $this->get_field_checkbox_group($parsed_args);
+            echo join(' ', $output);
+
+            // Stop here
+            return;
+        }
+
+        
         // We will save HTML markup in array
         // and join() later
         $output = array();
@@ -422,7 +436,6 @@ abstract class LNP_SettingsPage
         {
             // Don't add autocomplete arg to checkbox
             unset($parsed_args['autocomplete']);
-            error_log( print_r($parsed_args, true) );
         }
         
         // HTML output starts now
@@ -509,5 +522,76 @@ abstract class LNP_SettingsPage
 
         // Generate and return input field html output
         echo join(' ', $output);
+    }
+
+
+
+    /**
+     * Custom markup for checkbox group field
+     * @return [type] [description]
+     */
+    private function get_field_checkbox_group( $field )
+    {
+        $skip   = array('label', 'description');
+        $output = array();
+
+        foreach ( $field['values'] as $input )
+        {
+            // Start <label> wrap
+            $output[] = sprintf(
+                '<label for="%s-%s">',
+                $field['name'],
+                $input['value']
+            );
+
+            // Start input
+            $output[] = '<input type="checkbox"';
+
+            // Append name="my_name"
+            $output[] = sprintf(
+                'name="%s[%s][%s]"',
+                $this->option_name,
+                $field['name'],
+                $input['value']
+            );
+
+            // CSS Class name
+            $output[] = sprintf(
+                'class="%s"',
+                $field['class']
+            );
+
+            // Element ID
+            $output[] = sprintf(
+                'id="%s-%s"',
+                $field['name'],
+                $input['value']
+            );
+
+            // Close input
+            $output[] = '>';
+
+            // End label wrap
+            $output[] = sprintf(
+                ' %s</label>',
+                esc_attr($input['label'])
+            );
+
+            $output[] = '<br>';
+        }
+
+        /**
+         * Additional description if provided
+         * Extra "help" instructions block below the field
+         */
+        if ( ! empty($field['description']) )
+        {
+            $output[] = sprintf(
+                '<p class="description">%s</p>',
+                $field['description']
+            );
+        }
+
+        return $output;
     }
 }

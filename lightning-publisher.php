@@ -29,12 +29,16 @@ require_once 'includes/db/transactions.php';
 require_once 'admin/settings/class-abstract-settings.php';
 require_once 'admin/settings/class-dashboard.php';
 require_once 'admin/settings/class-balance.php';
+require_once 'admin/settings/class-donation.php';
 require_once 'admin/settings/class-paywall.php';
 require_once 'admin/settings/class-connections.php';
 require_once 'admin/settings/class-help.php';
 
-// Widgets
+// Admin stuff
 require_once 'admin/widgets/lnp-widget.php';
+
+// Public facing
+require_once 'public/includes/class-init.php';
 
 // Includes
 require_once 'lightning-address.php';
@@ -81,6 +85,7 @@ class WP_LN_Paywall
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
     new LNP_Dashboard($this, 'lnp_settings');
+    new LNP_DonationPage($this, 'lnp_settings');
     new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
     $paywall_page = new LNP_PaywallPage($this, 'lnp_settings');
     $connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
@@ -495,7 +500,14 @@ class WP_LN_Paywall
    */
   public function admin_menu()
   {
-    add_menu_page('Lighting Paywall', 'Lighting Paywall', 'manage_options', 'lnp_settings');
+    add_menu_page(
+      'Lightning Paywall',
+      'Lightning Paywall',
+      'manage_options',
+      'lnp_settings',
+      null,
+      'dashicons-superhero'
+    );
   }
 
   public function create_lnp_hub_account()
