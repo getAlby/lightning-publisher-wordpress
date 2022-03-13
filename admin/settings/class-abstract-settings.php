@@ -413,10 +413,9 @@ abstract class LNP_SettingsPage
         );
 
         
-        // Merge args with defaults and filter empty values
+        // Merge args with defaults
+        // Keep empty values to avoid warnings
         $parsed_args = wp_parse_args($args['field'], $defaults);
-        $parsed_args = array_filter($parsed_args);
-
 
         /**
          * Special field: Checkbox group
@@ -574,7 +573,7 @@ abstract class LNP_SettingsPage
             );
 
             // Mark field as checked
-            if ( array_key_exists($input['value'], $field['value']) )
+            if ( array_key_exists($input['value'], (array) $field['value']) )
             {
                 $output[] = 'checked="checked"';
             }

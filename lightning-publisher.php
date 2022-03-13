@@ -95,7 +95,8 @@ class WP_LN_Paywall
 
     // get page options
     $this->connection_options = $connection_page->options;
-    $this->paywall_options = $paywall_page->options ?  $paywall_page->options : [];
+    $this->paywall_options    = $paywall_page->options;
+    $this->donation_options   = $donation_page->options;
 
     // Anything that goes on frontend
     new LNP_Public( $this );

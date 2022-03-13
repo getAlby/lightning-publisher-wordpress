@@ -16,6 +16,9 @@ class LNP_DonationPage extends LNP_SettingsPage
             'integrations' => array(
                 'title' => __( 'Integrations', 'lnp-alby' ),
             ),
+            'widget' => array(
+                'title' => __( 'Donation Widget', 'lnp-alby' ),
+            ),
         );
 
         parent::init_fields();
@@ -79,7 +82,59 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'name'        => 'donations_autoadd',
                 'options'     => $options,
                 'label'       => __( 'Placement', 'lnp-alby' ),
-                'description' => __( 'Where to add donation box', 'lnp-alby'),
+                'description' => __( 'Where to add donation box, if not selected donation box will not be inserted automatically', 'lnp-alby'),
+            ),
+        );
+
+
+        $fields[] = array(
+            'tab'     => 'widget',
+            'field'   => array(
+                'type'    => 'number',
+                'name'    => 'widget_amount',
+                'default' => 100000,
+                'label'   => __( 'Default amount in SATS', 'lnp-alby' ),
+            ),
+        );
+
+        $fields[] = array(
+            'tab'     => 'widget',
+            'field'   => array(
+                'type'    => 'text',
+                'name'    => 'widget_title',
+                'default' => 'Show some love',
+                'label'   => __( 'Widget Title', 'lnp-alby' ),
+            ),
+        );
+
+        $fields[] = array(
+            'tab'     => 'widget',
+            'field'   => array(
+                'type'    => 'text',
+                'name'    => 'widget_description',
+                'default' => 'Support us by donating SATS to keep us going',
+                'label'   => __( 'Widget Description', 'lnp-alby' ),
+            ),
+        );
+
+        $fields[] = array(
+            'tab'     => 'widget',
+            'field'   => array(
+                'type'        => 'text',
+                'name'        => 'widget_thankyou',
+                'default'     => 'Woow, you are awesome! Thank you for your support!',
+                'label'       => __( 'Thank you message', 'lnp-alby' ),
+                'description' => __( 'Will be displayed after payment is processed', 'lnp-alby' ),
+            ),
+        );
+
+        $fields[] = array(
+            'tab'     => 'widget',
+            'field'   => array(
+                'type'    => 'text',
+                'name'    => 'widget_button_label',
+                'default' => 'Donate now',
+                'label'   => __( 'Widget Button Label', 'lnp-alby' ),
             ),
         );
 
