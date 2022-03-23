@@ -4,7 +4,7 @@
 defined('WPINC') || die;
 
 
-class LNP_Public {
+class LNP_DonationsWidget {
 
     function __construct( $plugin ) {
 
@@ -82,10 +82,14 @@ class LNP_Public {
 
         ob_start();
 
-        // Include abow content
+        // Include above content
         if ( in_array('above', $placement) )
         {
+            do_action( 'before_lnp_alby_donation_widget', 'above' );
+
             require $template;
+
+            do_action( 'after_lnp_alby_donation_widget', 'above' );
         }
 
         // WP_Post content
@@ -94,9 +98,17 @@ class LNP_Public {
         // Include below content
         if ( in_array('below', $placement) )
         {
+            do_action( 'before_lnp_alby_donation_widget', 'below' );
+
             require $template;
+
+            do_action( 'after_lnp_alby_donation_widget', 'below' );
         }
+
+        // Include Js/CSS
+        $this->load_scripts();
         
+        // Return post content
         return ob_get_clean();
     }
 
@@ -115,11 +127,11 @@ class LNP_Public {
             ? $this->plugin->donation_options
             : array();
 
+
         /**
          * Include LND Payment options
          */
-        $options['lnd_client']  = $this->plugin->lightningClientType;
-        $options['lnd_address'] = '';
+        $options['lnd_client'] = $this->plugin->lightningClientType;
 
         // Return specifc option
         if ( $option && isset($options[ $option ]) )
@@ -134,6 +146,11 @@ class LNP_Public {
 
 
 
+    /**
+     * Check if donation box
+     * @param  string  $post_type [description]
+     * @return boolean            [description]
+     */
     public function is_enabled_for_post_type( string $post_type )
     {
         $options   = $this->get_donation_box_options();
@@ -155,5 +172,25 @@ class LNP_Public {
         return ( in_array( $post_type, $post_types ) )
             ? $placement
             : array();
+    }
+
+
+
+    /**
+     * Include scripts required for donation widget to work
+     * Scripts will be included async
+     * 
+     * @return [type] [description]
+     */
+    public function load_scripts()
+    {
+        // Enqueue script for Donation widget
+        echo wp_get_script_tag(
+            array(
+                'src'   => WP_LN_ROOT_URI . '/assets/js/components/donations.js',
+                'async' => true,
+                'defer' => true,
+            )
+        );
     }
 }

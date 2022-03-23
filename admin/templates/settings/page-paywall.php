@@ -12,7 +12,7 @@ defined('WPINC') || die; ?>
             <form method="post" action="options.php">
                 <?php 
 
-                $this->do_tabs_settings_section($active);
+                $this->do_tabs_settings_section();
                 settings_fields($this->settings_path);
                 submit_button();
                 

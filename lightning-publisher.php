@@ -25,6 +25,10 @@ require_once 'vendor/autoload.php';
 require_once 'includes/db/database-handler.php';
 require_once 'includes/db/transactions.php';
 
+// REST API Server
+// Server class includes controllers
+require_once 'includes/rest-api/class-rest-server.php';
+
 // Settings 
 require_once 'admin/settings/class-abstract-settings.php';
 require_once 'admin/settings/class-dashboard.php';
@@ -38,7 +42,7 @@ require_once 'admin/settings/class-help.php';
 require_once 'admin/widgets/lnp-widget.php';
 
 // Public facing
-require_once 'public/includes/class-init.php';
+require_once 'public/includes/class-donations-widget.php';
 
 // Includes
 require_once 'lightning-address.php';
@@ -99,7 +103,14 @@ class WP_LN_Paywall
     $this->donation_options   = $donation_page->options;
 
     // Anything that goes on frontend
-    new LNP_Public( $this );
+    new LNP_DonationsWidget( $this );
+
+    /**
+     * Init REST API Server
+     */
+    $server = LNP_RESTServer::instance();
+    $server->init();
+    $server->set_plugin_instance($this);
 
     add_action('widgets_init', array($this, 'widget_init'));
     // feed
@@ -311,7 +322,8 @@ class WP_LN_Paywall
     );
 
     wp_localize_script( 'wpln/paywall-js', 'LN_Paywall', array(
-      'ajax_url' => admin_url('admin-ajax.php'),
+      'ajax_url'  => admin_url('admin-ajax.php'),
+      'rest_base' => get_rest_url( null, '/lnp-alby/v1' )
     ));
   }
 
@@ -324,7 +336,7 @@ class WP_LN_Paywall
       $post_id = (int)$_POST['post_id'];
       $paywall_options = $this->get_paywall_options_for($post_id, get_post_field('post_content', $post_id));
       if (!$paywall_options) {
-        return wp_send_json(['error' => 'invalid post'], 404);
+        // return wp_send_json(['error' => 'invalid post'], 404);
       }
       $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
       $amount = $paywall_options['amount'];
@@ -335,6 +347,11 @@ class WP_LN_Paywall
       $response_data = ['all' => true, 'amount' => $amount];
     } else {
       return wp_send_json(['error' => 'invalid post'], 404);
+    }
+
+    if ( ! $amount )
+    {
+      $amount = 1000;
     }
 
     $memo = substr($memo, 0, 64);
@@ -398,6 +415,7 @@ class WP_LN_Paywall
       wp_send_json(['settled' => false], 402);
     }
   }
+
   protected static function extract_ln_shortcode($content)
   {
     if (!preg_match('/\[ln(.+)\]/i', $content, $m)) {
@@ -518,7 +536,7 @@ class WP_LN_Paywall
 
   public function create_lnp_hub_account()
   {
-    $account = LNDHub\Client::createWallet("https://wallets.getalby.com", "bluewallet");
+    $account = LNDHub\Client::createWallet("https://ln.getalby.com", "bluewallet");
     wp_send_json($account);
   }
 
