@@ -21,6 +21,9 @@ class LNP_DonationsWidget
         // Invoice data
         this.invoice = {}
 
+        // How
+        this.retryCount = 0;
+
         // Init button listeners
         this.init();
     }
@@ -99,7 +102,12 @@ class LNP_DonationsWidget
 
             if ( 'token' in data )
             {
+                // Save invoice data
                 that.setInvoice(data);
+
+                // Trigger payment
+                that.doPayment();
+
                 return; // Stop here
             }
             
@@ -107,6 +115,82 @@ class LNP_DonationsWidget
             that.showError('Error creating invoice');
         });
     }
+
+
+
+    /**
+     * Proceed with payment
+     */
+    doPayment()
+    {
+        const that = this;
+
+        WebLN.requestProvider()
+            .then( (webln) => {
+                webln
+                    .sendPayment(that.invoice.payment_request)
+                    .then((response) => {
+                        that.invoice.preimage = response.preimage || response.payment_preimage;
+                    })
+                    .catch( (e) => {
+                        console.error(e);
+                        return;
+                    });
+
+                that.setQRCode();
+                that.verifyPayment();
+            })
+            .catch( (err) => {
+                console.error(err);
+                that.setQRCode();
+                that.verifyPayment();
+            });
+    }
+
+
+
+    /**
+     * Verify Payment
+     */
+    verifyPayment()
+    {
+        // 10x check
+        if ( 10 === this.retryCount )
+        {
+            return;
+        }
+
+
+        const that     = this;
+        const response = this.postRequest('verify', {
+            token: that.invoice.token,
+            amount: that.invoice.amount,
+            preimage: that.invoice.preimage,
+        });
+
+        // In case error exists
+        that.clearError();
+
+        // Make a request to API
+        response.then( data => {
+            console.log(data);
+
+            if ( data.settled )
+            {
+                that.clearInvoice();
+                that.retryCount = 0;
+            }
+            else
+            {
+                // Retry again
+                setTimeout(() => {
+                    that.retryCount += 1;
+                    that.verifyPayment();
+                }, 3000);
+            }
+        });
+    }
+
     
 
     /**
@@ -132,10 +216,21 @@ class LNP_DonationsWidget
     }
 
 
-
     /**
      * Helpers
      */
+    setQRCode() {
+
+        const qrDiv = this.wrapper.querySelector('.span-qr');
+        qrDiv.innerHTML = `
+            <div class="wp-lnp-qrcode">
+                <img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=${this.invoice.payment_request}">
+                <a href="lightning:${this.invoice.payment_request}">
+                    ${this.invoice.payment_request.substr(0, 36)}...
+                </a>
+            </div>
+        `;
+    }
     
 
     setInvoice( data )

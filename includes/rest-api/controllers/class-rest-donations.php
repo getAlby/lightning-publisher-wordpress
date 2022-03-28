@@ -31,6 +31,18 @@ class LNP_DonationsController extends \WP_REST_Controller {
                 ),
             )
         );
+
+        register_rest_route(
+            trailingslashit( $this->namespace ),
+            'verify',
+            array(
+                array(
+                    'methods'             => \WP_REST_Server::CREATABLE,
+                    'callback'            => array($this, 'process_verify_request'),
+                    'permission_callback' => '__return_true',
+                ),
+            )
+        );
     }
 
 
@@ -64,6 +76,72 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
         // error_log( print_r($request, true) );
         return rest_ensure_response($invoice);
+    }
+
+
+
+
+    public function process_verify_request( $request )
+    {   
+        $token    = $request->get_param('token');
+        $amount   = $request->get_param('amount');
+        $preimage = $request->get_param('preimage');
+        $plugin   = $this->get_plugin();
+        $settled  = false;
+        $invoice  = false;
+
+        // Default response
+        $response = array(
+            'settled' => false
+        );
+
+        // No token
+        if ( empty($token) )
+        {
+            return wp_send_json_error($response, 404);
+        }
+
+
+        try {
+            $jwt = JWT\JWT::decode(
+                $token,
+                new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM)
+            );
+        }
+        catch (Exception $e) {
+            return wp_send_json_error($response, 404);
+        }
+
+        // if we get a preimage we can check if the preimage matches the payment hash and accept it.
+        if (
+            ( ! empty($preimage) )
+            && hash('sha256', hex2bin($preimage), false) == $jwt->{"r_hash"}
+            )
+        {
+            $settled  = true;
+            $response = array('settled' => true);
+        }
+        // if ew do not have a preimage we must check with the LN node if the invoice was paid.
+        else
+        {
+            $invoice_id = $jwt->{'invoice_id'};
+            $invoice    = $plugin->getLightningClient()->getInvoice($invoice_id);
+        }
+
+
+        if ($invoice && $settled)
+        {
+            $post_id = $jwt->{'post_id'};
+            $plugin->database_handler->update_invoice_state($jwt->{'r_hash'}, 'settled');
+
+            if (!empty($post_id))
+            {
+                $plugin->save_as_paid($post_id, $amount);
+                wp_send_json_success($response, 200);
+            }
+        }
+
+        return wp_send_json_error($response, 402);
     }
 
 
