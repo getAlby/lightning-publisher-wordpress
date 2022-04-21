@@ -80,7 +80,12 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
 
 
-
+    /**
+     * Verify has invoice been paid
+     * 
+     * @param  object $request WP_REST_Request
+     * @return array           Invoice data or error message
+     */
     public function process_verify_request( $request )
     {   
         $token    = $request->get_param('token');

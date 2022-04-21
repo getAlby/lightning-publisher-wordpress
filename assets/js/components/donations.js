@@ -21,7 +21,7 @@ class LNP_DonationsWidget
         // Invoice data
         this.invoice = {}
 
-        // How
+        // Retry verify payment
         this.retryCount = 0;
 
         // Init button listeners
@@ -266,6 +266,7 @@ class LNP_DonationsWidget
         }
     }
 
+    
     /**
      * Utils for DOM manipulation
      */
