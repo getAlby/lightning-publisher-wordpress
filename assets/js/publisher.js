@@ -16,7 +16,6 @@ window.addEventListener("DOMContentLoaded", function () {
           .catch(function (e) {
             console.error(e);
             showQRCode(invoice, options);
-            stopWatchingForPayment();
           });
         return startWatchingForPayment(invoice);
       })
