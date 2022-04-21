@@ -29,6 +29,9 @@ require_once 'includes/db/transactions.php';
 // Server class includes controllers
 require_once 'includes/rest-api/class-rest-server.php';
 
+// Admin only stuff
+require_once 'admin/class-init.php';
+
 // Settings 
 require_once 'admin/settings/class-abstract-settings.php';
 require_once 'admin/settings/class-dashboard.php';
@@ -101,6 +104,9 @@ class WP_LN_Paywall
     $this->connection_options = $connection_page->options;
     $this->paywall_options    = $paywall_page->options;
     $this->donation_options   = $donation_page->options;
+
+    // Init admin only stuff
+    new LNP_Admin( $this );
 
     // Anything that goes on frontend
     new LNP_DonationsWidget( $this );

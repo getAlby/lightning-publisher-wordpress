@@ -1,3 +1,6 @@
+/**
+ * Class handles frontend donation
+ */
 class LNP_DonationsWidget
 {
     constructor( selector )

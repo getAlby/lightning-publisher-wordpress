@@ -21,7 +21,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
         $this->rest_base = 'donate';
 
         register_rest_route(
-            trailingslashit( $this->namespace ),
+            $this->namespace,
             $this->rest_base,
             array(
                 array(
@@ -33,7 +33,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
         );
 
         register_rest_route(
-            trailingslashit( $this->namespace ),
+            $this->namespace,
             'verify',
             array(
                 array(

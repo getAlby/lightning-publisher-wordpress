@@ -114,6 +114,29 @@ class LNP_DonationsWidget {
 
 
 
+
+    /**
+     * Append and/or prepend donation box to all post types
+     * Where in options is this option enabled
+     */
+    public function get_donation_block_html()
+    {
+        $template = $this->get_donation_template();
+        $wplnp    = $this->get_donation_box_options();
+
+        ob_start();
+
+        require $template;
+
+        // Include Js/CSS
+        $this->load_scripts();
+        
+        // Return post content
+        return ob_get_clean();
+    }
+
+
+
     /**
      * Get options for donations box
      * 
