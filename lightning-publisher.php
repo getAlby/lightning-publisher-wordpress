@@ -17,6 +17,26 @@ defined('WPINC') || die;
  * 
  */
 
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-wp-lightning-activator.php
+ */
+function activate_wp_lightning() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-lightning-activator.php';
+	WP_lightning_Activator::activate();
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-wp-lightning-deactivator.php
+ */
+function deactivate_wp_lightning() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-lightning-deactivator.php';
+	WP_lightning_Deactivator::deactivate();
+}
+
+register_activation_hook( __FILE__, 'activate_wp_lightning' );
+register_deactivation_hook( __FILE__, 'deactivate_wp_lightning' );
 
 // Composer dependencies
 require_once 'vendor/autoload.php';
@@ -67,8 +87,7 @@ class WP_LN_Paywall
     $this->lightningClientType = null;
 
     $this->database_handler = new LNP_DatabaseHandler();
-
-    add_action('init', array($this->database_handler, 'init'));
+    
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
     add_filter('the_content',        array($this, 'ln_paywall_filter'));

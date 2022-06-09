@@ -4,12 +4,16 @@ class LNP_DatabaseHandler
 {
     private $table_name;
 
+    public function __construct()
+    {
+        global $wpdb;
+        $this->table_name = $wpdb->prefix . "lightning_publisher_payments";
+    }
+
     public function init()
     {
         global $wpdb;
-
-        $this->table_name = $wpdb->prefix . "lightning_publisher_payments";
-
+        
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $this->table_name (
