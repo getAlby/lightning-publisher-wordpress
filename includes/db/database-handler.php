@@ -1,15 +1,19 @@
 <?php
 
-class DatabaseHandler
+class LNP_DatabaseHandler
 {
     private $table_name;
+
+    public function __construct()
+    {
+        global $wpdb;
+        $this->table_name = $wpdb->prefix . "lightning_publisher_payments";
+    }
 
     public function init()
     {
         global $wpdb;
-
-        $this->table_name = $wpdb->prefix . "lightning_publisher_payments";
-
+        
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $this->table_name (
@@ -40,14 +44,14 @@ class DatabaseHandler
             $wpdb->insert(
                 $this->table_name,
                 array(
-                    'post_id' => $post_id,
-                    'payment_hash' => $payment_hash,
-                    'payment_request' => $payment_request,
+                    'post_id'           => $post_id,
+                    'payment_hash'      => $payment_hash,
+                    'payment_request'   => $payment_request,
                     'amount_in_satoshi' => $amount,
-                    'exchange_rate' => $exchange_rate,
+                    'exchange_rate'     => $exchange_rate,
                     'exchange_currency' => $currency,
-                    'created_at' => current_time('mysql'),
-                    'state' => 'unpaid',
+                    'created_at'        => current_time('mysql'),
+                    'state'             => 'unpaid',
                 )
             );
         } catch (Exception $e) {
@@ -76,8 +80,9 @@ class DatabaseHandler
     public function get_payments($page, $items_per_page)
     {
         global $wpdb;
-        $offset = ($page - 1) * $items_per_page;
-        $query = "SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
+
+        $offset = (intval($page) - 1) * intval($items_per_page);
+        $query  = "SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
         
         return $wpdb->get_results($query);
     }

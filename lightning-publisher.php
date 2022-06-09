@@ -1,34 +1,83 @@
 <?php
-/*
-    Plugin Name: Lightning Paywall
-    Version:     0.0.1
-    Plugin URI:
-    Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
-    Author:
-    Author URI:
 
-    Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
-*/
+// If this file is called directly, abort.
+defined('WPINC') || die;
 
-if (!defined('ABSPATH')) exit;
+/**
+ * 
+ * Plugin Name: Lightning Paywall
+ * Version:     0.0.1
+ * Plugin URI:
+ * Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
+ * Author:
+ * Author URI:
+ * Text Domain: lnp-alby
+ *
+ * Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
+ * 
+ */
 
+/**
+ * The code that runs during plugin activation.
+ * This action is documented in includes/class-wp-lightning-activator.php
+ */
+function activate_wp_lightning() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-lightning-activator.php';
+	WP_lightning_Activator::activate();
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in includes/class-wp-lightning-deactivator.php
+ */
+function deactivate_wp_lightning() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-lightning-deactivator.php';
+	WP_lightning_Deactivator::deactivate();
+}
+
+register_activation_hook( __FILE__, 'activate_wp_lightning' );
+register_deactivation_hook( __FILE__, 'deactivate_wp_lightning' );
+
+// Composer dependencies
 require_once 'vendor/autoload.php';
 
-require_once 'lightning_address.php';
+// Custom Tables
+require_once 'includes/db/database-handler.php';
+require_once 'includes/db/transactions.php';
 
-require_once 'LnpWidget.php';
-require_once 'admin/dashboard.php';
-require_once 'admin/balance.php';
-require_once 'admin/paywall.php';
-require_once 'admin/connections.php';
-require_once 'admin/help.php';
-require_once 'database-handler.php';
+// REST API Server
+// Server class includes controllers
+require_once 'includes/rest-api/class-rest-server.php';
+
+// Admin only stuff
+require_once 'admin/class-init.php';
+
+// Settings 
+require_once 'admin/settings/class-abstract-settings.php';
+require_once 'admin/settings/class-dashboard.php';
+require_once 'admin/settings/class-balance.php';
+require_once 'admin/settings/class-donation.php';
+require_once 'admin/settings/class-paywall.php';
+require_once 'admin/settings/class-connections.php';
+require_once 'admin/settings/class-help.php';
+
+// Admin stuff
+require_once 'admin/widgets/lnp-widget.php';
+
+// Public facing
+require_once 'public/includes/class-donations-widget.php';
+
+// Includes
+require_once 'lightning-address.php';
 
 use \tkijewski\lnurl;
 use \Firebase\JWT;
 
-define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'wp-lightning-paywall', AUTH_KEY));
+define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'lnp-alby', AUTH_KEY));
 define('WP_LN_PAYWALL_JWT_ALGORITHM', 'HS256');
+define('WP_LN_ROOT_PATH', untrailingslashit(plugin_dir_path( __FILE__ )) );
+define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url( __FILE__ )) );
+
 
 class WP_LN_Paywall
 {
@@ -37,9 +86,8 @@ class WP_LN_Paywall
     $this->lightningClient = null;
     $this->lightningClientType = null;
 
-    $this->database_handler = new DatabaseHandler();
-
-    add_action('init', array($this->database_handler, 'init'));
+    $this->database_handler = new LNP_DatabaseHandler();
+    
     // frontend
     add_action('wp_enqueue_scripts', array($this, 'enqueue_script'));
     add_filter('the_content',        array($this, 'ln_paywall_filter'));
@@ -63,14 +111,31 @@ class WP_LN_Paywall
     add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
     new LNP_Dashboard($this, 'lnp_settings');
-    new BalancePage($this, 'lnp_settings', $this->database_handler);
-    $paywall_page = new PaywallPage($this, 'lnp_settings');
-    $connection_page = new ConnectionPage($this, 'lnp_settings');
-    new HelpPage($this, 'lnp_settings');
+    new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
+
+    $paywall_page    = new LNP_PaywallPage($this, 'lnp_settings');
+    $connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
+    $donation_page   = new LNP_DonationPage($this, 'lnp_settings');
+
+    new LNP_HelpPage($this, 'lnp_settings');
 
     // get page options
     $this->connection_options = $connection_page->options;
-    $this->paywall_options = $paywall_page->options ?  $paywall_page->options : [];
+    $this->paywall_options    = $paywall_page->options;
+    $this->donation_options   = $donation_page->options;
+
+    // Init admin only stuff
+    new LNP_Admin( $this );
+
+    // Anything that goes on frontend
+    new LNP_DonationsWidget( $this );
+
+    /**
+     * Init REST API Server
+     */
+    $server = LNP_RESTServer::instance();
+    $server->init();
+    $server->set_plugin_instance($this);
 
     add_action('widgets_init', array($this, 'widget_init'));
     // feed
@@ -80,6 +145,7 @@ class WP_LN_Paywall
       add_action('template_redirect', array($this, 'lnurl_endpoints'));
       add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
     }
+
     add_action('admin_enqueue_scripts', array($this, 'load_custom_wp_admin_style'));
     add_action('wp_head', array($this, 'hook_meta_tags'));
   }
@@ -258,13 +324,31 @@ class WP_LN_Paywall
   /**
    * Register scripts and styles
    */
-  public function enqueue_script()
-  {
-    wp_enqueue_script('webln', plugins_url('js/webln.min.js', __FILE__));
-    wp_enqueue_script('ln-paywall', plugins_url('js/publisher.js', __FILE__));
-    wp_enqueue_style('ln-paywall', plugins_url('css/publisher.css', __FILE__));
-    wp_localize_script('ln-paywall', 'LN_Paywall', array(
-      'ajax_url'   => admin_url('admin-ajax.php'),
+  public function enqueue_script() {
+
+    wp_enqueue_style(
+      'wpln/admin-css',
+      WP_LN_ROOT_URI . '/assets/css/admin.css'
+    );
+
+    wp_enqueue_script(
+      'wpln/webln-js',
+      WP_LN_ROOT_URI . '/assets/js/webln.min.js'
+    );
+
+    wp_enqueue_script(
+      'wpln/paywall-js',
+      WP_LN_ROOT_URI . '/assets/js/publisher.js'
+    );
+
+    wp_enqueue_script(
+      'wpln/paywall-js',
+      WP_LN_ROOT_URI . '/assets/css/publisher.css'
+    );
+
+    wp_localize_script( 'wpln/paywall-js', 'LN_Paywall', array(
+      'ajax_url'  => admin_url('admin-ajax.php'),
+      'rest_base' => get_rest_url( null, '/lnp-alby/v1' )
     ));
   }
 
@@ -277,7 +361,7 @@ class WP_LN_Paywall
       $post_id = (int)$_POST['post_id'];
       $paywall_options = $this->get_paywall_options_for($post_id, get_post_field('post_content', $post_id));
       if (!$paywall_options) {
-        return wp_send_json(['error' => 'invalid post'], 404);
+        // return wp_send_json(['error' => 'invalid post'], 404);
       }
       $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
       $amount = $paywall_options['amount'];
@@ -288,6 +372,11 @@ class WP_LN_Paywall
       $response_data = ['all' => true, 'amount' => $amount];
     } else {
       return wp_send_json(['error' => 'invalid post'], 404);
+    }
+
+    if ( ! $amount )
+    {
+      $amount = 1000;
     }
 
     $memo = substr($memo, 0, 64);
@@ -351,6 +440,7 @@ class WP_LN_Paywall
       wp_send_json(['settled' => false], 402);
     }
   }
+
   protected static function extract_ln_shortcode($content)
   {
     if (!preg_match('/\[ln(.+)\]/i', $content, $m)) {
@@ -459,12 +549,19 @@ class WP_LN_Paywall
    */
   public function admin_menu()
   {
-    add_menu_page('Lighting Paywall', 'Lighting Paywall', 'manage_options', 'lnp_settings');
+    add_menu_page(
+      'Lightning Paywall',
+      'Lightning Paywall',
+      'manage_options',
+      'lnp_settings',
+      null,
+      'dashicons-superhero'
+    );
   }
 
   public function create_lnp_hub_account()
   {
-    $account = LNDHub\Client::createWallet("https://wallets.getalby.com", "bluewallet");
+    $account = LNDHub\Client::createWallet("https://ln.getalby.com", "bluewallet");
     wp_send_json($account);
   }
 
@@ -484,7 +581,15 @@ class WP_LN_Paywall
     // if ($hook != 'toplevel_page_mypluginname') {
     //   return;
     // }
-    wp_enqueue_style('custom_wp_admin_css', plugins_url('css/admin.css', __FILE__));
+    wp_enqueue_style(
+      'wpln/admin-css',
+      WP_LN_ROOT_URI . '/assets/css/admin.css'
+    );
+
+    wp_enqueue_script(
+      'wpln/admin-js',
+      WP_LN_ROOT_URI . '/assets/js/admin.js'
+    );
   }
 
   public function get_file_url($path)

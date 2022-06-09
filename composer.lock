@@ -317,12 +317,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816"
+                "reference": "0541cba75ab108ef901985e68055a92646c73534"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/edda0f9ee45b8367699804f792a9be6d5175e816",
-                "reference": "edda0f9ee45b8367699804f792a9be6d5175e816",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/0541cba75ab108ef901985e68055a92646c73534",
+                "reference": "0541cba75ab108ef901985e68055a92646c73534",
                 "shasum": ""
             },
             "require": {
@@ -365,9 +365,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/main"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.0.0"
             },
-            "time": "2021-12-30T19:00:10+00:00"
+            "time": "2022-01-24T15:18:34+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -375,12 +375,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrahamCampbell/Result-Type.git",
-                "reference": "bbbdf946f83ec0b90d1e1333473adf9113eb5d03"
+                "reference": "e34340fd7476ff021b8d1c5937bce963fee9a932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/bbbdf946f83ec0b90d1e1333473adf9113eb5d03",
-                "reference": "bbbdf946f83ec0b90d1e1333473adf9113eb5d03",
+                "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/e34340fd7476ff021b8d1c5937bce963fee9a932",
+                "reference": "e34340fd7476ff021b8d1c5937bce963fee9a932",
                 "shasum": ""
             },
             "require": {
@@ -430,7 +430,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-23T12:09:37+00:00"
+            "time": "2022-01-24T01:34:04+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1979,5 +1979,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
