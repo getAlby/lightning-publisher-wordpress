@@ -19,7 +19,7 @@ abstract class LNP_SettingsPage
     protected $page_title;
     protected $menu_title;
 
-    public function __construct($plugin = false, $page = '')
+    public function __construct($plugin, $page = '')
     {
         $this->page        = $page;
         $this->plugin      = $plugin;
@@ -29,7 +29,7 @@ abstract class LNP_SettingsPage
         $this->set_translations();
         $this->set_options();
         
-        add_action( 'admin_menu', array($this, 'init_page') );
+        add_action( 'admin_menu', array($this, 'init_page'), 20 );
         add_action( 'admin_init', array($this, 'init_fields') );
     }
 
@@ -106,7 +106,6 @@ abstract class LNP_SettingsPage
      */
     public function renderer()
     {
-
         if ( empty($this->template_html) )
             return;
 
@@ -224,7 +223,7 @@ abstract class LNP_SettingsPage
             $option_name = "{$this->option_name}_{$tab}";
         }
 
-        $this->options = get_option($option_name);
+        $this->options = get_option($option_name, []);
     }
 
 

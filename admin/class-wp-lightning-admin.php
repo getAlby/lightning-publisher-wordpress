@@ -12,36 +12,24 @@
 class WP_Lightning_Admin {
 
 	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
-	 */
-	private $plugin_name;
+     * Main Plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      WP_Lightning    $plugin    The main plugin object.
+     */
+    private $plugin;
 
 	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
-	 */
-	private $version;
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of this plugin.
-	 * @param      string    $version    The version of this plugin.
-	 */
-	public function __construct( $plugin_name, $version ) {
-
-		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-
-	}
+     * Initialize the class and set its properties.
+     *
+     * @since    1.0.0
+     * @param    WP_Lightning    $plugin       The main plugin object.
+     */
+    public function __construct($plugin)
+    {
+        $this->plugin = $plugin;
+    }
 
 	/**
 	 * Register the stylesheets for the admin area.
@@ -50,20 +38,7 @@ class WP_Lightning_Admin {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Plugin_Name_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-lightning-admin.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style( $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'css/wp-lightning-admin.css', array(), $this->plugin->get_version(), 'all' );
 	}
 
 	/**
@@ -73,18 +48,89 @@ class WP_Lightning_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Plugin_Name_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+		wp_enqueue_script(  $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'js/wp-lightning-admin.js', array( 'jquery' ), $this->plugin->get_version(), true );
+	}
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-lightning-admin.js', array( 'jquery' ), $this->version, true );
+	/**
+	 * Admin Page
+	 */
+	public function lightning_menu()
+	{
+		add_menu_page(
+			'Lightning Paywall',
+			'Lightning Paywall',
+			'manage_options',
+			'lnp_settings',
+			null,
+			'dashicons-superhero'
+		);
+	}
+
+	/**
+     * Add Block
+     * @return [type] [description]
+     */
+    public function init_donation_block() {
+
+        // Gutenberg is not active.
+        if ( ! function_exists( 'register_block_type' ) ) {
+            return;
+        }
+
+        // Path to Js that handles block functionality
+        wp_register_script(
+            'alby/donate-js',
+            sprintf(
+                '%s/assets/js/blocks/donation/donation.js',
+                untrailingslashit(WP_LN_ROOT_URI)
+            )
+        );
+
+        wp_register_style(
+            'alby/donate-css',
+            sprintf(
+                '%s/assets/css/blocks/donation.css',
+                untrailingslashit(WP_LN_ROOT_URI)
+            )
+        );
+
+
+        register_block_type( 'alby/donate', array(
+            'api_version'     => 2,
+            'title'           => 'Alby: Bitcoin Donation',
+            'category'        => 'common',
+            'description'     => 'Learning in progress',
+            'icon'            => 'icon-alby',
+            'editor_script'   => 'alby/donate-js',
+            'editor_style'    => 'alby/donate-css',
+            'render_callback' => (array($this, 'render_gutenberg')),
+        ));
+    }
+
+	public function render_gutenberg( $atts )
+    {
+        $atts = shortcode_atts(array(
+            'pay_block'     => 'true',
+            'btc_format'    => '',
+            'currency'      => '',
+            'price'         => '',
+            'duration_type' => '',
+            'duration'      => '',
+        ), $atts);
+
+        return do_shortcode("[alby_donation_block]");
+    }
+
+	public function sc_alby_donation_block() {
+
+        $donationWidget = new LNP_DonationsWidget($this->plugin);
+
+        return $donationWidget->get_donation_block_html();
+    }
+
+	function widget_init()
+	{
+		$has_paid = WP_Lightning::has_paid_for_all();
+		register_widget(new LnpWidget($has_paid, $this->plugin->getPaywallOptions()));
 	}
 }

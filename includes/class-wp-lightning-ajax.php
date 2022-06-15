@@ -38,7 +38,7 @@ class WP_Lightning_Ajax
     {
         if (!empty($_POST['post_id'])) {
             $post_id = (int)$_POST['post_id'];
-            $paywall = new WP_Lightning_Paywall(get_post_field('post_content', $post_id));
+            $paywall = new WP_Lightning_Paywall($this->plugin, get_post_field('post_content', $post_id));
             $paywall_options = $paywall->getOptions();
             if (!$paywall_options) {
                 return wp_send_json(['error' => 'invalid post'], 404);
@@ -108,12 +108,12 @@ class WP_Lightning_Ajax
             $this->plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
             if (!empty($post_id)) {
                 $content = get_post_field('post_content', $post_id);
-                $paywall = new WP_Lightning_Paywall($content);
+                $paywall = new WP_Lightning_Paywall($this->plugin, $content);
                 $protected = $paywall->getProtectedContent();
-                WP_Lightning_Paywall::save_as_paid($post_id, $invoice['value']);
+                WP_Lightning::save_as_paid($post_id, $invoice['value']);
                 wp_send_json($protected, 200);
             } elseif (!empty($jwt->{'all'})) {
-                WP_Lightning_Paywall::save_paid_all($this->plugin->getPaywallOptions()['all_days']);
+                WP_Lightning::save_paid_all($this->plugin->getPaywallOptions()['all_days']);
                 wp_send_json($this->plugin->getPaywallOptions()['all_confirmation'], 200);
             }
         } else {

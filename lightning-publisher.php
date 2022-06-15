@@ -4,20 +4,6 @@
 defined('WPINC') || die;
 
 /**
- * 
- * Plugin Name: Lightning Paywall
- * Version:     0.0.1
- * Plugin URI:
- * Description: Wordpress content paywall using the lightning network. Directly connected to an LND node
- * Author:
- * Author URI:
- * Text Domain: lnp-alby
- *
- * Fork of: https://github.com/ElementsProject/wordpress-lightning-publisher
- * 
- */
-
-/**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wp-lightning-activator.php
  */
@@ -108,7 +94,7 @@ class WP_LN_Paywall
     add_action('wp_ajax_create_lnp_hub_account', array($this, 'create_lnp_hub_account'));
 
     // admin
-    add_action('admin_menu', array($this, 'admin_menu'));
+    // add_action('admin_menu', array($this, 'admin_menu'));
     // initializing admin pages
     new LNP_Dashboard($this, 'lnp_settings');
     new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
@@ -547,17 +533,17 @@ class WP_LN_Paywall
   /**
    * Admin
    */
-  public function admin_menu()
-  {
-    add_menu_page(
-      'Lightning Paywall',
-      'Lightning Paywall',
-      'manage_options',
-      'lnp_settings',
-      null,
-      'dashicons-superhero'
-    );
-  }
+  // public function admin_menu()
+  // {
+  //   add_menu_page(
+  //     'Lightning Paywall',
+  //     'Lightning Paywall',
+  //     'manage_options',
+  //     'lnp_settings',
+  //     null,
+  //     'dashicons-superhero'
+  //   );
+  // }
 
   public function create_lnp_hub_account()
   {

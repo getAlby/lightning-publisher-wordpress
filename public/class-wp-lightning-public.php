@@ -1,5 +1,8 @@
 <?php
 
+use Firebase\JWT;
+use \tkijewski\lnurl;
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -12,36 +15,24 @@
 class WP_Lightning_Public {
 
 	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
-	 */
-	private $plugin_name;
+     * Main Plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      WP_Lightning    $plugin    The main plugin object.
+     */
+    private $plugin;
 
 	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
-	 */
-	private $version;
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of the plugin.
-	 * @param      string    $version    The version of this plugin.
-	 */
-	public function __construct( $plugin_name, $version ) {
-
-		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-
-	}
+     * Initialize the class and set its properties.
+     *
+     * @since    1.0.0
+     * @param    WP_Lightning    $plugin       The main plugin object.
+     */
+    public function __construct($plugin)
+    {
+        $this->plugin = $plugin;
+    }
 
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
@@ -62,7 +53,7 @@ class WP_Lightning_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-lightning-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'css/wp-lightning-public.css', array(), $this->plugin->get_version(), 'all' );
 
 	}
 
@@ -85,11 +76,11 @@ class WP_Lightning_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-lightning-public.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'js/wp-lightning-public.js', array( 'jquery' ), $this->plugin->get_version(), true );
 
-		wp_enqueue_script( 'wpln/webln-js', plugin_dir_url( __FILE__ ) . 'js/webln.min.js', array(), $this->version, true );
+		wp_enqueue_script( 'wpln/webln-js', plugin_dir_url( __FILE__ ) . 'js/webln.min.js', array(), $this->plugin->get_version(), true );
 
-		wp_localize_script($this->plugin_name, 'LN_Paywall', array(
+		wp_localize_script($this->plugin->get_plugin_name(), 'LN_Paywall', array(
             'ajax_url'  => admin_url('admin-ajax.php'),
             'rest_base' => get_rest_url(null, '/lnp-alby/v1')
         ));
@@ -100,7 +91,7 @@ class WP_Lightning_Public {
      */
     public function ln_paywall_filter($content)
     {
-		$paywall = new WP_Lightning_Paywall($content);
+		$paywall = new WP_Lightning_Paywall($this->plugin, $content);
 		return $paywall->getContent();
     }
 
@@ -111,7 +102,8 @@ class WP_Lightning_Public {
     {
         if (!empty($_POST['post_id'])) {
             $post_id = (int)$_POST['post_id'];
-            $paywall_options = $this->get_paywall_options_for($post_id, get_post_field('post_content', $post_id));
+			$paywall = new WP_Lightning_Paywall($this->plugin, get_post_field('post_content', $post_id));
+            $paywall_options = $paywall->getOptions();
             if (!$paywall_options) {
                 // return wp_send_json(['error' => 'invalid post'], 404);
             }
@@ -139,8 +131,8 @@ class WP_Lightning_Public {
             'private' => true
         ];
 
-        $invoice = $this->getLightningClient()->addInvoice($invoice_params);
-        $this->database_handler->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
+        $invoice = $this->plugin->getLightningClient()->addInvoice($invoice_params);
+        $this->plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
 
         $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
         $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
@@ -149,4 +141,74 @@ class WP_Lightning_Public {
         //wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'amount' => $paywall_options['amount'], 'payment_request' => $invoice['payment_request']]);
         wp_send_json($response);
     }
+
+	// endpoint idea from: https://webdevstudios.com/2015/07/09/creating-simple-json-endpoint-wordpress/
+	public function add_lnurl_endpoints()
+	{
+		add_rewrite_tag('%lnurl%', '([^&]+)');
+		add_rewrite_tag('%lnurl_post_id%', '([^&]+)');
+		add_rewrite_tag('%amount%', '([^&]+)');
+		//add_rewrite_rule( 'lnurl/([^&]+)/?', 'index.php?lnurl=$matches[1]', 'top' );
+	}
+
+	public function lnurl_endpoints()
+	{
+		global $wp_query;
+		$lnurl = $wp_query->get('lnurl');
+		$post_id = $wp_query->get('lnurl_post_id');
+
+		if (!$lnurl) {
+			return;
+		}
+
+		$description = get_bloginfo('name');
+		if (!empty($post_id)) {
+			$description = $description . ' - ' . get_the_title($post_id);
+		}
+
+		if ($lnurl == 'pay') {
+			$callback_url = home_url(add_query_arg('lnurl', 'cb'));
+			wp_send_json([
+				'callback' => $callback_url,
+				'minSendable' => 1000 * 1000, // millisatoshi
+				'maxSendable' => 1000000 * 1000, // millisatoshi
+				'tag' => 'payRequest',
+				'metadata' => '[["text/plain", "' . $description . '"]]'
+			]);
+		} elseif ($lnurl == 'cb') {
+			$amount = $_GET['amount'];
+			if (empty($amount)) {
+				wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
+				return;
+			}
+			$description_hash = base64_encode(hash('sha256', '[["text/plain", "' . $description . '"]]', true));
+			$invoice = $this->plugin->getLightningClient()->addInvoice([
+				'memo' => substr($description, 0, 64),
+				'description_hash' => $description_hash,
+				'value' => $amount,
+				'expiry' => 1800,
+				'private' => true
+			]);
+			wp_send_json(['pr' => $invoice['payment_request'], 'routes' => []]);
+		}
+	}
+
+	public function add_lnurl_to_rss_item_filter()
+	{
+		global $post;
+		$pay_url = add_query_arg([
+			'lnurl' => 'pay',
+			'lnurl_post_id' => $post->ID
+		], get_site_url());
+		$lnurl = lnurl\encodeUrl($pay_url);
+		echo '<payment:lnurl>' . $lnurl . '</payment:lnurl>';
+	}
+
+	public function hook_meta_tags()
+	{
+		if (!empty($this->plugin->getPaywallOptions()['lnurl_meta_tag']) && $this->plugin->getPaywallOptions()['lnurl_meta_tag']) {
+			$url = get_site_url(null, '/?lnurl=pay');
+			echo '<meta name="lightning" content="lnurlp:' . $url . '" />';
+		}
+	}
 }

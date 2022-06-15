@@ -44,7 +44,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
      */
     public function addInvoice($params)
     {
-        $this->client->addInvoice($params);
+        return $this->client->addInvoice($params);
     }
     
     /**
@@ -54,6 +54,76 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
      */
     public function getInvoice($params)
     {
-        $this->client->getInvoice($params);
+        return $this->client->getInvoice($params);
+    }
+    
+    /**
+     * Check if Invoice is paid
+     * 
+     * @since    1.0.0
+     */
+    public function isInvoicePaid()
+    {
+        return $this->client->isInvoicePaid();
+    }
+
+    /**
+     * Check for valid connection
+     * 
+     * @since    1.0.0
+     */
+    public function isConnectionValid()
+    {
+        return $this->client->isConnectionValid();
+    }
+
+    /**
+     * Get information about the client
+     * 
+     * @since    1.0.0
+     */
+    public function getInfo()
+    {
+        return $this->client->getInfo();
+    }
+
+    /**
+     * Get address
+     * 
+     * @since    1.0.0
+     */
+    public function getAddress()
+    {
+        return $this->client->getAddress();
+    }
+   
+    /**
+     * Set address
+     * 
+     * @since    1.0.0
+     */
+    public function setAddress()
+    {
+        return $this->client->setAddress();
+    }
+    
+    /**
+     * Request
+     * 
+     * @since    1.0.0
+     */
+    public function request()
+    {
+        return $this->client->request();
+    }
+    
+    /**
+     * Client
+     * 
+     * @since    1.0.0
+     */
+    public function client()
+    {
+        return $this->client->client();
     }
 }

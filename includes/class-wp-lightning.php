@@ -1,6 +1,5 @@
 <?php
 
-use \tkijewski\lnurl;
 use \Firebase\JWT;
 
 class WP_Lightning
@@ -98,11 +97,6 @@ class WP_Lightning
 	 */
 	public function __construct()
 	{
-		define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'lnp-alby', AUTH_KEY));
-		define('WP_LN_PAYWALL_JWT_ALGORITHM', 'HS256');
-		define('WP_LN_ROOT_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
-		define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url(__FILE__)));
-
 		if (defined('WP_LIGHTNING_VERSION')) {
 			$this->version = WP_LIGHTNING_VERSION;
 		} else {
@@ -113,51 +107,12 @@ class WP_Lightning
 		$this->set_locale();
 		$this->read_database_options();
 		$this->setup_client();
+		// var_dump($this->connection_options);die;
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 		$this->define_ajax_hooks();
-
-		// // admin
-		// add_action('admin_menu', array($this, 'admin_menu'));
-		// // initializing admin pages
-		// new LNP_Dashboard($this, 'lnp_settings');
-		// new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
-
-		// $paywall_page    = new LNP_PaywallPage($this, 'lnp_settings');
-		// $connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
-		// $donation_page   = new LNP_DonationPage($this, 'lnp_settings');
-
-		// new LNP_HelpPage($this, 'lnp_settings');
-
-		// // get page options
-		// $this->connection_options = $connection_page->options;
-		// $this->paywall_options    = $paywall_page->options;
-		// $this->donation_options   = $donation_page->options;
-
-		// // Init admin only stuff
-		// new LNP_Admin($this);
-
-		// // Anything that goes on frontend
-		// new LNP_DonationsWidget($this);
-
-		// /**
-		//  * Init REST API Server
-		//  */
-		// $server = LNP_RESTServer::instance();
-		// $server->init();
-		// $server->set_plugin_instance($this);
-
-		// add_action('widgets_init', array($this, 'widget_init'));
-		// // feed
-		// // https://code.tutsplus.com/tutorials/extending-the-default-wordpress-rss-feed--wp-27935
-		// if (!empty($this->paywall_options['lnurl_rss'])) {
-		//     add_action('init', array($this, 'add_lnurl_endpoints'));
-		//     add_action('template_redirect', array($this, 'lnurl_endpoints'));
-		//     add_action('rss2_item', array($this, 'add_lnurl_to_rss_item_filter'));
-		// }
-
-		// add_action('admin_enqueue_scripts', array($this, 'load_custom_wp_admin_style'));
-		// add_action('wp_head', array($this, 'hook_meta_tags'));
+		$this->define_shortcodes();
+		$this->initialize_rest_api();
 	}
 
 	/**
@@ -204,9 +159,6 @@ class WP_Lightning
 
 		// Admin stuff
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/widgets/lnp-widget.php';
-
-		// Public facing
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/includes/class-donations-widget.php';
 
 		// Includes
 		require_once plugin_dir_path(dirname(__FILE__)) . 'lightning-address.php';
@@ -256,6 +208,16 @@ class WP_Lightning
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-lightning-paywall.php';
+		
+		/**
+		 * The class responsible for donation widget
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-lightning-donations-widget.php';
+		
+		/**
+		 * The class responsible for REST API.
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/rest-api/class-rest-server.php';
 
 		$this->loader = new WP_Lightning_Loader();
 	}
@@ -288,9 +250,12 @@ class WP_Lightning
 
 		$this->database_handler = new LNP_DatabaseHandler();
 
+		$dashboard_page = new LNP_Dashboard($this, 'lnp_settings');
+		$balance_page = new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
 		$paywall_page    = new LNP_PaywallPage($this, 'lnp_settings');
 		$connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
 		$donation_page   = new LNP_DonationPage($this, 'lnp_settings');
+		$help_page = new LNP_HelpPage($this, 'lnp_settings');
 
 		// get page options
 		$this->connection_options = $connection_page->options;
@@ -340,10 +305,13 @@ class WP_Lightning
 	private function define_admin_hooks()
 	{
 
-		$plugin_admin = new WP_Lightning_Admin($this->get_plugin_name(), $this->get_version());
+		$plugin_admin = new WP_Lightning_Admin($this);
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+		$this->loader->add_action('admin_menu', $plugin_admin, 'lightning_menu');
+		$this->loader->add_action('init', $plugin_admin, 'init_donation_block');
+		$this->loader->add_action('widgets_init', $plugin_admin, 'widget_init');
 	}
 
 	/**
@@ -356,12 +324,20 @@ class WP_Lightning
 	private function define_public_hooks()
 	{
 
-		$plugin_public = new WP_Lightning_Public($this->get_plugin_name(), $this->get_version());
+		$plugin_public = new WP_Lightning_Public($this);
+		$donation_widget = new LNP_DonationsWidget($this);
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+		$this->loader->add_action('wp_head', $plugin_public, 'hook_meta_tags');
+		if (!empty($this->paywall_options['lnurl_rss'])) {
+			$this->loader->add_action('init', $plugin_public, 'add_lnurl_endpoints');
+			$this->loader->add_action('template_redirect', $plugin_public, 'lnurl_endpoints');
+			$this->loader->add_action('rss2_item', $plugin_public, 'add_lnurl_to_rss_item_filter');
+		}
 
 		$this->loader->add_filter('the_content', $plugin_public, 'ln_paywall_filter');
+		$this->loader->add_filter('the_content', $donation_widget, 'set_donation_box');
 	}
 
 	/**
@@ -390,6 +366,33 @@ class WP_Lightning
 		// $this->loader->add_action('wp_ajax_nopriv_lnp_check_payment_all', $plugin_ajax, 'ajax_check_payment_all');
 
 		$this->loader->add_action('wp_ajax_create_lnp_hub_account', $plugin_ajax, 'create_lnp_hub_account');
+	}
+	
+	/**
+	 * Register all of the shortcodes.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_shortcodes()
+	{
+
+		$plugin_admin = new WP_Lightning_Admin($this->get_plugin_name(), $this->get_version());
+
+		$this->loader->add_shortcode('alby_donation_block', $plugin_admin, 'sc_alby_donation_block');
+	}
+	
+	/**
+	 * Initialize REST API.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function initialize_rest_api()
+	{
+		$server = LNP_RESTServer::instance();
+		$server->init();
+		$server->set_plugin_instance($this);
 	}
 
 	/**
@@ -445,6 +448,14 @@ class WP_Lightning
 	}
 	
 	/**
+	 * Get the lightning client type
+	 */
+	public function getLightningClientType()
+	{
+		return $this->lightningClientType;
+	}
+	
+	/**
 	 * Get the database handler
 	 */
 	public function getDatabaseHandler()
@@ -476,326 +487,81 @@ class WP_Lightning
 		return $this->donation_options;
 	}
 
-	//     public function add_lnurl_to_rss_item_filter()
-	//     {
-	//         global $post;
-	//         $pay_url = add_query_arg([
-	//             'lnurl' => 'pay',
-	//             'lnurl_post_id' => $post->ID
-	//         ], get_site_url());
-	//         $lnurl = lnurl\encodeUrl($pay_url);
-	//         echo '<payment:lnurl>' . $lnurl . '</payment:lnurl>';
-	//     }
+	/**
+     * Check if paid for all
+     */
+    public static function has_paid_for_all()
+    {
+        $wplnp = null;
+        if (isset($_COOKIE['wplnp'])) {
+            $wplnp = $_COOKIE['wplnp'];
+        } elseif (isset($_GET['wplnp'])) {
+            $wplnp = $_GET['wplnp'];
+        }
+        if (empty($wplnp)) return false;
+        try {
+            $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
+            return $jwt->{'all_until'} ?? 0 > time();
+        } catch (Exception $e) {
+            //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
+            return false;
+        }
+    }
 
-	//     public static function splitPublicProtected($content)
-	//     {
-	//         return preg_split('/(<p>)?\[ln.+\](<\/p>)?/', $content, 2);
-	//     }
+    public static function get_paid_post_ids()
+    {
+        $wplnp = null;
+        if (isset($_COOKIE['wplnp'])) {
+            $wplnp = $_COOKIE['wplnp'];
+        } elseif (isset($_GET['wplnp'])) {
+            $wplnp = $_GET['wplnp'];
+        }
+        if (empty($wplnp)) return [];
+        try {
+            $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
+            $paid_post_ids = $jwt->{'post_ids'};
+            if (!is_array($paid_post_ids)) return [];
 
-	//     /**
-	//      * Store the post_id in an cookie to remember the payment
-	//      * and increment the paid amount on the post
-	//      * must only be called once (can be exploited currently)
-	//      */
-	//     public static function save_as_paid($post_id, $amount_paid = 0)
-	//     {
-	//         $paid_post_ids = self::get_paid_post_ids();
-	//         if (!in_array($post_id, $post_ids)) {
-	//             $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
-	//             if (is_numeric($amount_received)) {
-	//                 $amount = $amount_received + $amount_paid;
-	//             } else {
-	//                 $amount = $amount_paid;
-	//             }
-	//             update_post_meta($post_id, '_lnp_amount_received', $amount);
+            return $paid_post_ids;
+        } catch (Exception $e) {
+            //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
+            return [];
+        }
+    }
 
-	//             array_push($paid_post_ids, $post_id);
-	//         }
-	//         $jwt = JWT\JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
-	//         setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
-	//     }
+    public static function has_paid_for_post($post_id)
+    {
+        $paid_post_ids = self::get_paid_post_ids();
+        return in_array($post_id, $paid_post_ids);
+    }
 
-	//     public static function save_paid_all($days)
-	//     {
-	//         $paid_post_ids = self::get_paid_post_ids();
-	//         $jwt = JWT\JWT::encode(array('all_until' => time() + $days * 24 * 60 * 60, 'post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
-	//         setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
-	//     }
+    /**
+     * Store the post_id in an cookie to remember the payment
+     * and increment the paid amount on the post
+     * must only be called once (can be exploited currently)
+     */
+    public static function save_as_paid($post_id, $amount_paid = 0)
+    {
+        $paid_post_ids = self::get_paid_post_ids();
+        if (!in_array($post_id, $paid_post_ids)) {
+            $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
+            if (is_numeric($amount_received)) {
+                $amount = $amount_received + $amount_paid;
+            } else {
+                $amount = $amount_paid;
+            }
+            update_post_meta($post_id, '_lnp_amount_received', $amount);
 
-	//     public static function has_paid_for_all()
-	//     {
-	//         $wplnp = null;
-	//         if (isset($_COOKIE['wplnp'])) {
-	//             $wplnp = $_COOKIE['wplnp'];
-	//         } elseif (isset($_GET['wplnp'])) {
-	//             $wplnp = $_GET['wplnp'];
-	//         }
-	//         if (empty($wplnp)) return false;
-	//         try {
-	//             $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
-	//             return $jwt->{'all_until'} > time();
-	//         } catch (Exception $e) {
-	//             //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
-	//             return false;
-	//         }
-	//     }
+            array_push($paid_post_ids, $post_id);
+        }
+        $jwt = JWT\JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
+        setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
+    }
 
-	//     public static function get_paid_post_ids()
-	//     {
-	//         $wplnp = null;
-	//         if (isset($_COOKIE['wplnp'])) {
-	//             $wplnp = $_COOKIE['wplnp'];
-	//         } elseif (isset($_GET['wplnp'])) {
-	//             $wplnp = $_GET['wplnp'];
-	//         }
-	//         if (empty($wplnp)) return [];
-	//         try {
-	//             $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
-	//             $paid_post_ids = $jwt->{'post_ids'};
-	//             if (!is_array($paid_post_ids)) return [];
-
-	//             return $paid_post_ids;
-	//         } catch (Exception $e) {
-	//             //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
-	//             return [];
-	//         }
-	//     }
-
-	//     public static function has_paid_for_post($post_id)
-	//     {
-	//         $paid_post_ids = self::get_paid_post_ids();
-	//         return in_array($post_id, $paid_post_ids);
-	//     }
-
-	//     /**
-	//      * Register scripts and styles
-	//      */
-	//     public function enqueue_script()
-	//     {
-
-	//         wp_enqueue_style(
-	//             'wpln/admin-css',
-	//             WP_LN_ROOT_URI . '/assets/css/admin.css'
-	//         );
-
-	//         wp_enqueue_script(
-	//             'wpln/webln-js',
-	//             WP_LN_ROOT_URI . '/assets/js/webln.min.js'
-	//         );
-
-	//         wp_enqueue_script(
-	//             'wpln/paywall-js',
-	//             WP_LN_ROOT_URI . '/assets/js/publisher.js'
-	//         );
-
-	//         wp_enqueue_script(
-	//             'wpln/paywall-js',
-	//             WP_LN_ROOT_URI . '/assets/css/publisher.css'
-	//         );
-
-	//         wp_localize_script('wpln/paywall-js', 'LN_Paywall', array(
-	//             'ajax_url'  => admin_url('admin-ajax.php'),
-	//             'rest_base' => get_rest_url(null, '/lnp-alby/v1')
-	//         ));
-	//     }
-
-
-
-	//     /**
-	//      * AJAX endpoint to check if an invoice is settled
-	//      * returns the protected content if the invoice is settled
-	//      */
-	//     public function ajax_check_payment()
-	//     {
-	//         if (empty($_POST['token'])) {
-	//             return wp_send_json(['settled' => false], 404);
-	//         }
-	//         try {
-	//             $jwt = JWT\JWT::decode($_POST['token'], new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
-	//         } catch (Exception $e) {
-	//             return wp_send_json(['settled' => false], 404);
-	//         }
-
-	//         // if we get a preimage we can check if the preimage matches the payment hash and accept it.
-	//         if (!empty($_POST['preimage']) && hash('sha256', hex2bin($_POST['preimage']), false) == $jwt->{"r_hash"}) {
-	//             $invoice = ['settled' => true];
-	//             // if ew do not have a preimage we must check with the LN node if the invoice was paid.
-	//         } else {
-	//             $invoice_id = $jwt->{'invoice_id'};
-	//             $invoice = $this->getLightningClient()->getInvoice($invoice_id);
-	//         }
-
-	//         // TODO check amount?
-	//         if ($invoice && $invoice['settled']) { // && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
-	//             $post_id = $jwt->{'post_id'};
-	//             $this->database_handler->update_invoice_state($jwt->{'r_hash'}, 'settled');
-	//             if (!empty($post_id)) {
-	//                 $content = get_post_field('post_content', $post_id);
-	//                 list($public, $protected) = self::splitPublicProtected($content);
-	//                 self::save_as_paid($post_id, $amount);
-	//                 wp_send_json($protected, 200);
-	//             } elseif (!empty($jwt->{'all'})) {
-	//                 self::save_paid_all($this->paywall_options['all_days']);
-	//                 wp_send_json($this->paywall_options['all_confirmation'], 200);
-	//             }
-	//         } else {
-	//             wp_send_json(['settled' => false], 402);
-	//         }
-	//     }
-
-	//     protected static function extract_ln_shortcode($content)
-	//     {
-	//         if (!preg_match('/\[ln(.+)\]/i', $content, $m)) {
-	//             return;
-	//         }
-	//         return shortcode_parse_atts($m[1]);
-	//     }
-
-	//     public function get_paywall_options_for($postId, $content)
-	//     {
-	//         $ln_shortcode_data = self::extract_ln_shortcode($content);
-	//         if (!$ln_shortcode_data && !is_array($ln_shortcode_data)) {
-	//             return null;
-	//         }
-
-
-	//         return [
-	//             'paywall_text' => array_key_exists('text', $ln_shortcode_data) ? $ln_shortcode_data['text'] : $this->paywall_options['paywall_text'] ?? null,
-	//             'button_text'  => array_key_exists('button', $ln_shortcode_data) ? $ln_shortcode_data['button'] : $this->paywall_options['button_text'] ?? null,
-	//             'amount'       => array_key_exists('amount', $ln_shortcode_data) ? (int)$ln_shortcode_data['amount'] : (int)($this->paywall_options['amount'] ?? null),
-	//             'total'        => array_key_exists('total', $ln_shortcode_data) ? (int)$ln_shortcode_data['total'] : (int)($this->paywall_options['total'] ?? null),
-	//             'timeout'      => array_key_exists('timeout', $ln_shortcode_data) ? (int)$ln_shortcode_data['timeout'] : (int)($this->paywall_options['timeout'] ?? null),
-	//             'timein'       => array_key_exists('timein', $ln_shortcode_data) ? (int)$ln_shortcode_data['timein'] : (int)($this->paywall_options['timein'] ?? null),
-	//             'disable_in_rss' => array_key_exists('disable_in_rss', $ln_shortcode_data) ? true : $this->paywall_options['disable_paywall_in_rss'] ?? [] ?? null,
-	//         ];
-	//     }
-
-	//     /**
-	//      * Format display for paid post
-	//      */
-	//     protected static function format_paid($post_id, $ln_shortcode_data, $public, $protected)
-	//     {
-	//         return sprintf('%s%s', $public, $protected);
-	//     }
-
-	//     /**
-	//      * Format display for unpaid post. Injects the payment request HTML
-	//      */
-	//     protected static function format_unpaid($post_id, $options, $public)
-	//     {
-	//         $text   = '<p>' . sprintf(empty($options['paywall_text']) ? 'To continue reading the rest of this post, please pay <em>%s Sats</em>.' : $options['paywall_text'], $options['amount']) . '</p>';
-	//         $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($options['button_text']) ? 'Pay now' : $options['button_text']);
-	//         // $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
-	//         return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $public, $post_id, $text, $button);
-	//     }
-
-	//     function widget_init()
-	//     {
-	//         $has_paid = self::has_paid_for_all();
-	//         register_widget(new LnpWidget($has_paid, $this->paywall_options));
-	//     }
-
-	//     // endpoint idea from: https://webdevstudios.com/2015/07/09/creating-simple-json-endpoint-wordpress/
-	//     public function add_lnurl_endpoints()
-	//     {
-	//         add_rewrite_tag('%lnurl%', '([^&]+)');
-	//         add_rewrite_tag('%lnurl_post_id%', '([^&]+)');
-	//         add_rewrite_tag('%amount%', '([^&]+)');
-	//         //add_rewrite_rule( 'lnurl/([^&]+)/?', 'index.php?lnurl=$matches[1]', 'top' );
-	//     }
-
-	//     public function lnurl_endpoints()
-	//     {
-	//         global $wp_query;
-	//         $lnurl = $wp_query->get('lnurl');
-	//         $post_id = $wp_query->get('lnurl_post_id');
-
-	//         if (!$lnurl) {
-	//             return;
-	//         }
-
-	//         $description = get_bloginfo('name');
-	//         if (!empty($post_id)) {
-	//             $description = $description . ' - ' . get_the_title($post_id);
-	//         }
-
-	//         if ($lnurl == 'pay') {
-	//             $callback_url = home_url(add_query_arg('lnurl', 'cb'));
-	//             wp_send_json([
-	//                 'callback' => $callback_url,
-	//                 'minSendable' => 1000 * 1000, // millisatoshi
-	//                 'maxSendable' => 1000000 * 1000, // millisatoshi
-	//                 'tag' => 'payRequest',
-	//                 'metadata' => '[["text/plain", "' . $description . '"]]'
-	//             ]);
-	//         } elseif ($lnurl == 'cb') {
-	//             $amount = $_GET['amount'];
-	//             if (empty($amount)) {
-	//                 wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
-	//                 return;
-	//             }
-	//             $description_hash = base64_encode(hash('sha256', '[["text/plain", "' . $description . '"]]', true));
-	//             $invoice = $this->getLightningClient()->addInvoice([
-	//                 'memo' => substr($description, 0, 64),
-	//                 'description_hash' => $description_hash,
-	//                 'value' => $amount,
-	//                 'expiry' => 1800,
-	//                 'private' => true
-	//             ]);
-	//             wp_send_json(['pr' => $invoice['payment_request'], 'routes' => []]);
-	//         }
-	//     }
-
-	//     /**
-	//      * Admin
-	//      */
-	//     public function admin_menu()
-	//     {
-	//         add_menu_page(
-	//             'Lightning Paywall',
-	//             'Lightning Paywall',
-	//             'manage_options',
-	//             'lnp_settings',
-	//             null,
-	//             'dashicons-superhero'
-	//         );
-	//     }
-
-	//     public function create_lnp_hub_account()
-	//     {
-	//         $account = LNDHub\Client::createWallet("https://ln.getalby.com", "bluewallet");
-	//         wp_send_json($account);
-	//     }
-
-
-	//     public function hook_meta_tags()
-	//     {
-	//         if (!empty($this->paywall_options['lnurl_meta_tag']) && $this->paywall_options['lnurl_meta_tag']) {
-	//             $url = get_site_url(null, '/?lnurl=pay');
-	//             echo '<meta name="lightning" content="lnurlp:' . $url . '" />';
-	//         }
-	//     }
-
-
-	//     public function load_custom_wp_admin_style($hook)
-	//     {
-	//         // $hook is string value given add_menu_page function.
-	//         // if ($hook != 'toplevel_page_mypluginname') {
-	//         //   return;
-	//         // }
-	//         wp_enqueue_style(
-	//             'wpln/admin-css',
-	//             WP_LN_ROOT_URI . '/assets/css/admin.css'
-	//         );
-
-	//         wp_enqueue_script(
-	//             'wpln/admin-js',
-	//             WP_LN_ROOT_URI . '/assets/js/admin.js'
-	//         );
-	//     }
-
-	//     public function get_file_url($path)
-	//     {
-	//         return plugins_url($path, __FILE__);
-	//     }
+    public static function save_paid_all($days)
+    {
+        $paid_post_ids = self::get_paid_post_ids();
+        $jwt = JWT\JWT::encode(array('all_until' => time() + $days * 24 * 60 * 60, 'post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
+        setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
+    }
 }

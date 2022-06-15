@@ -11,6 +11,14 @@ use \Firebase\JWT;
  */
 class WP_Lightning_Paywall
 {
+    /**
+     * Main Plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      WP_Lightning    $plugin    The main plugin object.
+     */
+    private $plugin;
 
     /**
      * Full content that the Paywall is blocking.
@@ -29,6 +37,15 @@ class WP_Lightning_Paywall
      * @var      string    $teaser    Teaser of the full content blocked by the Paywall.
      */
     protected $teaser;
+    
+    /**
+     * Protected content of the content.
+     *
+     * @since    1.0.0
+     * @access   protected
+     * @var      string    $protected_content    Protected content of the full content blocked by the Paywall.
+     */
+    protected $protected_content;
 
     /**
      * Status of the Paywall.
@@ -63,16 +80,16 @@ class WP_Lightning_Paywall
      *
      * @since    1.0.0
      */
-    public function __construct($content)
+    public function __construct($plugin, $content)
     {
+        $this->plugin = $plugin;
         $this->content = $content;
 
         $shortcode_options = $this->extract_shortcode();
-        $paywall_page = new LNP_PaywallPage($this, 'lnp_settings');
-        $database_options = $paywall_page->options;
+        $database_options = $this->plugin->getPaywallOptions();
         $this->options = array_merge($this->options, $database_options, $shortcode_options);
 
-        $this->setTeaser();
+        $this->splitPublicProtected();
     }
 
     /**
@@ -90,89 +107,30 @@ class WP_Lightning_Paywall
     }
 
     /**
-     * Set the teaser of the content
+     * Split the teaser and the protected content
      */
-    protected function setTeaser()
+    public function splitPublicProtected()
     {
-        $this->teaser = preg_split('/(<p>)?\[ln.+\](<\/p>)?/', $this->content, 2)[0];
+        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[ln.+\](<\/p>)?/', $this->content, 2),2,null);
     }
 
     /**
-     * Check if paid for all
+     * Format display for paid post
      */
-    protected static function has_paid_for_all()
+    protected function format_paid()
     {
-        $wplnp = null;
-        if (isset($_COOKIE['wplnp'])) {
-            $wplnp = $_COOKIE['wplnp'];
-        } elseif (isset($_GET['wplnp'])) {
-            $wplnp = $_GET['wplnp'];
-        }
-        if (empty($wplnp)) return false;
-        try {
-            $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
-            return $jwt->{'all_until'} > time();
-        } catch (Exception $e) {
-            //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
-            return false;
-        }
-    }
-
-    protected static function get_paid_post_ids()
-    {
-        $wplnp = null;
-        if (isset($_COOKIE['wplnp'])) {
-            $wplnp = $_COOKIE['wplnp'];
-        } elseif (isset($_GET['wplnp'])) {
-            $wplnp = $_GET['wplnp'];
-        }
-        if (empty($wplnp)) return [];
-        try {
-            $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
-            $paid_post_ids = $jwt->{'post_ids'};
-            if (!is_array($paid_post_ids)) return [];
-
-            return $paid_post_ids;
-        } catch (Exception $e) {
-            //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
-            return [];
-        }
-    }
-
-    protected static function has_paid_for_post($post_id)
-    {
-        $paid_post_ids = self::get_paid_post_ids();
-        return in_array($post_id, $paid_post_ids);
+        return sprintf('%s%s', $this->teaser, $this->protected_content);
     }
 
     /**
-     * Store the post_id in an cookie to remember the payment
-     * and increment the paid amount on the post
-     * must only be called once (can be exploited currently)
+     * Format display for unpaid post. Injects the payment request HTML
      */
-    public static function save_as_paid($post_id, $amount_paid = 0)
+    protected function format_unpaid()
     {
-        $paid_post_ids = self::get_paid_post_ids();
-        if (!in_array($post_id, $paid_post_ids)) {
-            $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
-            if (is_numeric($amount_received)) {
-                $amount = $amount_received + $amount_paid;
-            } else {
-                $amount = $amount_paid;
-            }
-            update_post_meta($post_id, '_lnp_amount_received', $amount);
-
-            array_push($paid_post_ids, $post_id);
-        }
-        $jwt = JWT\JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
-        setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
-    }
-
-    public static function save_paid_all($days)
-    {
-        $paid_post_ids = self::get_paid_post_ids();
-        $jwt = JWT\JWT::encode(array('all_until' => time() + $days * 24 * 60 * 60, 'post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
-        setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
+        $text   = '<p>' . sprintf(empty($this->options['paywall_text']) ? 'To continue reading the rest of this post, please pay <em>%s Sats</em>.' : $this->options['paywall_text'], $this->options['amount']) . '</p>';
+        $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($this->options['button_text']) ? 'Pay now' : $this->options['button_text']);
+        // $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
+        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, get_the_ID(), $text, $button);
     }
 
     /**
@@ -184,31 +142,31 @@ class WP_Lightning_Paywall
     public function getContent()
     {
         if ($this->options['disable_in_rss'] && is_feed()) {
-            return $this->content;
+            return $this->format_paid();
         }
 
         if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 24 * 60 * 60) {
-            return $this->content;
+            return $this->format_paid();
         }
 
         if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 24 * 60 * 60) {
-            return $this->content;
+            return $this->format_paid();
         }
 
         $amount_received = get_post_meta(get_the_ID(), '_lnp_amount_received', true);
         if (!empty($this->options['total']) && $amount_received >= $this->options['total']) {
-            return $this->content;
+            return $this->format_paid();
         }
 
-        if (self::has_paid_for_all()) {
-            return $this->content;
+        if (WP_Lightning::has_paid_for_all()) {
+            return $this->format_paid();
         }
 
-        if (self::has_paid_for_post(get_the_ID())) {
-            return $this->content;
+        if (WP_Lightning::has_paid_for_post(get_the_ID())) {
+            return $this->format_paid();
         }
 
-        return $this->teaser;
+        return $this->format_unpaid();
     }
 
     /**
@@ -222,7 +180,8 @@ class WP_Lightning_Paywall
     /**
      * Get the protected content
      */
-    public function getProtectedContent() {
-        return trim($this->content, $this->teaser);
+    public function getProtectedContent()
+    {
+        return $this->protected_content;
     }
 }
