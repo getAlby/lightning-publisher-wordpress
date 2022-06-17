@@ -86,9 +86,13 @@ class WP_Lightning_Paywall
         $this->content = $content;
 
         $shortcode_options = $this->extract_shortcode();
-        $database_options = $this->plugin->getPaywallOptions();
-        $this->options = array_merge($this->options, $database_options, $shortcode_options);
-
+        if (!empty($shortcode_options)) {
+            $database_options = $this->plugin->getPaywallOptions();
+            $this->options = array_merge($this->options, $database_options, $shortcode_options);
+        } else {
+            // If no shortcode found, do not enable the paywall
+            $this->status = 0;
+        }
         $this->splitPublicProtected();
     }
 
@@ -141,32 +145,35 @@ class WP_Lightning_Paywall
      */
     public function getContent()
     {
-        if ($this->options['disable_in_rss'] && is_feed()) {
-            return $this->format_paid();
+        if ($this->status === 1) {
+            if ($this->options['disable_in_rss'] && is_feed()) {
+                return $this->format_paid();
+            }
+    
+            if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 24 * 60 * 60) {
+                return $this->format_paid();
+            }
+    
+            if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 24 * 60 * 60) {
+                return $this->format_paid();
+            }
+    
+            $amount_received = get_post_meta(get_the_ID(), '_lnp_amount_received', true);
+            if (!empty($this->options['total']) && $amount_received >= $this->options['total']) {
+                return $this->format_paid();
+            }
+    
+            if (WP_Lightning::has_paid_for_all()) {
+                return $this->format_paid();
+            }
+    
+            if (WP_Lightning::has_paid_for_post(get_the_ID())) {
+                return $this->format_paid();
+            }
+    
+            return $this->format_unpaid();
         }
-
-        if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 24 * 60 * 60) {
-            return $this->format_paid();
-        }
-
-        if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 24 * 60 * 60) {
-            return $this->format_paid();
-        }
-
-        $amount_received = get_post_meta(get_the_ID(), '_lnp_amount_received', true);
-        if (!empty($this->options['total']) && $amount_received >= $this->options['total']) {
-            return $this->format_paid();
-        }
-
-        if (WP_Lightning::has_paid_for_all()) {
-            return $this->format_paid();
-        }
-
-        if (WP_Lightning::has_paid_for_post(get_the_ID())) {
-            return $this->format_paid();
-        }
-
-        return $this->format_unpaid();
+        return $this->format_paid();
     }
 
     /**
