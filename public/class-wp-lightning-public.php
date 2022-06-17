@@ -95,53 +95,6 @@ class WP_Lightning_Public {
 		return $paywall->getContent();
     }
 
-	/**
-     * AJAX endpoint to create new invoices
-     */
-    public function ajax_make_invoice()
-    {
-        if (!empty($_POST['post_id'])) {
-            $post_id = (int)$_POST['post_id'];
-			$paywall = new WP_Lightning_Paywall($this->plugin, get_post_field('post_content', $post_id));
-            $paywall_options = $paywall->getOptions();
-            if (!$paywall_options) {
-                // return wp_send_json(['error' => 'invalid post'], 404);
-            }
-            $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
-            $amount = $paywall_options['amount'];
-            $response_data = ['post_id' => $post_id, 'amount' => $amount];
-        } elseif (!empty($_POST['all'])) {
-            $memo = get_bloginfo('name');
-            $amount = $this->paywall_options['all_amount'];
-            $response_data = ['all' => true, 'amount' => $amount];
-        } else {
-            return wp_send_json(['error' => 'invalid post'], 404);
-        }
-
-        if (!$amount) {
-            $amount = 1000;
-        }
-
-        $memo = substr($memo, 0, 64);
-        $memo = preg_replace('/[^\w_ ]/', '', $memo);
-        $invoice_params = [
-            'memo' => $memo,
-            'value' => $amount, // in sats
-            'expiry' => 1800,
-            'private' => true
-        ];
-
-        $invoice = $this->plugin->getLightningClient()->addInvoice($invoice_params);
-        $this->plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
-
-        $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
-        $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
-
-        $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
-        //wp_send_json([ 'post_id' => $post_id, 'token' => $jwt, 'amount' => $paywall_options['amount'], 'payment_request' => $invoice['payment_request']]);
-        wp_send_json($response);
-    }
-
 	// endpoint idea from: https://webdevstudios.com/2015/07/09/creating-simple-json-endpoint-wordpress/
 	public function add_lnurl_endpoints()
 	{

@@ -19,6 +19,15 @@ class WP_Lightning_Ajax
      * @var      WP_Lightning    $plugin    The main plugin object.
      */
     private $plugin;
+    
+    /**
+     * Logger instance.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      Logger    $logger    Logger instance.
+     */
+    private $logger;
 
     /**
      * Initialize the class and set its properties.
@@ -29,6 +38,7 @@ class WP_Lightning_Ajax
     public function __construct($plugin)
     {
         $this->plugin = $plugin;
+        $this->logger = $plugin->get_logger();
     }
 
     /**
@@ -41,6 +51,7 @@ class WP_Lightning_Ajax
             $paywall = new WP_Lightning_Paywall($this->plugin, get_post_field('post_content', $post_id));
             $paywall_options = $paywall->getOptions();
             if (!$paywall_options) {
+                $this->logger->error('Paywall options not found', ['post_id' => $post_id]);
                 return wp_send_json(['error' => 'invalid post'], 404);
             }
             $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
@@ -52,6 +63,7 @@ class WP_Lightning_Ajax
             $amount = $database_options['all_amount'];
             $response_data = ['all' => true, 'amount' => $amount];
         } else {
+            $this->logger->error('Invalid post');
             return wp_send_json(['error' => 'invalid post'], 404);
         }
 
@@ -75,6 +87,7 @@ class WP_Lightning_Ajax
         $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
+        $this->logger->info('Invoice created successfully', $response);
         wp_send_json($response);
     }
 
@@ -85,11 +98,13 @@ class WP_Lightning_Ajax
     public function ajax_check_payment()
     {
         if (empty($_POST['token'])) {
+            $this->logger->error('Token not provided');
             return wp_send_json(['settled' => false], 404);
         }
         try {
             $jwt = JWT\JWT::decode($_POST['token'], new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
         } catch (Exception $e) {
+            $this->logger->error('Unable to decode token');
             return wp_send_json(['settled' => false], 404);
         }
 
@@ -111,12 +126,16 @@ class WP_Lightning_Ajax
                 $paywall = new WP_Lightning_Paywall($this->plugin, $content);
                 $protected = $paywall->getProtectedContent();
                 WP_Lightning::save_as_paid($post_id, $invoice['value']);
+                $this->logger->info('Payment saved successfully', ['post_id'=> $post_id, 'invoice' => $invoice]);
                 wp_send_json($protected, 200);
             } elseif (!empty($jwt->{'all'})) {
                 WP_Lightning::save_paid_all($this->plugin->getPaywallOptions()['all_days']);
+                $this->logger->info('Payment saved successfully', ['post_id'=> 'all', 'invoice' => $invoice]);
                 wp_send_json($this->plugin->getPaywallOptions()['all_confirmation'], 200);
             }
         } else {
+            $this->logger->error('Payment couldn\'t be saved', ['invoice' => $invoice]);
+
             wp_send_json(['settled' => false], 402);
         }
     }
@@ -127,6 +146,7 @@ class WP_Lightning_Ajax
     public function create_lnp_hub_account()
     {
       $account = LNDHub\Client::createWallet("https://ln.getalby.com", "bluewallet");
+      $this->logger->info('LNDHub Wallet Created', ['account' => $account]);
       wp_send_json($account);
     }
 }

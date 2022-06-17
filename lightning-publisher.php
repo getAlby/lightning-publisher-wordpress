@@ -526,24 +526,10 @@ class WP_LN_Paywall
         'expiry' => 1800,
         'private' => true
       ]);
+      $this->logger->info('Invoice added', ['invoice' => $invoice]);
       wp_send_json(['pr' => $invoice['payment_request'], 'routes' => []]);
     }
   }
-
-  /**
-   * Admin
-   */
-  // public function admin_menu()
-  // {
-  //   add_menu_page(
-  //     'Lightning Paywall',
-  //     'Lightning Paywall',
-  //     'manage_options',
-  //     'lnp_settings',
-  //     null,
-  //     'dashicons-superhero'
-  //   );
-  // }
 
   public function create_lnp_hub_account()
   {

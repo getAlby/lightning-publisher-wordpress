@@ -1,6 +1,8 @@
 <?php
 
 use \Firebase\JWT;
+use \Monolog\Logger;
+use \Monolog\Handler\StreamHandler;
 
 class WP_Lightning
 {
@@ -87,6 +89,12 @@ class WP_Lightning
 	protected $donation_options;
 
 	/**
+	 * The Monolog Logger
+	 * @var Logger $logger
+	 */
+	protected $logger;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -104,10 +112,10 @@ class WP_Lightning
 		}
 		$this->plugin_name = 'wp-lightning';
 		$this->load_dependencies();
+		$this->initialize_logger();
 		$this->set_locale();
 		$this->read_database_options();
 		$this->setup_client();
-		// var_dump($this->connection_options);die;
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 		$this->define_ajax_hooks();
@@ -156,6 +164,7 @@ class WP_Lightning
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-paywall.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-connections.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-help.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-logs.php';
 
 		// Admin stuff
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/widgets/lnp-widget.php';
@@ -223,6 +232,15 @@ class WP_Lightning
 	}
 
 	/**
+	 * Initialize the logger instance
+	 */
+	private function initialize_logger() {
+		$this->logger = new Logger('WP_LIGHTNING_LOGGER');
+		$date = date('Y-m-d');
+		$this->logger->pushHandler(new StreamHandler(trailingslashit(wp_upload_dir()['basedir']). "wp-lightning-logs/{$date}.log", Logger::INFO));
+	}
+
+	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
 	 * Uses the WP_Lightning_i18n class in order to set the domain and to register the hook
@@ -256,6 +274,7 @@ class WP_Lightning
 		$connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
 		$donation_page   = new LNP_DonationPage($this, 'lnp_settings');
 		$help_page = new LNP_HelpPage($this, 'lnp_settings');
+		$logs_page = new LNP_LogsPage($this, 'lnp_settings');
 
 		// get page options
 		$this->connection_options = $connection_page->options;
@@ -485,6 +504,15 @@ class WP_Lightning
 	public function getDonationOptions()
 	{
 		return $this->donation_options;
+	}
+
+	/**
+	 * Retrieve the Monolog logger
+	 * @return Logger
+	 */
+	public function get_logger()
+	{
+		return $this->logger;
 	}
 
 	/**
