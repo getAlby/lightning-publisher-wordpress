@@ -274,7 +274,6 @@ class WP_Lightning
 		$connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
 		$donation_page   = new LNP_DonationPage($this, 'lnp_settings');
 		$help_page = new LNP_HelpPage($this, 'lnp_settings');
-		$logs_page = new LNP_LogsPage($this, 'lnp_settings');
 
 		// get page options
 		$this->connection_options = $connection_page->options;
@@ -326,10 +325,15 @@ class WP_Lightning
 
 		$plugin_admin = new WP_Lightning_Admin($this);
 
+		// Load the css styles for admin section 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		// Load the js scripts for admin section 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+		// Add the WP Lightning menu to the Wordpress Dashboard
 		$this->loader->add_action('admin_menu', $plugin_admin, 'lightning_menu');
+		// Register the donation block
 		$this->loader->add_action('init', $plugin_admin, 'init_donation_block');
+		// Register the subscription widget
 		$this->loader->add_action('widgets_init', $plugin_admin, 'widget_init');
 	}
 
@@ -346,16 +350,26 @@ class WP_Lightning
 		$plugin_public = new WP_Lightning_Public($this);
 		$donation_widget = new LNP_DonationsWidget($this);
 
+		// Load the css styles for frotnend 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		// Load the js scripts for frotnend 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+		// Add the lightning meta tag to the head of the page
 		$this->loader->add_action('wp_head', $plugin_public, 'hook_meta_tags');
+
+		// For RSS Feed
 		if (!empty($this->paywall_options['lnurl_rss'])) {
+			// Register custom URLs for API
 			$this->loader->add_action('init', $plugin_public, 'add_lnurl_endpoints');
+			// Custom URL handler
 			$this->loader->add_action('template_redirect', $plugin_public, 'lnurl_endpoints');
+			// Add URL as RSS Item
 			$this->loader->add_action('rss2_item', $plugin_public, 'add_lnurl_to_rss_item_filter');
 		}
 
+		// Apply Paywall to the content
 		$this->loader->add_filter('the_content', $plugin_public, 'ln_paywall_filter');
+		// Add donation widget to the content
 		$this->loader->add_filter('the_content', $donation_widget, 'set_donation_box');
 	}
 
@@ -370,20 +384,25 @@ class WP_Lightning
 
 		$plugin_ajax = new WP_Lightning_Ajax($this);
 
+		// Ajax endpoint for creating invoice
 		$this->loader->add_action('wp_ajax_lnp_invoice', $plugin_ajax, 'ajax_make_invoice');
+		// Ajax endpoint for creating invoice for non-logged in users
 		$this->loader->add_action('wp_ajax_nopriv_lnp_invoice', $plugin_ajax, 'ajax_make_invoice');
 		
 		// TODO: Missing Implementation of ajax_make_invoice_all
 		// $this->loader->add_action('wp_ajax_lnp_invoice_all', $plugin_ajax, 'ajax_make_invoice_all');
 		// $this->loader->add_action('wp_ajax_nopriv_lnp_invoice_all', $plugin_ajax, 'ajax_make_invoice_all');
 
+		// Ajax endpoint for saving the payment
 		$this->loader->add_action('wp_ajax_lnp_check_payment', $plugin_ajax, 'ajax_check_payment');
+		// Ajax endpoint for saving the payment for non-logged in users
 		$this->loader->add_action('wp_ajax_nopriv_lnp_check_payment', $plugin_ajax, 'ajax_check_payment');
 		
 		// TODO: Missing Implementation of ajax_check_payment_all
 		// $this->loader->add_action('wp_ajax_lnp_check_payment_all', $plugin_ajax, 'ajax_check_payment_all');
 		// $this->loader->add_action('wp_ajax_nopriv_lnp_check_payment_all', $plugin_ajax, 'ajax_check_payment_all');
 
+		// Ajax endpoint for creating lightning hub wallet
 		$this->loader->add_action('wp_ajax_create_lnp_hub_account', $plugin_ajax, 'create_lnp_hub_account');
 	}
 	
@@ -398,6 +417,7 @@ class WP_Lightning
 
 		$plugin_admin = new WP_Lightning_Admin($this->get_plugin_name(), $this->get_version());
 
+		// Register shortcode for donation block
 		$this->loader->add_shortcode('alby_donation_block', $plugin_admin, 'sc_alby_donation_block');
 	}
 	

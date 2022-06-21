@@ -1,9 +1,22 @@
 <?php
 
-use \Firebase\JWT;
-
 /**
  * Lightning Paywall related functionalities.
+ * 
+ * Lightning Paywall Class to manage the paywall initialization on
+ * a given content.
+ * 
+ * When applied to a content, it searches for the [ln-*] shortcode,
+ * parses the available options provided in the shortcode,
+ * merges the provided options with the database options
+ * and separates the protected and public part of the content.
+ * 
+ * `the_content` filter is attached to the getContent function.
+ * The getContent function hides the protected content by default
+ * and shows the payment buttons.
+ * 
+ * Depending on the post payment details, the getContent shows
+ * the full content or the teaser.
  *
  * @since      1.0.0
  * @package    WP_Lightning
@@ -49,6 +62,9 @@ class WP_Lightning_Paywall
 
     /**
      * Status of the Paywall.
+     * 
+     * On - 1 (Hide the protected content)
+     * Off - 0 (Show the protected content)
      *
      * @since    1.0.0
      * @access   protected
