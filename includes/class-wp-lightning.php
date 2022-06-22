@@ -152,7 +152,7 @@ class WP_Lightning
 		// Server class includes controllers
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/rest-api/class-rest-server.php';
 
-		// Settings 
+		// Settings
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-abstract-settings.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-dashboard.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-balance.php';
@@ -162,7 +162,7 @@ class WP_Lightning
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-help.php';
 
 		// Admin stuff
-		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/widgets/lnp-widget.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/widgets/twentyuno-widget.php';
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
@@ -186,7 +186,7 @@ class WP_Lightning
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-lightning-public.php';
-		
+
 		/**
 		 * The lightning client classes.
 		 */
@@ -204,12 +204,12 @@ class WP_Lightning
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-lightning-paywall.php';
-		
+
 		/**
 		 * The class responsible for donation widget
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-lightning-donations-widget.php';
-		
+
 		/**
 		 * The class responsible for REST API.
 		 */
@@ -312,9 +312,9 @@ class WP_Lightning
 
 		$plugin_admin = new WP_Lightning_Admin($this);
 
-		// Load the css styles for admin section 
+		// Load the css styles for admin section
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
-		// Load the js scripts for admin section 
+		// Load the js scripts for admin section
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 		// Add the WP Lightning menu to the Wordpress Dashboard
 		$this->loader->add_action('admin_menu', $plugin_admin, 'lightning_menu');
@@ -337,9 +337,9 @@ class WP_Lightning
 		$plugin_public = new WP_Lightning_Public($this);
 		$donation_widget = new LNP_DonationsWidget($this);
 
-		// Load the css styles for frotnend 
+		// Load the css styles for frotnend
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
-		// Load the js scripts for frotnend 
+		// Load the js scripts for frotnend
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 		// Add the lightning meta tag to the head of the page
 		$this->loader->add_action('wp_head', $plugin_public, 'hook_meta_tags');
@@ -359,7 +359,7 @@ class WP_Lightning
 		// Add donation widget to the content
 		$this->loader->add_filter('the_content', $donation_widget, 'set_donation_box');
 	}
-	
+
 	/**
 	 * Register all of the shortcodes.
 	 *
@@ -374,7 +374,7 @@ class WP_Lightning
 		// Register shortcode for donation block
 		$this->loader->add_shortcode('alby_donation_block', $plugin_admin, 'sc_alby_donation_block');
 	}
-	
+
 	/**
 	 * Initialize REST API.
 	 *
@@ -439,7 +439,7 @@ class WP_Lightning
 	{
 		return $this->lightningClient;
 	}
-	
+
 	/**
 	 * Get the lightning client type
 	 */
@@ -447,7 +447,7 @@ class WP_Lightning
 	{
 		return $this->lightningClientType;
 	}
-	
+
 	/**
 	 * Get the database handler
 	 */
@@ -488,27 +488,6 @@ class WP_Lightning
 	{
 		return $this->logger;
 	}
-
-	/**
-     * Check if paid for all
-     */
-    public static function has_paid_for_all()
-    {
-        $wplnp = null;
-        if (isset($_COOKIE['wplnp'])) {
-            $wplnp = $_COOKIE['wplnp'];
-        } elseif (isset($_GET['wplnp'])) {
-            $wplnp = $_GET['wplnp'];
-        }
-        if (empty($wplnp)) return false;
-        try {
-            $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
-            return $jwt->{'all_until'} ?? 0 > time();
-        } catch (Exception $e) {
-            //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
-            return false;
-        }
-    }
 
     public static function get_paid_post_ids()
     {
@@ -560,10 +539,4 @@ class WP_Lightning
         setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
     }
 
-    public static function save_paid_all($days)
-    {
-        $paid_post_ids = self::get_paid_post_ids();
-        $jwt = JWT\JWT::encode(array('all_until' => time() + $days * 24 * 60 * 60, 'post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
-        setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
-    }
 }

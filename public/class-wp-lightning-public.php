@@ -81,7 +81,6 @@ class WP_Lightning_Public {
 		wp_enqueue_script( 'wpln/webln-js', plugin_dir_url( __FILE__ ) . 'js/webln.min.js', array(), $this->plugin->get_version(), true );
 
 		wp_localize_script($this->plugin->get_plugin_name(), 'LN_Paywall', array(
-            'ajax_url'  => admin_url('admin-ajax.php'),
             'rest_base' => get_rest_url(null, '/lnp-alby/v1')
         ));
 	}

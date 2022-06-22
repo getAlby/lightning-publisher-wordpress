@@ -42,7 +42,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
                 ),
             )
         );
-        
+
         register_rest_route(
             $this->namespace,
             'account',
@@ -60,7 +60,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
 
     /**
      * Process paywall payment request
-     * 
+     *
      * @param  object $request WP_REST_Request
      * @return array           Invoice data or error message
      */
@@ -69,28 +69,23 @@ class LNP_PaywallController extends \WP_REST_Controller {
         $plugin = $this->get_plugin();
         $logger = $plugin->get_logger();
         $post_id = intval( $request->get_param('post_id') );
-        $all = intval( $request->get_param('all') );
-        if (!empty($post_id)) {
-            $paywall = new WP_Lightning_Paywall($plugin, get_post_field('post_content', $post_id));
-            $paywall_options = $paywall->getOptions();
-            if (!$paywall_options) {
-                $logger->error('Paywall options not found', ['post_id' => $post_id]);
-                ob_end_clean();
-                return wp_send_json(['error' => 'invalid post'], 404);
-            }
-            $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
-            $amount = $paywall_options['amount'];
-            $response_data = ['post_id' => $post_id, 'amount' => $amount];
-        } elseif (!empty($all)) {
-            $memo = get_bloginfo('name');
-            $database_options = $plugin->getPaywallOptions();
-            $amount = $database_options['all_amount'];
-            $response_data = ['all' => true, 'amount' => $amount];
-        } else {
-            $logger->error('Invalid post');
+
+        if (empty($post_id)) {
+            $logger->error('Invalid request. missing post id');
             ob_end_clean();
             return new \WP_Error(__('Invalid Request, Missing required parameters', 'lnp-alby'));
         }
+
+        $paywall = new WP_Lightning_Paywall($plugin, get_post_field('post_content', $post_id));
+        $paywall_options = $paywall->getOptions();
+        if (!$paywall_options) {
+            $logger->error('Paywall options not found', ['post_id' => $post_id]);
+            ob_end_clean();
+            return wp_send_json(['error' => 'invalid post'], 404);
+        }
+        $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
+        $amount = $paywall_options['amount'];
+        $response_data = ['post_id' => $post_id, 'amount' => $amount];
 
         if (!$amount) {
             $amount = 1000;
@@ -120,12 +115,12 @@ class LNP_PaywallController extends \WP_REST_Controller {
 
     /**
      * Verify has invoice been paid
-     * 
+     *
      * @param  object $request WP_REST_Request
      * @return array           Invoice data or error message
      */
     public function process_paywall_verify_request( $request )
-    {   
+    {
         ob_start();
         $plugin = $this->get_plugin();
         $logger = $plugin->get_logger();
@@ -157,22 +152,15 @@ class LNP_PaywallController extends \WP_REST_Controller {
         if ($invoice && $invoice['settled']) { // && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
             $post_id = $jwt->{'post_id'};
             $plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
-            if (!empty($post_id)) {
-                $content = get_post_field('post_content', $post_id);
-                $paywall = new WP_Lightning_Paywall($plugin, $content);
-                $protected = $paywall->getProtectedContent();
-                WP_Lightning::save_as_paid($post_id, $invoice['value']);
-                $logger->info('Payment saved successfully', ['post_id'=> $post_id, 'invoice' => $invoice]);
-                ob_end_clean();
-                wp_send_json($protected, 200);
-            } elseif (!empty($jwt->{'all'})) {
-                WP_Lightning::save_paid_all($plugin->getPaywallOptions()['all_days']);
-                $logger->info('Payment saved successfully', ['post_id'=> 'all', 'invoice' => $invoice]);
-                ob_end_clean();
-                wp_send_json($plugin->getPaywallOptions()['all_confirmation'], 200);
-            }
+
+            $content = get_post_field('post_content', $post_id);
+            $paywall = new WP_Lightning_Paywall($plugin, $content);
+            $protected = $paywall->getProtectedContent();
+            WP_Lightning::save_as_paid($post_id, $invoice['value']);
+            $logger->info('Invoice paid', ['post_id'=> $post_id, 'invoice' => $invoice]);
+            ob_end_clean();
+            wp_send_json($protected, 200);
         } else {
-            $logger->error('Payment couldn\'t be saved', ['invoice' => $invoice]);
             ob_end_clean();
             wp_send_json(['settled' => false], 402);
         }
@@ -200,7 +188,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
 
     /**
      * Main plugin instance
-     * 
+     *
      * @return object
      */
     private function get_plugin()
@@ -212,7 +200,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
     /**
      * Main plugin instance
      * This will provide access to LND Client
-     * 
+     *
      * @param object $plugin
      */
     public function set_plugin_instance( &$plugin )
@@ -230,7 +218,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
 
         $params['post_id'] = array(
             'default'           => 0,
-            'description'       => __( 'Post where paywall payment was made', 'lnp-alby' ),
+            'description'       => __( 'ID of the post that is requested for payment', 'lnp-alby' ),
             'type'              => 'integer',
             'sanitize_callback' => 'intval',
             'validate_callback' => 'rest_validate_request_arg',

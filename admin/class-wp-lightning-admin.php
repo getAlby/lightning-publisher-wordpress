@@ -130,7 +130,7 @@ class WP_Lightning_Admin {
 
 	function widget_init()
 	{
-		$has_paid = WP_Lightning::has_paid_for_all();
-		register_widget(new LnpWidget($has_paid, $this->plugin->getPaywallOptions()));
+    $widget = new TwentyunoWidget(["lnurl" => get_rest_url(null, '/lnp-alby/v1/lnurl')]);
+		register_widget($widget);
 	}
 }

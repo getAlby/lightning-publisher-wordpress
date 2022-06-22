@@ -2,19 +2,19 @@
 
 /**
  * Lightning Paywall related functionalities.
- * 
+ *
  * Lightning Paywall Class to manage the paywall initialization on
  * a given content.
- * 
+ *
  * When applied to a content, it searches for the [ln-*] shortcode,
  * parses the available options provided in the shortcode,
  * merges the provided options with the database options
  * and separates the protected and public part of the content.
- * 
+ *
  * `the_content` filter is attached to the getContent function.
  * The getContent function hides the protected content by default
  * and shows the payment buttons.
- * 
+ *
  * Depending on the post payment details, the getContent shows
  * the full content or the teaser.
  *
@@ -50,7 +50,7 @@ class WP_Lightning_Paywall
      * @var      string    $teaser    Teaser of the full content blocked by the Paywall.
      */
     protected $teaser;
-    
+
     /**
      * Protected content of the content.
      *
@@ -62,7 +62,7 @@ class WP_Lightning_Paywall
 
     /**
      * Status of the Paywall.
-     * 
+     *
      * On - 1 (Hide the protected content)
      * Off - 0 (Show the protected content)
      *
@@ -165,28 +165,24 @@ class WP_Lightning_Paywall
             if ($this->options['disable_in_rss'] && is_feed()) {
                 return $this->format_paid();
             }
-    
+
             if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 24 * 60 * 60) {
                 return $this->format_paid();
             }
-    
+
             if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 24 * 60 * 60) {
                 return $this->format_paid();
             }
-    
+
             $amount_received = get_post_meta(get_the_ID(), '_lnp_amount_received', true);
             if (!empty($this->options['total']) && $amount_received >= $this->options['total']) {
                 return $this->format_paid();
             }
-    
-            if (WP_Lightning::has_paid_for_all()) {
-                return $this->format_paid();
-            }
-    
+
             if (WP_Lightning::has_paid_for_post(get_the_ID())) {
                 return $this->format_paid();
             }
-    
+
             return $this->format_unpaid();
         }
         return $this->format_paid();

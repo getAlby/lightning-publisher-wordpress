@@ -8,7 +8,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
     protected $settings_path = 'lnp_settings_paywall';
     protected $template_html = 'settings/page-paywall.php';
     protected $option_name   = 'lnp_paywall';
-  
+
     public function init_fields()
     {
         // Tabs
@@ -45,7 +45,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
     public function set_form_fields() {
 
         /**
-         * Fields 
+         * Fields
          */
         $fields = array();
 
@@ -77,18 +77,18 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'label'       => __( 'Amount', 'lnp-alby' ),
                 'description' => __( 'Amount in SATS per article', 'lnp-alby'),
             ),
-        );    
+        );
 
         $fields[] = array(
             'tab'     => 'pricing',
             'field'   => array(
                 'type'        => 'number',
                 'name'        => 'paywall_total',
-                'label'       => __( 'Total', 'lnp-alby' ),                
+                'label'       => __( 'Total', 'lnp-alby' ),
                 'description' => __( 'Total amount to collect. After that amount the article will be free', 'lnp-alby'),
             ),
         );
-        
+
 
         /**
          * Fields for section: Pricing
@@ -110,25 +110,6 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'name'        => 'paywall_timein',
                 'label'       => __( 'Timein', 'lnp-alby' ),
                 'description' => __( 'Enable the paywall N days after the article is published', 'lnp-alby'),
-            ),
-        );
-
-        $fields[] = array(
-            'tab'     => 'restrictions',
-            'field'   => array(
-                'type'        => 'number',
-                'name'        => 'paywall_all_period',
-                'label'       => __( 'Days available', 'lnp-alby' ),
-                'description' => __( 'How many days should all articles be available', 'lnp-alby'),
-            ),
-        );
-
-        $fields[] = array(
-            'tab'     => 'restrictions',
-            'field'   => array(
-                'name'        => 'paywall_all_confirmation',
-                'label'       => __( 'Confirmation text', 'lnp-alby' ),
-                'description' => __( 'Confirmation text for all article payments', 'lnp-alby'),
             ),
         );
 
