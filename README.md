@@ -43,10 +43,10 @@ The plugin also provides a set of REST API Endpoints for handling payments and d
 
 #### Intiate Payment for Paywall
 
-URL: `/lnp-alby/v1/paywall/pay`
-Method: `POST`
-Auth Required: No
-Data example
+- URL: `/lnp-alby/v1/paywall/pay`
+- Method: `POST`
+- Auth Required: No
+- Data example
 
 ```
 {
@@ -56,10 +56,10 @@ Data example
 
 #### Verify Payment for Paywall
 
-URL: `/lnp-alby/v1/paywall/verify`
-Method: `POST`
-Auth Required: No
-Data example
+- URL: `/lnp-alby/v1/paywall/verify`
+- Method: `POST`
+- Auth Required: No
+- Data example
 
 ```
 {
@@ -71,10 +71,10 @@ Data example
 
 #### Initiate Donation
 
-URL: `/lnp-alby/v1/donate`
-Method: `POST`
-Auth Required: No
-Data example
+- URL: `/lnp-alby/v1/donate`
+- Method: `POST`
+- Auth Required: No
+- Data example
 
 ```
 {
@@ -85,10 +85,10 @@ Data example
 
 #### Verify Donation
 
-URL: `/lnp-alby/v1/verify`
-Method: `POST`
-Auth Required: No
-Data example
+- URL: `/lnp-alby/v1/verify`
+- Method: `POST`
+- Auth Required: No
+- Data example
 
 ```
 {
