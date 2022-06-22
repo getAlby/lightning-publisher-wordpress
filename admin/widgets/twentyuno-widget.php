@@ -4,9 +4,9 @@
       $this->lnp_options = $lnp_options;
 
       parent::__construct(
-        'lnp_widget', // Base ID
-        'Lightning Donation Widget', // Name
-         array( 'description' => __( 'A Lightning Donation Widget', 'text_domain' ), ) // Args
+        'lnp_widget_twentyuno', // Base ID
+        'Twentyuno Lightning Payment Widget', // Name
+         array( 'description' => __( 'The Lightning Widget by https://widgets.twentyuno.net', 'text_domain' ), ) // Args
       );
     }
 
