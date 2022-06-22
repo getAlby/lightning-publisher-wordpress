@@ -105,13 +105,13 @@ class LNP_TransactionsTable extends WP_List_Table
         $data = array();
         $payments = $this->database_handler->get_payments($page, $perPage);
         foreach ($payments as $payment) {
-            $post = get_post($payment->post_id);
-            $link = get_permalink($post);
+            $post = empty($payment->post_id) ? null : get_post($payment->post_id);
+            $link = empty($payment->post_id) ? null : get_permalink($post);
             $payment_hash = substr($payment->payment_hash, 0, 20) . '...';
             $payment_request = substr($payment->payment_request, 0, 20) . '...';
             // $link = get_permalink($post);
             $data[] = array(
-                'post'          => "<a href='$link'>$post->post_title</a>",
+                'post'          => (empty($post) ? "" : "<a href='$link'>$post->post_title</a>"),
                 'payment_hash'       => "<span title='$payment->payment_hash'>$payment_hash</span>",
                 'payment_request' => "<span title='$payment->payment_request'>$payment_request</span>",
                 'amount'        => $payment->amount_in_satoshi,

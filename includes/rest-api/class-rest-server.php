@@ -67,27 +67,28 @@ class LNP_RESTServer
 
     /**
      * Get plugin instance
-     * @param [type] $plugin 
+     * @param [type] $plugin
      */
     public function get_plugin_instance()
     {
         return $this->plugin;
     }
 
-    
+
     /**
      * Register REST API routes.
      */
     public function register_rest_routes()
     {
         $plugin = $this->get_plugin_instance();
-        
+
         /**
          * filename => class name
          */
         $classes = array(
             'class-rest-donations' => 'LNP_DonationsController',
-            'class-rest-paywall' => 'LNP_PaywallController'
+            'class-rest-paywall' => 'LNP_PaywallController',
+            'class-rest-invoices' => 'LNP_InvoicesController'
         );
 
         foreach ( $classes as $file => $controller_class )
@@ -143,7 +144,7 @@ class LNP_RESTServer
      */
     private function __clone() {}
 
-    
+
     /**
      * Prevent unserializing.
      */

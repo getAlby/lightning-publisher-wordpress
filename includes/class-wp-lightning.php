@@ -391,8 +391,8 @@ class WP_Lightning
 	private function initialize_rest_api()
 	{
 		$server = LNP_RESTServer::instance();
-		$server->init();
 		$server->set_plugin_instance($this);
+		$server->init();
 	}
 
 	/**
