@@ -164,7 +164,6 @@ class WP_Lightning
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-paywall.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-connections.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-help.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-logs.php';
 
 		// Admin stuff
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/widgets/lnp-widget.php';

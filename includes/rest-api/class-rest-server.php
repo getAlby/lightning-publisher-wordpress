@@ -86,7 +86,8 @@ class LNP_RESTServer
          * filename => class name
          */
         $classes = array(
-            'class-rest-donations' => 'LNP_DonationsController'
+            'class-rest-donations' => 'LNP_DonationsController',
+            'class-rest-paywall' => 'LNP_PaywallController'
         );
 
         foreach ( $classes as $file => $controller_class )
