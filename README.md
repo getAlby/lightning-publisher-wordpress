@@ -37,6 +37,67 @@ Folder structure is based on https://github.com/DevinVinson/WordPress-Plugin-Boi
 - `includes/class-wp-lightning.php` is the main plugin class which handles including all the related classes.
 - `includes/class-wp-lightning-loader.php` is responsible for registering the action and filter hooks, and shortcodes. 
 
+## REST API
+
+The plugin also provides a set of REST API Endpoints for handling payments and donations.
+
+#### Intiate Payment for Paywall
+
+URL: `/lnp-alby/v1/paywall/pay`
+Method: `POST`
+Auth Required: No
+Data example
+
+```
+{
+    post_id: "xxx"
+}
+```
+
+#### Verify Payment for Paywall
+
+URL: `/lnp-alby/v1/paywall/verify`
+Method: `POST`
+Auth Required: No
+Data example
+
+```
+{
+    post_id: "xxx",
+    token: "xxx",
+    preimage: "xxx"
+}
+```
+
+#### Initiate Donation
+
+URL: `/lnp-alby/v1/donate`
+Method: `POST`
+Auth Required: No
+Data example
+
+```
+{
+    post_id: "xxx",
+    amount: "xxx"
+}
+```
+
+#### Verify Donation
+
+URL: `/lnp-alby/v1/verify`
+Method: `POST`
+Auth Required: No
+Data example
+
+```
+{
+    amount: "xxx",
+    token: "xxx",
+    preimage: "xxx"
+}
+```
+
 ## License
 
 MIT

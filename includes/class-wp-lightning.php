@@ -153,9 +153,6 @@ class WP_Lightning
 		// Server class includes controllers
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/rest-api/class-rest-server.php';
 
-		// Admin only stuff
-		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-init.php';
-
 		// Settings 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-abstract-settings.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-dashboard.php';
@@ -167,9 +164,6 @@ class WP_Lightning
 
 		// Admin stuff
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/widgets/lnp-widget.php';
-
-		// Includes
-		require_once plugin_dir_path(dirname(__FILE__)) . 'lightning-address.php';
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
@@ -203,6 +197,7 @@ class WP_Lightning
 		/**
 		 * The lightning client classes.
 		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/lightning-address.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/interface-wp-lightning-client.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/abstract-class-wp-lightning-client.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-wp-lightning-btcpay-client.php';
