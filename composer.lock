@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5082efae6ba0dd7169ce096e6990495e",
+    "content-hash": "53cbc90220dea482b97421a16ffc9492",
     "packages": [
         {
             "name": "bitwasp/bech32",
@@ -26,12 +26,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "BitWasp\\Bech32\\": "src/"
-                },
                 "files": [
                     "src/bech32.php"
-                ]
+                ],
+                "psr-4": {
+                    "BitWasp\\Bech32\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -106,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/btcpayserver/btcpayserver-greenfield-php.git",
-                "reference": "a7fb36f1e41d497c1c97fe576a4d9b7845363908"
+                "reference": "aff6ab92151431c2faa63c72805aa60736b0deea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/btcpayserver/btcpayserver-greenfield-php/zipball/a7fb36f1e41d497c1c97fe576a4d9b7845363908",
-                "reference": "a7fb36f1e41d497c1c97fe576a4d9b7845363908",
+                "url": "https://api.github.com/repos/btcpayserver/btcpayserver-greenfield-php/zipball/aff6ab92151431c2faa63c72805aa60736b0deea",
+                "reference": "aff6ab92151431c2faa63c72805aa60736b0deea",
                 "shasum": ""
             },
             "require": {
@@ -150,9 +150,9 @@
             "description": "BTCPay Server Greenfield API PHP client library.",
             "support": {
                 "issues": "https://github.com/btcpayserver/btcpayserver-greenfield-php/issues",
-                "source": "https://github.com/btcpayserver/btcpayserver-greenfield-php/tree/master"
+                "source": "https://github.com/btcpayserver/btcpayserver-greenfield-php/tree/v1.3.3"
             },
-            "time": "2021-11-19T11:39:14+00:00"
+            "time": "2022-05-21T15:11:12+00:00"
         },
         {
             "name": "composer/semver",
@@ -160,19 +160,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "deac27056b57e46faf136fae7b449eeaa71661ee"
+                "reference": "3953f23262f2bff1919fc82183ad9acb13ff62c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/deac27056b57e46faf136fae7b449eeaa71661ee",
-                "reference": "deac27056b57e46faf136fae7b449eeaa71661ee",
+                "url": "https://api.github.com/repos/composer/semver/zipball/3953f23262f2bff1919fc82183ad9acb13ff62c9",
+                "reference": "3953f23262f2bff1919fc82183ad9acb13ff62c9",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.54",
+                "phpstan/phpstan": "^1.4",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
             "default-branch": true,
@@ -218,7 +218,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.2.7"
+                "source": "https://github.com/composer/semver/tree/3.3.2"
             },
             "funding": [
                 {
@@ -234,7 +234,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-04T09:57:54+00:00"
+            "time": "2022-04-01T19:23:25+00:00"
         },
         {
             "name": "fgrosse/phpasn1",
@@ -317,19 +317,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "0541cba75ab108ef901985e68055a92646c73534"
+                "reference": "d28e6df83830252650da4623c78aaaf98fb385f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/0541cba75ab108ef901985e68055a92646c73534",
-                "reference": "0541cba75ab108ef901985e68055a92646c73534",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/d28e6df83830252650da4623c78aaaf98fb385f3",
+                "reference": "d28e6df83830252650da4623c78aaaf98fb385f3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^7.1||^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": ">=4.8 <=9"
+                "guzzlehttp/guzzle": "^6.5||^7.4",
+                "phpspec/prophecy-phpunit": "^1.1",
+                "phpunit/phpunit": "^7.5||^9.5",
+                "psr/cache": "^1.0||^2.0",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0"
             },
             "suggest": {
                 "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
@@ -365,9 +370,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.0.0"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.2.0"
             },
-            "time": "2022-01-24T15:18:34+00:00"
+            "time": "2022-05-13T20:54:50+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -375,12 +380,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrahamCampbell/Result-Type.git",
-                "reference": "e34340fd7476ff021b8d1c5937bce963fee9a932"
+                "reference": "2c41119c817eaf5bf08d362005b980dc45999b5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/e34340fd7476ff021b8d1c5937bce963fee9a932",
-                "reference": "e34340fd7476ff021b8d1c5937bce963fee9a932",
+                "url": "https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/2c41119c817eaf5bf08d362005b980dc45999b5b",
+                "reference": "2c41119c817eaf5bf08d362005b980dc45999b5b",
                 "shasum": ""
             },
             "require": {
@@ -430,7 +435,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-24T01:34:04+00:00"
+            "time": "2022-05-30T20:57:52+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -438,18 +443,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "c1fd316f0a0f3325ed1e7cdbe61030418b868f9f"
+                "reference": "1dd98b0564cb3f6bd16ce683cb755f94c10fbd82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c1fd316f0a0f3325ed1e7cdbe61030418b868f9f",
-                "reference": "c1fd316f0a0f3325ed1e7cdbe61030418b868f9f",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/1dd98b0564cb3f6bd16ce683cb755f94c10fbd82",
+                "reference": "1dd98b0564cb3f6bd16ce683cb755f94c10fbd82",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/promises": "^1.5",
-                "guzzlehttp/psr7": "^1.8.3 || ^2.1",
+                "guzzlehttp/psr7": "^1.9 || ^2.4",
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-client": "^1.0",
                 "symfony/deprecation-contracts": "^2.2 || ^3.0"
@@ -477,12 +482,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -539,7 +544,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/master"
+                "source": "https://github.com/guzzle/guzzle/tree/7.4.5"
             },
             "funding": [
                 {
@@ -555,7 +560,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-13T16:13:08+00:00"
+            "time": "2022-06-20T22:16:13+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -585,12 +590,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Promise\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -648,12 +653,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "c5b547b9904106507e48c645b76ff74f18eea84e"
+                "reference": "13388f00956b1503577598873fffb5ae994b5737"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/c5b547b9904106507e48c645b76ff74f18eea84e",
-                "reference": "c5b547b9904106507e48c645b76ff74f18eea84e",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/13388f00956b1503577598873fffb5ae994b5737",
+                "reference": "13388f00956b1503577598873fffb5ae994b5737",
                 "shasum": ""
             },
             "require": {
@@ -678,7 +683,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -740,7 +745,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/master"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.0"
             },
             "funding": [
                 {
@@ -756,7 +761,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T11:26:46+00:00"
+            "time": "2022-06-20T21:43:11+00:00"
         },
         {
             "name": "jorijn/bitcoin-bolt11",
@@ -1050,19 +1055,19 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/octangroup/btcpay-php.git",
-                "reference": "10b5252c9049bc73c1c11cf5dd3bcd698a0ec0b8"
+                "url": "https://github.com/bumi/btcpay-php.git",
+                "reference": "3208e450bc5d22cca9d017c881bf3598cea05b7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/octangroup/btcpay-php/zipball/10b5252c9049bc73c1c11cf5dd3bcd698a0ec0b8",
-                "reference": "10b5252c9049bc73c1c11cf5dd3bcd698a0ec0b8",
+                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/3208e450bc5d22cca9d017c881bf3598cea05b7b",
+                "reference": "3208e450bc5d22cca9d017c881bf3598cea05b7b",
                 "shasum": ""
             },
             "require": {
                 "btcpayserver/btcpayserver-greenfield-php": "dev-master",
                 "guzzlehttp/guzzle": "^7.0",
-                "php": "^7.2",
+                "php": ">=7.0",
                 "vlucas/phpdotenv": "5.4.x-dev"
             },
             "require-dev": {
@@ -1090,10 +1095,9 @@
             ],
             "description": "A client for the BTCPay API",
             "support": {
-                "source": "https://github.com/octangroup/btcpay-php/tree/main",
-                "issues": "https://github.com/octangroup/btcpay-php/issues"
+                "source": "https://github.com/bumi/btcpay-php/tree/main"
             },
-            "time": "2022-01-11T15:27:47+00:00"
+            "time": "2022-06-22T18:09:45+00:00"
         },
         {
             "name": "octan/lnbits",
@@ -1101,17 +1105,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "20b9115efb0b6338ce96e4e118319cf99da52df4"
+                "reference": "ffb521a60ff266d730963b66a441c16c6ac668c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/20b9115efb0b6338ce96e4e118319cf99da52df4",
-                "reference": "20b9115efb0b6338ce96e4e118319cf99da52df4",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/ffb521a60ff266d730963b66a441c16c6ac668c8",
+                "reference": "ffb521a60ff266d730963b66a441c16c6ac668c8",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.0",
-                "php": "^7.2"
+                "php": ">=7.0"
             },
             "default-branch": true,
             "type": "library",
@@ -1138,7 +1142,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2021-11-26T04:11:29+00:00"
+            "time": "2022-06-22T18:07:23+00:00"
         },
         {
             "name": "octan/lnd-rest",
@@ -1146,17 +1150,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnd-php-rest.git",
-                "reference": "3843abd178f67d1fd970e97a8b832a8231236605"
+                "reference": "dfffc734e3b926bea05f8026d9baf74e99d3f1fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnd-php-rest/zipball/3843abd178f67d1fd970e97a8b832a8231236605",
-                "reference": "3843abd178f67d1fd970e97a8b832a8231236605",
+                "url": "https://api.github.com/repos/bumi/lnd-php-rest/zipball/dfffc734e3b926bea05f8026d9baf74e99d3f1fa",
+                "reference": "dfffc734e3b926bea05f8026d9baf74e99d3f1fa",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.0",
-                "php": "^7.2"
+                "php": ">=7.0"
             },
             "default-branch": true,
             "type": "library",
@@ -1183,7 +1187,7 @@
                 "source": "https://github.com/bumi/lnd-php-rest/tree/master",
                 "issues": "https://github.com/bumi/lnd-php-rest/issues"
             },
-            "time": "2020-08-05T07:26:49+00:00"
+            "time": "2022-06-22T18:08:46+00:00"
         },
         {
             "name": "octan/lndhub",
@@ -1191,17 +1195,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lndhub-php.git",
-                "reference": "085380aab628cd51bdd056091cf544b85e8b61ce"
+                "reference": "d99a9500912f487b25eaada5453768f607c06e9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/085380aab628cd51bdd056091cf544b85e8b61ce",
-                "reference": "085380aab628cd51bdd056091cf544b85e8b61ce",
+                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/d99a9500912f487b25eaada5453768f607c06e9e",
+                "reference": "d99a9500912f487b25eaada5453768f607c06e9e",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.0",
-                "php": "^7.2"
+                "php": ">=7.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7"
@@ -1231,7 +1235,7 @@
                 "source": "https://github.com/bumi/lndhub-php/tree/main",
                 "issues": "https://github.com/bumi/lndhub-php/issues"
             },
-            "time": "2021-12-10T21:38:19+00:00"
+            "time": "2022-06-22T18:05:01+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -1389,12 +1393,12 @@
             "default-branch": true,
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "BitWasp\\Bitcoin\\": "src/"
-                },
                 "files": [
                     "src/Script/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "BitWasp\\Bitcoin\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1579,30 +1583,31 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
+                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=8.0.0"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
+                    "Psr\\Log\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1623,9 +1628,9 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
+                "source": "https://github.com/php-fig/log/tree/3.0.0"
             },
-            "time": "2021-05-03T11:20:27+00:00"
+            "time": "2021-07-14T16:46:02+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -1673,25 +1678,26 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "2.5.x-dev",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8"
+                "reference": "4912000e79dc2d6df029d35d8755be1ed79b6691"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/6f981ee24cf69ee7ce9736146d1c57c2780598a8",
-                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/4912000e79dc2d6df029d35d8755be1ed79b6691",
+                "reference": "4912000e79dc2d6df029d35d8755be1ed79b6691",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=8.1"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.5-dev"
+                    "dev-main": "3.2-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -1736,20 +1742,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-12T14:48:14+00:00"
+            "time": "2022-05-20T13:56:22+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.24.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "30885182c981ab175d4d034db0f6f469898070ab"
+                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/30885182c981ab175d4d034db0f6f469898070ab",
-                "reference": "30885182c981ab175d4d034db0f6f469898070ab",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
+                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
                 "shasum": ""
             },
             "require": {
@@ -1761,10 +1767,11 @@
             "suggest": {
                 "ext-ctype": "For best performance"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -1772,12 +1779,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1802,7 +1809,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -1818,20 +1825,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-20T20:35:02+00:00"
+            "time": "2022-05-24T11:49:31+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.24.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "0abb51d2f102e00a4eefcf46ba7fec406d245825"
+                "reference": "9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/0abb51d2f102e00a4eefcf46ba7fec406d245825",
-                "reference": "0abb51d2f102e00a4eefcf46ba7fec406d245825",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e",
+                "reference": "9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e",
                 "shasum": ""
             },
             "require": {
@@ -1843,10 +1850,11 @@
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -1854,12 +1862,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1885,7 +1893,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -1901,29 +1909,30 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-30T18:21:41+00:00"
+            "time": "2022-05-24T11:49:31+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.24.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9"
+                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/57b712b08eddb97c762a8caa32c84e037892d2e9",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/cfa0ae98841b9e461207c13ab093d76b0fa7bace",
+                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -1931,12 +1940,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php80\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -1968,7 +1977,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -1984,7 +1993,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-13T13:58:33+00:00"
+            "time": "2022-05-10T07:21:04+00:00"
         },
         {
             "name": "tkijewski/php-lnurl",
@@ -2010,12 +2019,12 @@
             "default-branch": true,
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "tkijewski\\lnurl\\": "src/"
-                },
                 "files": [
                     "src/lnurl.php"
-                ]
+                ],
+                "psr-4": {
+                    "tkijewski\\lnurl\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2134,5 +2143,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
