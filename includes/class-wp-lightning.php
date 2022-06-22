@@ -112,6 +112,7 @@ class WP_Lightning
 		}
 		$this->plugin_name = 'wp-lightning';
 		$this->load_dependencies();
+		$this->initialize_loader();
 		$this->initialize_logger();
 		$this->set_locale();
 		$this->read_database_options();
@@ -215,6 +216,12 @@ class WP_Lightning
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/rest-api/class-rest-server.php';
 
+	}
+
+	/**
+	 * Initialize the loader which registers all actions and filters for the plugin
+	 */
+	private function initialize_loader() {
 		$this->loader = new WP_Lightning_Loader();
 	}
 
