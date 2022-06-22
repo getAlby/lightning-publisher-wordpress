@@ -11,7 +11,8 @@
         "octan/btcpay": "dev-main",
         "firebase/php-jwt": "dev-main",
         "tkijewski/php-lnurl": "dev-master",
-        "jorijn/bitcoin-bolt11": "dev-master"
+        "jorijn/bitcoin-bolt11": "dev-master",
+        "monolog/monolog": "2.x-dev"
     },
     "repositories": [
       { "type": "vcs", "url": "https://github.com/bumi/lnd-php-rest" },

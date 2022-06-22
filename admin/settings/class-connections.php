@@ -232,15 +232,14 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         if ( ! $this->is_current_page() )
         {
             return;
+            
         }
-
         try {
 
             if (
                 $this->plugin->getLightningClient()
                 && $this->plugin->getLightningClient()->isConnectionValid()
             ) {
-                
                 $node_info = $this->plugin->getLightningClient()->getInfo();
                 
                 $type    = 'notice';

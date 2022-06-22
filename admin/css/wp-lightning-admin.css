@@ -1,0 +1,81 @@
+/**
+ * Tabs
+ */
+.lnp .tab-content:not(.tab-content-active) {
+    display: none;
+}
+
+.lnp .nav-tab:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+/**
+   * Cards in connections page
+   */
+.wp-lnp-card__container {
+    display: flex;
+    padding: 1.25rem 1.25rem;
+}
+
+.wp-lnp-card__container>*+* {
+    margin-left: 1.25rem;
+}
+
+.wp-lnp-card--disabled {
+    opacity: 0.75;
+}
+
+.wp-lnp-card {
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
+    width: 25%;
+    max-width: 200px;
+    background-color: white;
+    padding: 1.25rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.wp-lnp-card__header {
+    width: 100%;
+    text-align: center;
+    padding: 1.25rem 0;
+}
+
+.wp-lnp-card__image {
+    width: 60%;
+    border-radius: 15px;
+}
+
+.wp-lnp-card__image--grayscale {
+    -webkit-filter: grayscale(100%);
+    /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+
+.wp-lnp-card__body {
+    text-align: center;
+}
+
+.wp-lnp-card__title {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.wp-lnp-card__text {
+    font-weight: 300;
+    font-size: 14px;
+}
+#log-viewer {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+    padding: 5px 20px;
+    margin-top: 20px;
+}
+#log-viewer pre {
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

@@ -9,8 +9,6 @@ class LNP_DonationsWidget {
     function __construct( $plugin ) {
 
         $this->plugin = $plugin;
-
-        add_filter('the_content', array($this, 'set_donation_box') );
     }
 
 
@@ -147,14 +145,14 @@ class LNP_DonationsWidget {
     public function get_donation_box_options( string $option = '' )
     {
         $options = ( property_exists($this->plugin, 'donation_options') )
-            ? $this->plugin->donation_options
+            ? $this->plugin->getDonationOptions()
             : array();
 
 
         /**
          * Include LND Payment options
          */
-        $options['lnd_client'] = $this->plugin->lightningClientType;
+        $options['lnd_client'] = $this->plugin->getLightningClientType();
 
         // Return specifc option
         if ( $option && isset($options[ $option ]) )

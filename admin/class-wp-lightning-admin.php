@@ -1,21 +1,72 @@
 <?php
 
-// If this file is called directly, abort.
-defined('WPINC') || die;
+/**
+ * The admin-specific functionality of the plugin.
+ *
+ * Defines the plugin name, version, and two examples hooks for how to
+ * enqueue the admin-specific stylesheet and JavaScript.
+ *
+ * @package    WP_Lightning
+ * @subpackage WP_Lightning/admin
+ */
+class WP_Lightning_Admin {
 
-class LNP_Admin
-{
-    public function __construct($plugin = false)
+	/**
+     * Main Plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      WP_Lightning    $plugin    The main plugin object.
+     */
+    private $plugin;
+
+	/**
+     * Initialize the class and set its properties.
+     *
+     * @since    1.0.0
+     * @param    WP_Lightning    $plugin       The main plugin object.
+     */
+    public function __construct($plugin)
     {
         $this->plugin = $plugin;
-
-        add_action('init', array($this, 'init_donation_block') );
-        add_shortcode('alby_donation_block', array($this, 'sc_alby_donation_block') );
-
     }
 
+	/**
+	 * Register the stylesheets for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_styles() {
 
-    /**
+		wp_enqueue_style( $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'css/wp-lightning-admin.css', array(), $this->plugin->get_version(), 'all' );
+	}
+
+	/**
+	 * Register the JavaScript for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_scripts() {
+
+		wp_enqueue_script(  $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'js/wp-lightning-admin.js', array( 'jquery' ), $this->plugin->get_version(), true );
+	}
+
+	/**
+	 * Admin Page
+	 */
+	public function lightning_menu()
+	{
+		add_menu_page(
+			'Lightning Paywall',
+			'Lightning Paywall',
+			'manage_options',
+			'lnp_settings',
+			null,
+			'dashicons-superhero'
+		);
+	}
+
+	/**
      * Add Block
      * @return [type] [description]
      */
@@ -56,8 +107,7 @@ class LNP_Admin
         ));
     }
 
-
-    public function render_gutenberg( $atts )
+	public function render_gutenberg( $atts )
     {
         $atts = shortcode_atts(array(
             'pay_block'     => 'true',
@@ -71,11 +121,16 @@ class LNP_Admin
         return do_shortcode("[alby_donation_block]");
     }
 
-
-    public function sc_alby_donation_block() {
+	public function sc_alby_donation_block() {
 
         $donationWidget = new LNP_DonationsWidget($this->plugin);
 
         return $donationWidget->get_donation_block_html();
     }
+
+	function widget_init()
+	{
+		$has_paid = WP_Lightning::has_paid_for_all();
+		register_widget(new LnpWidget($has_paid, $this->plugin->getPaywallOptions()));
+	}
 }

@@ -54,20 +54,22 @@ class LNP_DonationsController extends \WP_REST_Controller {
      * @return array           Invoice data or error message
      */
     public function process_donate_request( $request ) {
-
+        ob_start();
         // Amount user is trying to donate
         $amount  = intval( $request->get_param('amount') );
         $post_id = intval( $request->get_param('post_id') );
 
         // Don't allow less than 100 SATS
         if ( $amount < 100 )
-        {
+        {  
+            ob_end_clean();
             return new \WP_Error(__('Mimimum domation amount is 100 SATS', 'lnp-alby'));
         }
 
         // Don't allow less than 100 SATS
         if ( ! $post_id )
         {
+            ob_end_clean();
             return new \WP_Error(__('Invalid Request, post_id missing', 'lnp-alby'));
         }
 
@@ -75,6 +77,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
         //$resposne =  
 
         // error_log( print_r($request, true) );
+        ob_end_clean();
         return rest_ensure_response($invoice);
     }
 
@@ -87,7 +90,8 @@ class LNP_DonationsController extends \WP_REST_Controller {
      * @return array           Invoice data or error message
      */
     public function process_verify_request( $request )
-    {   
+    {
+        ob_start();
         $token    = $request->get_param('token');
         $amount   = $request->get_param('amount');
         $preimage = $request->get_param('preimage');
@@ -103,6 +107,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
         // No token
         if ( empty($token) )
         {
+            ob_end_clean();
             return wp_send_json_error($response, 404);
         }
 
@@ -114,6 +119,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
             );
         }
         catch (Exception $e) {
+            ob_end_clean();
             return wp_send_json_error($response, 404);
         }
 
@@ -137,15 +143,17 @@ class LNP_DonationsController extends \WP_REST_Controller {
         if ($invoice && $settled)
         {
             $post_id = $jwt->{'post_id'};
-            $plugin->database_handler->update_invoice_state($jwt->{'r_hash'}, 'settled');
+            $plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
 
             if (!empty($post_id))
             {
                 $plugin->save_as_paid($post_id, $amount);
+                ob_end_clean();
                 wp_send_json_success($response, 200);
             }
         }
 
+        ob_end_clean();
         return wp_send_json_error($response, 402);
     }
 
@@ -159,6 +167,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
      */
     private function create_invoice( int $post_id, int $amount )
     {
+        ob_start();
         $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
         $memo = substr($memo, 0, 64);
         $memo = preg_replace('/[^\w_ ]/', '', $memo);
@@ -177,7 +186,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
         $plugin  = $this->get_plugin();
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
-        $plugin->database_handler->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
+        $plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
 
         $jwt_data = array_merge($response_data,
             array(
@@ -194,7 +203,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
                 'payment_request' => $invoice['payment_request']
             )
         );
-        
+        ob_end_clean();
         return $response;
     }
 
