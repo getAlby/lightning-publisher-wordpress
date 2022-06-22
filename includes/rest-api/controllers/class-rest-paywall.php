@@ -65,6 +65,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
      * @return array           Invoice data or error message
      */
     public function process_paywall_payment_request( $request ) {
+        ob_start();
         $plugin = $this->get_plugin();
         $logger = $plugin->get_logger();
         $post_id = intval( $request->get_param('post_id') );
@@ -74,6 +75,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
             $paywall_options = $paywall->getOptions();
             if (!$paywall_options) {
                 $logger->error('Paywall options not found', ['post_id' => $post_id]);
+                ob_end_clean();
                 return wp_send_json(['error' => 'invalid post'], 404);
             }
             $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
@@ -86,6 +88,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
             $response_data = ['all' => true, 'amount' => $amount];
         } else {
             $logger->error('Invalid post');
+            ob_end_clean();
             return new \WP_Error(__('Invalid Request, Missing required parameters', 'lnp-alby'));
         }
 
@@ -101,7 +104,6 @@ class LNP_PaywallController extends \WP_REST_Controller {
             'expiry' => 1800,
             'private' => true
         ];
-
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
         $plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
 
@@ -110,7 +112,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
         $logger->info('Invoice created successfully', $response);
-        
+        ob_end_clean();
         return rest_ensure_response($response);
     }
 
@@ -124,18 +126,21 @@ class LNP_PaywallController extends \WP_REST_Controller {
      */
     public function process_paywall_verify_request( $request )
     {   
+        ob_start();
         $plugin = $this->get_plugin();
         $logger = $plugin->get_logger();
         $token    = $request->get_param('token');
         $preimage = $request->get_param('preimage');
         if (empty($token)) {
             $logger->error('Token not provided');
+            ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
         try {
             $jwt = JWT\JWT::decode($token, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
         } catch (Exception $e) {
             $logger->error('Unable to decode token');
+            ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
 
@@ -158,15 +163,17 @@ class LNP_PaywallController extends \WP_REST_Controller {
                 $protected = $paywall->getProtectedContent();
                 WP_Lightning::save_as_paid($post_id, $invoice['value']);
                 $logger->info('Payment saved successfully', ['post_id'=> $post_id, 'invoice' => $invoice]);
+                ob_end_clean();
                 wp_send_json($protected, 200);
             } elseif (!empty($jwt->{'all'})) {
                 WP_Lightning::save_paid_all($plugin->getPaywallOptions()['all_days']);
                 $logger->info('Payment saved successfully', ['post_id'=> 'all', 'invoice' => $invoice]);
+                ob_end_clean();
                 wp_send_json($plugin->getPaywallOptions()['all_confirmation'], 200);
             }
         } else {
             $logger->error('Payment couldn\'t be saved', ['invoice' => $invoice]);
-
+            ob_end_clean();
             wp_send_json(['settled' => false], 402);
         }
     }
@@ -176,13 +183,16 @@ class LNP_PaywallController extends \WP_REST_Controller {
      */
     public function create_lnp_hub_account()
     {
+        ob_start();
         $plugin = $this->get_plugin();
         $logger = $plugin->get_logger();
         try {
             $account = LNDHub\Client::createWallet("https://ln.getalby.com", "bluewallet");
             $logger->info('LNDHub Wallet Created', ['account' => $account]);
+            ob_end_clean();
             wp_send_json($account, 200);
         }catch(Exception $e) {
+            ob_end_clean();
             wp_send_json($e, 500);
         }
     }
