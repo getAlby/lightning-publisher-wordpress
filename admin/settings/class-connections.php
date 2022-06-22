@@ -32,12 +32,12 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         // Tabs
         $this->tabs = array(
             'lnd' => array(
-                'title'       => __('LndHUB', 'lnp-alby' ),
-                'description' => __('Connect using LndHUB', 'lnp-alby'),
+                'title'       => __('LND', 'lnp-alby' ),
+                'description' => __('Connect using LND', 'lnp-alby'),
             ),
             'lndhub' => array(
-                'title'       => __('LndHUB (BlueWallet)', 'lnp-alby' ),
-                'description' => __('Connect using LndHUB', 'lnp-alby'),
+                'title'       => __('LNDHub', 'lnp-alby' ),
+                'description' => __('Connect using LNDHub', 'lnp-alby'),
             ),
             'lnbits' => array(
                 'title'       => __('LNbits', 'lnp-alby' ),
@@ -67,7 +67,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
     public function set_form_fields() {
 
         /**
-         * Fields 
+         * Fields
          */
         $fields = array();
 
@@ -135,7 +135,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             ),
         );
 
-        
+
         /**
          * LNBits
          */
@@ -232,7 +232,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         if ( ! $this->is_current_page() )
         {
             return;
-            
+
         }
         try {
 
@@ -241,7 +241,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
                 && $this->plugin->getLightningClient()->isConnectionValid()
             ) {
                 $node_info = $this->plugin->getLightningClient()->getInfo();
-                
+
                 $type    = 'notice';
                 $message = sprintf(
                     '%s %s - %s',
