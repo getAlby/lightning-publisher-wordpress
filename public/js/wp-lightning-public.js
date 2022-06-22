@@ -3,7 +3,7 @@
 
     $(function () {
         var checkPaidInterval = null;
-        var wp_ajax_url = LN_Paywall.ajax_url;
+        var wp_rest_base_url = '/wp-json/lnp-alby/v1/';
         var LN_Paywall_Spinner =
             '<svg class="LNP_spinner" viewBox="0 0 50 50"><circle class="LNP_path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>';
 
@@ -49,12 +49,12 @@
 
         function checkPaymentStatus(invoice, callback) {
             return function () {
-                fetch(wp_ajax_url, {
+                fetch(wp_rest_base_url+'paywall/verify', {
                     method: "POST",
                     credentials: "same-origin",
                     cache: "no-cache",
                     body:
-                        "action=lnp_check_payment&token=" +
+                        "token=" +
                         invoice.token +
                         "&preimage=" +
                         window.LNP_CURRENT_PREIMAGE,
@@ -88,11 +88,11 @@
                 .map((key) => `${key}=${params[key]}`)
                 .join("&");
 
-            return fetch(wp_ajax_url, {
+            return fetch(wp_rest_base_url+'paywall/pay', {
                 method: "POST",
                 credentials: "same-origin",
                 cache: "no-cache",
-                body: "action=lnp_invoice&" + paramsQueryString,
+                body: paramsQueryString,
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 },

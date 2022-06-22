@@ -137,7 +137,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
         if ($invoice && $settled)
         {
             $post_id = $jwt->{'post_id'};
-            $plugin->database_handler->update_invoice_state($jwt->{'r_hash'}, 'settled');
+            $plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
 
             if (!empty($post_id))
             {
@@ -177,7 +177,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
         $plugin  = $this->get_plugin();
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
-        $plugin->database_handler->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
+        $plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
 
         $jwt_data = array_merge($response_data,
             array(

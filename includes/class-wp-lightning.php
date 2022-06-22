@@ -118,7 +118,6 @@ class WP_Lightning
 		$this->setup_client();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-		$this->define_ajax_hooks();
 		$this->define_shortcodes();
 		$this->initialize_rest_api();
 	}
@@ -187,12 +186,6 @@ class WP_Lightning
 		 * side of the site.
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-lightning-public.php';
-
-		/**
-		 * The class responsible for defining all ajax endpoints
-		 * side of the site.
-		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-lightning-ajax.php';
 		
 		/**
 		 * The lightning client classes.
@@ -365,39 +358,6 @@ class WP_Lightning
 		$this->loader->add_filter('the_content', $plugin_public, 'ln_paywall_filter');
 		// Add donation widget to the content
 		$this->loader->add_filter('the_content', $donation_widget, 'set_donation_box');
-	}
-
-	/**
-	 * Register all of the hooks related to ajax endpoints.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_ajax_hooks()
-	{
-
-		$plugin_ajax = new WP_Lightning_Ajax($this);
-
-		// Ajax endpoint for creating invoice
-		$this->loader->add_action('wp_ajax_lnp_invoice', $plugin_ajax, 'ajax_make_invoice');
-		// Ajax endpoint for creating invoice for non-logged in users
-		$this->loader->add_action('wp_ajax_nopriv_lnp_invoice', $plugin_ajax, 'ajax_make_invoice');
-		
-		// TODO: Missing Implementation of ajax_make_invoice_all
-		// $this->loader->add_action('wp_ajax_lnp_invoice_all', $plugin_ajax, 'ajax_make_invoice_all');
-		// $this->loader->add_action('wp_ajax_nopriv_lnp_invoice_all', $plugin_ajax, 'ajax_make_invoice_all');
-
-		// Ajax endpoint for saving the payment
-		$this->loader->add_action('wp_ajax_lnp_check_payment', $plugin_ajax, 'ajax_check_payment');
-		// Ajax endpoint for saving the payment for non-logged in users
-		$this->loader->add_action('wp_ajax_nopriv_lnp_check_payment', $plugin_ajax, 'ajax_check_payment');
-		
-		// TODO: Missing Implementation of ajax_check_payment_all
-		// $this->loader->add_action('wp_ajax_lnp_check_payment_all', $plugin_ajax, 'ajax_check_payment_all');
-		// $this->loader->add_action('wp_ajax_nopriv_lnp_check_payment_all', $plugin_ajax, 'ajax_check_payment_all');
-
-		// Ajax endpoint for creating lightning hub wallet
-		$this->loader->add_action('wp_ajax_create_lnp_hub_account', $plugin_ajax, 'create_lnp_hub_account');
 	}
 	
 	/**

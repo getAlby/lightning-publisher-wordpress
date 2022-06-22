@@ -45,7 +45,7 @@ defined('WPINC') || die; ?>
 
         data.append('action', 'create_lnp_hub_account');
 
-        fetch("<?php echo home_url( '/wp-admin/admin-ajax.php' ); ?>", {
+        fetch("<?php echo home_url( '/wp-json/lnp-alby/v1/account' ); ?>", {
                 method: "POST",
                 credentials: 'same-origin',
                 body: data

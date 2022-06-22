@@ -42,6 +42,18 @@ class LNP_PaywallController extends \WP_REST_Controller {
                 ),
             )
         );
+        
+        register_rest_route(
+            $this->namespace,
+            'account',
+            array(
+                array(
+                    'methods'             => \WP_REST_Server::CREATABLE,
+                    'callback'            => array($this, 'create_lnp_hub_account'),
+                    'permission_callback' => '__return_true',
+                ),
+            )
+        );
     }
 
 
@@ -156,6 +168,22 @@ class LNP_PaywallController extends \WP_REST_Controller {
             $logger->error('Payment couldn\'t be saved', ['invoice' => $invoice]);
 
             wp_send_json(['settled' => false], 402);
+        }
+    }
+
+    /**
+     * Create LNPHub Account
+     */
+    public function create_lnp_hub_account()
+    {
+        $plugin = $this->get_plugin();
+        $logger = $plugin->get_logger();
+        try {
+            $account = LNDHub\Client::createWallet("https://ln.getalby.com", "bluewallet");
+            $logger->info('LNDHub Wallet Created', ['account' => $account]);
+            wp_send_json($account, 200);
+        }catch(Exception $e) {
+            wp_send_json($e, 500);
         }
     }
 
