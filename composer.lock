@@ -443,12 +443,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "1dd98b0564cb3f6bd16ce683cb755f94c10fbd82"
+                "reference": "ca5c743d20730d1a129a9ee04cbe854df7304b96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/1dd98b0564cb3f6bd16ce683cb755f94c10fbd82",
-                "reference": "1dd98b0564cb3f6bd16ce683cb755f94c10fbd82",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ca5c743d20730d1a129a9ee04cbe854df7304b96",
+                "reference": "ca5c743d20730d1a129a9ee04cbe854df7304b96",
                 "shasum": ""
             },
             "require": {
@@ -544,7 +544,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.4.5"
+                "source": "https://github.com/guzzle/guzzle/tree/master"
             },
             "funding": [
                 {
@@ -560,7 +560,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-20T22:16:13+00:00"
+            "time": "2022-06-22T22:41:11+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1195,12 +1195,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lndhub-php.git",
-                "reference": "d99a9500912f487b25eaada5453768f607c06e9e"
+                "reference": "b8f0128956b70296e87b30fb54707fc1b662a8b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/d99a9500912f487b25eaada5453768f607c06e9e",
-                "reference": "d99a9500912f487b25eaada5453768f607c06e9e",
+                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/b8f0128956b70296e87b30fb54707fc1b662a8b1",
+                "reference": "b8f0128956b70296e87b30fb54707fc1b662a8b1",
                 "shasum": ""
             },
             "require": {
@@ -1235,7 +1235,7 @@
                 "source": "https://github.com/bumi/lndhub-php/tree/main",
                 "issues": "https://github.com/bumi/lndhub-php/issues"
             },
-            "time": "2022-06-22T18:05:01+00:00"
+            "time": "2022-06-22T23:14:50+00:00"
         },
         {
             "name": "phpoption/phpoption",

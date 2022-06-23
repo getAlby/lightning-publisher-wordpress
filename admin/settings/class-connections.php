@@ -52,7 +52,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
                 'description' => __('Connect using Lightning Address Config', 'lnp-alby'),
             ),
             'alby' => array(
-                'title'       => __('New Wallet', 'lnp-alby' ),
+                'title'       => __('Alby Wallet', 'lnp-alby' ),
                 'description' => __('We create and manage a lightning wallet for you', 'lnp-alby'),
             ),
         );
@@ -217,10 +217,23 @@ class LNP_ConnectionPage extends LNP_SettingsPage
 
         printf(
             '<div>
-                <button id="%s" type="button" class="button button-secondary">%s</button>
+                <table class="form-table" role="presentation"><tbody>
+                    <tr>
+                        <th scope="row">%s</th><td><input type="email" class="regular-text" id="alby_email" value="" placeholder="" autocomplete="off"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">%s</th><td><input type="password" class="regular-text" id="alby_password" value="" placeholder="" autocomplete="off"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"></th><td>
+                        <button id="create_alby_account" type="button" class="button button-secondary">%s</button>
+                        </td>
+                    </tr>
+                </table>
              </div>',
-            'create_lndhub_account',
-            __('Create Wallet', 'lnp-alby')
+            __('Email', 'lnp-alby'),
+            __('Password', 'lnp-alby'),
+            __('Use Alby Wallet', 'lnp-alby')
         );
     }
 
