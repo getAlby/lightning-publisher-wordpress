@@ -130,7 +130,7 @@ class WP_Lightning_Admin {
 
 	function widget_init()
 	{
-    $widget = new TwentyunoWidget(["lnurl" => get_rest_url(null, '/lnp-alby/v1/lnurl')]);
+    $widget = new TwentyunoWidget(["lnurl" => get_rest_url(null, '/lnp-alby/v1/lnurlp')]);
 		register_widget($widget);
 	}
 }

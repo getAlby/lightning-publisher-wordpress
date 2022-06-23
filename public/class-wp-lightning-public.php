@@ -1,7 +1,6 @@
 <?php
 
 use Firebase\JWT;
-use \tkijewski\lnurl;
 
 /**
  * The public-facing functionality of the plugin.
@@ -94,73 +93,19 @@ class WP_Lightning_Public {
 		return $paywall->getContent();
     }
 
-	// endpoint idea from: https://webdevstudios.com/2015/07/09/creating-simple-json-endpoint-wordpress/
-	public function add_lnurl_endpoints()
-	{
-		add_rewrite_tag('%lnurl%', '([^&]+)');
-		add_rewrite_tag('%lnurl_post_id%', '([^&]+)');
-		add_rewrite_tag('%amount%', '([^&]+)');
-		//add_rewrite_rule( 'lnurl/([^&]+)/?', 'index.php?lnurl=$matches[1]', 'top' );
-	}
-
-	public function lnurl_endpoints()
-	{
-		global $wp_query;
-		$lnurl = $wp_query->get('lnurl');
-		$post_id = $wp_query->get('lnurl_post_id');
-
-		if (!$lnurl) {
-			return;
-		}
-
-		$description = get_bloginfo('name');
-		if (!empty($post_id)) {
-			$description = $description . ' - ' . get_the_title($post_id);
-		}
-
-		if ($lnurl == 'pay') {
-			$callback_url = home_url(add_query_arg('lnurl', 'cb'));
-			wp_send_json([
-				'callback' => $callback_url,
-				'minSendable' => 1000 * 1000, // millisatoshi
-				'maxSendable' => 1000000 * 1000, // millisatoshi
-				'tag' => 'payRequest',
-				'metadata' => '[["text/plain", "' . $description . '"]]'
-			]);
-		} elseif ($lnurl == 'cb') {
-			$amount = $_GET['amount'];
-			if (empty($amount)) {
-				wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
-				return;
-			}
-			$description_hash = base64_encode(hash('sha256', '[["text/plain", "' . $description . '"]]', true));
-			$invoice = $this->plugin->getLightningClient()->addInvoice([
-				'memo' => substr($description, 0, 64),
-				'description_hash' => $description_hash,
-				'value' => $amount,
-				'expiry' => 1800,
-				'private' => true
-			]);
-			wp_send_json(['pr' => $invoice['payment_request'], 'routes' => []]);
-		}
-	}
-
 	public function add_lnurl_to_rss_item_filter()
 	{
 		global $post;
-		$pay_url = add_query_arg([
-			'lnurl' => 'pay',
-			'lnurl_post_id' => $post->ID
-		], get_site_url());
-		$lnurl = lnurl\encodeUrl($pay_url);
+		$pay_url = get_rest_url(null, '/lnp-alby/v1/lnurlp');
+		$lnurl = preg_replace('/^https?:\/\//', 'lnurlp://', $pay_url);
 		echo '<payment:lnurl>' . $lnurl . '</payment:lnurl>';
 	}
 
 	public function hook_meta_tags()
 	{
 		if (!empty($this->plugin->getPaywallOptions()['lnurl_meta_tag']) && $this->plugin->getPaywallOptions()['lnurl_meta_tag']) {
-			$url = get_site_url(null, '/?lnurl=pay');
-			echo '<meta name="lightning" content="lnurlp:' . $url . '" />';
+			$lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
+			echo '<meta name="lightning" content="lnurlp:' . $lnurl . '" />';
 		}
 	}
 }

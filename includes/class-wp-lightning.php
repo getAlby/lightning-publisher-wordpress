@@ -353,10 +353,6 @@ class WP_Lightning
 
 		// For RSS Feed
 		if (!empty($this->paywall_options['lnurl_rss'])) {
-			// Register custom URLs for API
-			$this->loader->add_action('init', $plugin_public, 'add_lnurl_endpoints');
-			// Custom URL handler
-			$this->loader->add_action('template_redirect', $plugin_public, 'lnurl_endpoints');
 			// Add URL as RSS Item
 			$this->loader->add_action('rss2_item', $plugin_public, 'add_lnurl_to_rss_item_filter');
 		}
