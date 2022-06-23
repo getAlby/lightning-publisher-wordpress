@@ -123,13 +123,6 @@ class WP_Lightning_Admin {
         return do_shortcode("[alby_donation_block]");
     }
 
-	public function sc_alby_donation_block() {
-
-        $donationWidget = new LNP_DonationsWidget($this->plugin);
-
-        return $donationWidget->get_donation_block_html();
-    }
-
 	function widget_init()
 	{
         $lnurl = lnurl\encodeUrl(get_rest_url(null, '/lnp-alby/v1/lnurlp'));
