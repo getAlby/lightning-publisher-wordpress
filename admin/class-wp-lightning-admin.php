@@ -1,5 +1,7 @@
 <?php
 
+ use \tkijewski\lnurl;
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -130,7 +132,8 @@ class WP_Lightning_Admin {
 
 	function widget_init()
 	{
-    $widget = new TwentyunoWidget(["lnurl" => get_rest_url(null, '/lnp-alby/v1/lnurlp')]);
+        $lnurl = lnurl\encodeUrl(get_rest_url(null, '/lnp-alby/v1/lnurlp'));
+        $widget = new TwentyunoWidget(["lnurl" => $lnurl]);
 		register_widget($widget);
 	}
 }

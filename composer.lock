@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36164f2e2dbc1696e322413df78dca0a",
+    "content-hash": "f61e00c660e2233d61e38c79be803778",
     "packages": [
         {
             "name": "bitwasp/bech32",
@@ -1996,6 +1996,58 @@
             "time": "2022-05-10T07:21:04+00:00"
         },
         {
+            "name": "tkijewski/php-lnurl",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/huedaya/php-lnurl.git",
+                "reference": "52360b071cd5ff420518f40c7327da10bcebb06b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/huedaya/php-lnurl/zipball/52360b071cd5ff420518f40c7327da10bcebb06b",
+                "reference": "52360b071cd5ff420518f40c7327da10bcebb06b",
+                "shasum": ""
+            },
+            "require": {
+                "bitwasp/bech32": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.4.0",
+                "squizlabs/php_codesniffer": "^2.0.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "tkijewski\\lnurl\\": "src/"
+                },
+                "files": [
+                    "src/lnurl.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "tkijewski\\test\\lnurl\\": "test/"
+                }
+            },
+            "license": [
+                "Unlicense"
+            ],
+            "authors": [
+                {
+                    "name": "Tim Kijewski",
+                    "role": "Author"
+                }
+            ],
+            "description": "PHP implementation of lnurl Spec",
+            "homepage": "https://github.com/tkijewski/php-lnurl",
+            "support": {
+                "source": "https://github.com/huedaya/php-lnurl/tree/v0.0.2"
+            },
+            "time": "2022-05-30T13:46:35+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "dev-master",
             "source": {
@@ -2087,6 +2139,7 @@
         "octan/btcpay": 20,
         "firebase/php-jwt": 20,
         "jorijn/bitcoin-bolt11": 20,
+        "tkijewski/php-lnurl": 20,
         "monolog/monolog": 20
     },
     "prefer-stable": false,

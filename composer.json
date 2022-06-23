@@ -11,6 +11,7 @@
     "octan/btcpay": "dev-main",
     "firebase/php-jwt": "dev-main",
     "jorijn/bitcoin-bolt11": "dev-master",
+    "tkijewski/php-lnurl": "dev-master",
     "monolog/monolog": "2.x-dev"
   },
   "repositories": [
@@ -29,6 +30,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/bumi/btcpay-php"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/huedaya/php-lnurl.git"
     }
   ]
 }

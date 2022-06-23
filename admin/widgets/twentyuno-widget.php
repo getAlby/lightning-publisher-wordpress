@@ -1,4 +1,5 @@
 <?php
+
   class TwentyunoWidget extends WP_Widget {
     function __construct($lnp_options) {
       $this->lnp_options = $lnp_options;

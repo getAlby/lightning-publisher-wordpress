@@ -59,7 +59,7 @@ class LNP_LnurlpController extends \WP_REST_Controller {
         $response = [
           'status' => 'OK',
           'callback' => $callback_url,
-          'minSendable' => 100 * 1000, // millisatoshi
+          'minSendable' => 10 * 1000, // millisatoshi
           'maxSendable' => 1000000 * 1000, // millisatoshi
           'tag' => 'payRequest',
           'metadata' => '[["text/identifier", "' . site_url() .'"]["text/plain", "' . $description . '"]]'
