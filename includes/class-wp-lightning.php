@@ -95,6 +95,16 @@ class WP_Lightning
 	protected $logger;
 
 	/**
+	 * The Plugin Admin Class
+	 */
+	protected $plugin_admin;
+
+	/**
+	 * The Plugin Public Class
+	 */
+	protected $plugin_public;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -216,6 +226,8 @@ class WP_Lightning
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/rest-api/class-rest-server.php';
 
+		$this->plugin_admin = new WP_Lightning_Admin($this);
+		$this->plugin_public = new WP_Lightning_Public($this);
 	}
 
 	/**
@@ -316,19 +328,16 @@ class WP_Lightning
 	 */
 	private function define_admin_hooks()
 	{
-
-		$plugin_admin = new WP_Lightning_Admin($this);
-
 		// Load the css styles for admin section
-		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		$this->loader->add_action('admin_enqueue_scripts', $this->plugin_admin, 'enqueue_styles');
 		// Load the js scripts for admin section
-		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+		$this->loader->add_action('admin_enqueue_scripts', $this->plugin_admin, 'enqueue_scripts');
 		// Add the WP Lightning menu to the Wordpress Dashboard
-		$this->loader->add_action('admin_menu', $plugin_admin, 'lightning_menu');
+		$this->loader->add_action('admin_menu', $this->plugin_admin, 'lightning_menu');
 		// Register the donation block
-		$this->loader->add_action('init', $plugin_admin, 'init_donation_block');
+		$this->loader->add_action('init', $this->plugin_admin, 'init_donation_block');
 		// Register the subscription widget
-		$this->loader->add_action('widgets_init', $plugin_admin, 'widget_init');
+		$this->loader->add_action('widgets_init', $this->plugin_admin, 'widget_init');
 	}
 
 	/**
@@ -340,25 +349,23 @@ class WP_Lightning
 	 */
 	private function define_public_hooks()
 	{
-
-		$plugin_public = new WP_Lightning_Public($this);
 		$donation_widget = new LNP_DonationsWidget($this);
 
 		// Load the css styles for frotnend
-		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		$this->loader->add_action('wp_enqueue_scripts', $this->plugin_public, 'enqueue_styles');
 		// Load the js scripts for frotnend
-		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+		$this->loader->add_action('wp_enqueue_scripts', $this->plugin_public, 'enqueue_scripts');
 		// Add the lightning meta tag to the head of the page
-		$this->loader->add_action('wp_head', $plugin_public, 'hook_meta_tags');
+		$this->loader->add_action('wp_head', $this->plugin_public, 'hook_meta_tags');
 
 		// For RSS Feed
 		if (!empty($this->paywall_options['lnurl_rss'])) {
 			// Add URL as RSS Item
-			$this->loader->add_action('rss2_item', $plugin_public, 'add_lnurl_to_rss_item_filter');
+			$this->loader->add_action('rss2_item', $this->plugin_public, 'add_lnurl_to_rss_item_filter');
 		}
 
 		// Apply Paywall to the content
-		$this->loader->add_filter('the_content', $plugin_public, 'ln_paywall_filter');
+		$this->loader->add_filter('the_content', $this->plugin_public, 'ln_paywall_filter');
 		// Add donation widget to the content
 		$this->loader->add_filter('the_content', $donation_widget, 'set_donation_box');
 	}
@@ -371,11 +378,8 @@ class WP_Lightning
 	 */
 	private function define_shortcodes()
 	{
-
-		$plugin_admin = new WP_Lightning_Admin($this->get_plugin_name(), $this->get_version());
-
 		// Register shortcode for donation block
-		$this->loader->add_shortcode('alby_donation_block', $plugin_admin, 'sc_alby_donation_block');
+		$this->loader->add_shortcode('alby_donation_block', $this->plugin_public, 'sc_alby_donation_block');
 	}
 
 	/**

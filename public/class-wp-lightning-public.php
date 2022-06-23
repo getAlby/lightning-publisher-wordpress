@@ -108,4 +108,11 @@ class WP_Lightning_Public {
 			echo '<meta name="lightning" content="lnurlp:' . $lnurl . '" />';
 		}
 	}
+
+	public function sc_alby_donation_block() {
+
+        $donationWidget = new LNP_DonationsWidget($this->plugin);
+
+        return $donationWidget->get_donation_block_html();
+    }
 }
