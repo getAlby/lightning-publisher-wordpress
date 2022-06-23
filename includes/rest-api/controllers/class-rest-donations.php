@@ -12,9 +12,6 @@ defined( 'WPINC' ) || die;
  */
 class LNP_DonationsController extends \WP_REST_Controller {
 
-    /**
-     * Register route for file uploads from remote repository
-     */
     public function register_routes() {
 
         $this->namespace = 'lnp-alby/v1';
@@ -49,7 +46,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
     /**
      * Process donation request
-     * 
+     *
      * @param  object $request WP_REST_Request
      * @return array           Invoice data or error message
      */
@@ -61,7 +58,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
         // Don't allow less than 100 SATS
         if ( $amount < 100 )
-        {  
+        {
             ob_end_clean();
             return new \WP_Error(__('Mimimum domation amount is 100 SATS', 'lnp-alby'));
         }
@@ -74,7 +71,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
         }
 
         $invoice  = $this->create_invoice($post_id, $amount);
-        //$resposne =  
+        //$resposne =
 
         // error_log( print_r($request, true) );
         ob_end_clean();
@@ -85,7 +82,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
     /**
      * Verify has invoice been paid
-     * 
+     *
      * @param  object $request WP_REST_Request
      * @return array           Invoice data or error message
      */
@@ -161,7 +158,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
     /**
      * Create Invoice
-     * 
+     *
      * @param  object $request WP_REST_Request
      * @return [type]          [description]
      */
@@ -210,7 +207,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
     /**
      * Main plugin instance
-     * 
+     *
      * @return object
      */
     private function get_plugin()
@@ -222,7 +219,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
     /**
      * Main plugin instance
      * This will provide access to LND Client
-     * 
+     *
      * @param object $plugin
      */
     public function set_plugin_instance( &$plugin )

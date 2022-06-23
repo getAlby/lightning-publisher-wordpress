@@ -12,9 +12,6 @@ defined( 'WPINC' ) || die;
  */
 class LNP_AccountController extends \WP_REST_Controller {
 
-    /**
-     * Register route for file uploads from remote repository
-     */
     public function register_routes() {
 
         $this->namespace = 'lnp-alby/v1';
