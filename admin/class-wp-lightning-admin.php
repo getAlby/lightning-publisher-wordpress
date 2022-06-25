@@ -79,6 +79,47 @@ class WP_Lightning_Admin {
             return;
         }
 
+        register_block_type(dirname(__DIR__, 1) . '/blocks/donate/block.json');
+        //register_block_type(dirname(__DIR__, 1) . '/blocks/twentyuno/block.json');
+
+        // The JS block script
+        $twentyuno_block_js_path = sprintf(
+            '%s/blocks/twentyuno/block.js',
+            untrailingslashit(WP_LN_ROOT_URI)
+        );
+        wp_register_script(
+            'alby-twentyuno-block-script-edit',
+            $twentyuno_block_js_path,
+            ['wp-blocks', 'wp-i18n', 'wp-element'], // Required scripts for the block
+            filemtime(dirname(__DIR__, 1) . '/blocks/twentyuno/block.js')
+        );
+        wp_register_script("twentyuno-widget-script", "https://embed.twentyuno.net/js/app.js");
+        $twentyuno_block_editor_css_path = sprintf(
+            '%s/blocks/twentyuno/editor.css',
+            untrailingslashit(WP_LN_ROOT_URI)
+        );
+        wp_register_style(
+            'alby-twentyuno-block-css-edit',
+            $twentyuno_block_editor_css_path
+        );
+
+        register_block_type('alby/twentyuno-widget',[
+            "title" => "Twentyuno Payment Widget",
+            "icon" =>  "index-card",
+            "category" => "layout",
+            "attributes" => [
+              "name" => [
+                "type" => "string",
+                "source" => "attribute",
+                "attribute" => "name",
+                "selector" => "lightning-widget"
+              ]
+            ],
+            'editor_script' => 'alby-twentyuno-block-script-edit',
+            'editor_style' => 'alby-twentyuno-block-css-edit',
+            'render_callback' => [$this, 'render_twentyuno_widget_block'],
+        ]);
+
         // Path to Js that handles block functionality
         wp_register_script(
             'alby/donate-js',
@@ -97,6 +138,7 @@ class WP_Lightning_Admin {
         );
 
 
+
         register_block_type( 'alby/donate', array(
             'api_version'     => 2,
             'title'           => 'Alby: Bitcoin Donation',
@@ -105,10 +147,30 @@ class WP_Lightning_Admin {
             'icon'            => 'icon-alby',
             'editor_script'   => 'alby/donate-js',
             'editor_style'    => 'alby/donate-css',
+            'attributes'      => [
+                'amount'      => [
+                    'type'    => 'number'
+                ]
+            ],
             'render_callback' => (array($this, 'render_gutenberg')),
         ));
     }
 
+    public function render_twentyuno_widget_block( $attrs) {
+        $name = !empty($attrs['name']) ? strip_tags($attrs["name"]) : '';
+        $color = !empty($attrs['color']) ? strip_tags($attrs["color"]) : '';
+        $image = !empty($attrs['image']) ? strip_tags($attrs["image"]) : '';
+        $lnurl = lnurl\encodeUrl(get_rest_url(null, '/lnp-alby/v1/lnurlp'));
+
+        return '<div class="wp-lnp-twentyuno-widget">
+            <lightning-widget
+                name="'. $name . '"
+                accent="'. $color . '"
+                to="'. $lnurl .'"
+                image="'. $color . '"
+            />
+          </div>';
+    }
 	public function render_gutenberg( $atts )
     {
         $atts = shortcode_atts(array(
