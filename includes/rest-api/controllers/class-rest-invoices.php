@@ -55,6 +55,7 @@ class LNP_InvoicesController extends \WP_REST_Controller {
         $logger = $plugin->get_logger();
         $post_id = intval( $request->get_param('post_id') );
         $amount = intval( $request->get_param('amount') );
+        $comment = intval( $request->get_param('comment') );
         $memo = $request->get_param('memo');
 
         if (!empty($post_id) && empty($memo)) {
@@ -75,7 +76,16 @@ class LNP_InvoicesController extends \WP_REST_Controller {
         ];
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
 
-        $plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
+        $plugin->getDatabaseHandler()->store_invoice([
+            "post_id" => $post_id,
+            "payment_hash" => $invoice['r_hash'],
+            "payment_request" => $invoice['payment_request'],
+            "comment" => $invoice['payment_request'],
+            "amount" => $amount,
+            "currency" => "",
+            "exchange_rate" => 0
+        ]);
+
 
         $response_data = ['post_id' => $post_id, 'amount' => $amount];
 

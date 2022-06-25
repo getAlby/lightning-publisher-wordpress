@@ -86,7 +86,14 @@ class LNP_PaywallController extends \WP_REST_Controller {
             'private' => true
         ];
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
-        $plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
+        $plugin->getDatabaseHandler()->store_invoice([
+            "post_id" => $post_id,
+            "payment_hash" => $invoice['r_hash'],
+            "payment_request" => $invoice['payment_request'],
+            "amount" => $amount,
+            "currency" => "",
+            "exchange_rate" => 0
+        ]);
 
         $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
         $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);

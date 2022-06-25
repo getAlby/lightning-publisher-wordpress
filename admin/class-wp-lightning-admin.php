@@ -173,6 +173,7 @@ class WP_Lightning_Admin {
     }
 	public function render_gutenberg( $atts )
     {
+        return 'nop';
         $atts = shortcode_atts(array(
             'pay_block'     => 'true',
             'btc_format'    => '',

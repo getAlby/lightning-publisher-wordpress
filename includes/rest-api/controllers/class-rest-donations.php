@@ -183,7 +183,14 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
         $plugin  = $this->get_plugin();
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
-        $plugin->getDatabaseHandler()->store_invoice($post_id, $invoice['r_hash'], $invoice['payment_request'], $amount, '', 0);
+        $plugin->getDatabaseHandler()->store_invoice([
+            "post_id" => $post_id,
+            "payment_hash" => $invoice['r_hash'],
+            "payment_request" => $invoice['payment_request'],
+            "amount" => $amount,
+            "currency" => "",
+            "exchange_rate" => 0
+        ]);
 
         $jwt_data = array_merge($response_data,
             array(

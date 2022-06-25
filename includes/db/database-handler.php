@@ -13,7 +13,7 @@ class LNP_DatabaseHandler
     public function init()
     {
         global $wpdb;
-        
+
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $this->table_name (
@@ -21,6 +21,7 @@ class LNP_DatabaseHandler
         post_id bigint(20) NOT NULL,
         payment_hash varchar(256) NOT NULL,
         payment_request text NOT NULL,
+        comment text DEFAULT NULL,
         amount_in_satoshi int(10) DEFAULT 0 NOT NULL,
         exchange_rate int(10) DEFAULT 0 NOT NULL,
         exchange_currency varchar(10) DEFAULT NULL,
@@ -36,7 +37,7 @@ class LNP_DatabaseHandler
         dbDelta($sql);
     }
 
-    public function store_invoice($post_id, $payment_hash, $payment_request, $amount, $currency, $exchange_rate)
+    public function store_invoice($args)
     {
         global $wpdb;
         // // TODO: implement get exchange rate functionality
@@ -44,12 +45,13 @@ class LNP_DatabaseHandler
             $wpdb->insert(
                 $this->table_name,
                 array(
-                    'post_id'           => $post_id,
-                    'payment_hash'      => $payment_hash,
-                    'payment_request'   => $payment_request,
-                    'amount_in_satoshi' => $amount,
-                    'exchange_rate'     => $exchange_rate,
-                    'exchange_currency' => $currency,
+                    'post_id'           => $args["post_id"],
+                    'payment_hash'      => $args["payment_hash"],
+                    'payment_request'   => $args["payment_request"],
+                    'comment'           => $args["comment"],
+                    'amount_in_satoshi' => $args["amount"],
+                    'exchange_rate'     => $args["exchange_rate"],
+                    'exchange_currency' => $args["currency"],
                     'created_at'        => current_time('mysql'),
                     'state'             => 'unpaid',
                 )
@@ -83,7 +85,7 @@ class LNP_DatabaseHandler
 
         $offset = (intval($page) - 1) * intval($items_per_page);
         $query  = "SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
-        
+
         return $wpdb->get_results($query);
     }
 
