@@ -41,7 +41,7 @@
             TextControl,
             {
               label: __("Name", "alby"),
-              onChange: (v) => { console.log(v); props.setAttributes({name: v}) },
+              onChange: (v) => { props.setAttributes({name: v}) },
               value: name,
             }
           ),
