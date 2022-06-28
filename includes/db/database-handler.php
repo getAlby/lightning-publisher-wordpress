@@ -94,4 +94,22 @@ class LNP_DatabaseHandler
         global $wpdb;
         return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");
     }
+
+    /**
+     * Get the payments sum from the database
+     */
+    public function total_payment_sum()
+    {
+        global $wpdb;
+        return $wpdb->get_var("SELECT SUM(amount_in_satoshi) FROM $this->table_name WHERE state = 'settled'");
+    }
+    
+    /**
+     * Get the top posts the database
+     */
+    public function top_posts()
+    {
+        global $wpdb;
+        return $wpdb->get_results("SELECT p.ID as id, p.post_title as title, SUM(amount_in_satoshi) as total FROM $this->table_name t JOIN {$wpdb->prefix}posts p ON t.post_id = p.ID  WHERE t.state = 'settled' GROUP BY id ORDER BY total DESC LIMIT 10");
+    }
 }
