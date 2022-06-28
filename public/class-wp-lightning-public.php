@@ -90,7 +90,7 @@ class WP_Lightning_Public {
     public function ln_paywall_filter($content)
     {
 		$paywall = new WP_Lightning_Paywall($this->plugin, $content);
-		return $paywall->getContent();
+		return $paywall->get_content();
     }
 
 	public function add_lnurl_to_rss_item_filter()

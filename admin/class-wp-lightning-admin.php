@@ -68,6 +68,7 @@ class WP_Lightning_Admin {
 		);
 	}
 
+
 	/**
      * Add Block
      * @return [type] [description]
@@ -80,7 +81,11 @@ class WP_Lightning_Admin {
         }
 
         register_block_type(dirname(__DIR__, 1) . '/blocks/donate/block.json');
-        //register_block_type(dirname(__DIR__, 1) . '/blocks/twentyuno/block.json');
+        register_block_type(dirname(__DIR__, 1) . '/blocks/paywall/block.json',
+            array(
+                'render_callback' => [$this, 'render_paywall_shortcode'],
+            )
+        );
 
         // The JS block script
         $twentyuno_block_js_path = sprintf(
@@ -171,6 +176,13 @@ class WP_Lightning_Admin {
             />
           </div>';
     }
+
+    function render_paywall_shortcode( $attributes, $content ) {
+        $sanitized_attributes = array_map(function($key, $value) { return strval($key) . '="' . esc_html(strval($value)) . '"'; }, array_keys($attributes), array_values($attributes));
+        $shortcode_attributes = implode(" ", $sanitized_attributes);
+        return "[ln " . $shortcode_attributes . " ]";
+    }
+
 	public function render_gutenberg( $atts )
     {
         return 'nop';

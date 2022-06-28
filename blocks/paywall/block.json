@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/block.json",
+  "apiVersion": 2,
+  "name": "alby/paywall",
+  "title": "Lightning Paywall",
+  "icon": "index-card",
+  "category": "layout",
+  "attributes": {
+    "amount": {
+      "type": "number"
+    },
+    "button": {
+      "type": "string"
+    },
+    "timein": {
+      "type": "number"
+    },
+    "timeout": {
+      "type": "number"
+    },
+    "total": {
+      "type": "number"
+    },
+    "disable_in_rss": {
+      "type": "boolean"
+    }
+  },
+  "example": {
+    "attributes": {
+    }
+  },
+  "editorScript": "file:./block.js",
+  "editorStyle": "file:./editor.css",
+  "style": "file:./style.css"
+}

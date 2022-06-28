@@ -6,16 +6,16 @@
  * Lightning Paywall Class to manage the paywall initialization on
  * a given content.
  *
- * When applied to a content, it searches for the [ln-*] shortcode,
+ * When applied to a content, it searches for the [ln ] shortcode,
  * parses the available options provided in the shortcode,
  * merges the provided options with the database options
  * and separates the protected and public part of the content.
  *
- * `the_content` filter is attached to the getContent function.
- * The getContent function hides the protected content by default
+ * `the_content` filter is attached to the get_content function.
+ * The get_content function hides the protected content by default
  * and shows the payment buttons.
  *
- * Depending on the post payment details, the getContent shows
+ * Depending on the post payment details, the get_content shows
  * the full content or the teaser.
  *
  * @since      1.0.0
@@ -101,15 +101,15 @@ class WP_Lightning_Paywall
         $this->plugin = $plugin;
         $this->content = $content;
 
-        $shortcode_options = $this->extract_shortcode();
+        $shortcode_options = $this->extract_options_from_shortcode();
         if (!empty($shortcode_options)) {
-            $database_options = $this->plugin->getPaywallOptions();
-            $this->options = array_merge($this->options, $database_options, $shortcode_options);
+            $options_from_database = $this->plugin->getPaywallOptions();
+            $this->options = array_merge($this->options, $options_from_database, $shortcode_options);
         } else {
             // If no shortcode found, do not enable the paywall
             $this->status = 0;
         }
-        $this->splitPublicProtected();
+        $this->split_public_protected();
     }
 
     /**
@@ -118,9 +118,9 @@ class WP_Lightning_Paywall
      * @since     1.0.0
      * @return array Array of shortcode properties of the paywall
      */
-    protected function extract_shortcode()
+    protected function extract_options_from_shortcode()
     {
-        if (preg_match('/\[ln(.+)\]/i', $this->content, $m)) {
+        if (preg_match('/\[ln (.+)\]/i', $this->content, $m)) {
             return shortcode_parse_atts($m[1]);
         }
         return [];
@@ -129,7 +129,7 @@ class WP_Lightning_Paywall
     /**
      * Split the teaser and the protected content
      */
-    public function splitPublicProtected()
+    public function split_public_protected()
     {
         list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[ln.+\](<\/p>)?/', $this->content, 2),2,null);
     }
@@ -159,7 +159,7 @@ class WP_Lightning_Paywall
      * @since     1.0.0
      * @return string Returns the entire if Paywall is Off, only the teaser if Paywall is On
      */
-    public function getContent()
+    public function get_content()
     {
         if ($this->status === 1) {
             if ($this->options['disable_in_rss'] && is_feed()) {
@@ -191,7 +191,7 @@ class WP_Lightning_Paywall
     /**
      * Get the options of the Paywall
      */
-    public function getOptions()
+    public function get_options()
     {
         return $this->options;
     }
@@ -199,7 +199,7 @@ class WP_Lightning_Paywall
     /**
      * Get the protected content
      */
-    public function getProtectedContent()
+    public function get_protected_content()
     {
         return $this->protected_content;
     }

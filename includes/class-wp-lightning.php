@@ -365,7 +365,7 @@ class WP_Lightning
 		}
 
 		// Apply Paywall to the content
-		$this->loader->add_filter('the_content', $this->plugin_public, 'ln_paywall_filter');
+		$this->loader->add_filter('the_content', $this->plugin_public, 'ln_paywall_filter', 9); // 9 is the priority. this needs to run before wptexturize which changes for example the quotes. (10 is the default)
 		// Add donation widget to the content
 		$this->loader->add_filter('the_content', $donation_widget, 'set_donation_box');
 	}

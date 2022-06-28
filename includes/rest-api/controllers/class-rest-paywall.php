@@ -62,8 +62,13 @@ class LNP_PaywallController extends \WP_REST_Controller {
             return new \WP_Error(__('Invalid Request, Missing required parameters', 'lnp-alby'));
         }
 
-        $paywall = new WP_Lightning_Paywall($plugin, get_post_field('post_content', $post_id));
-        $paywall_options = $paywall->getOptions();
+        $post = get_post($post_id);
+        // get the content of the post and apply the blocks
+        // this adds the "shortcode" to the content if the Gutenberg block is used
+        // the shortcode is then parsed in WP_Lightning_Paywall with a regex
+        $content = do_blocks($post->post_content);
+        $paywall = new WP_Lightning_Paywall($plugin, $content);
+        $paywall_options = $paywall->get_options();
         if (!$paywall_options) {
             $logger->error('Paywall options not found', ['post_id' => $post_id]);
             ob_end_clean();
@@ -146,9 +151,13 @@ class LNP_PaywallController extends \WP_REST_Controller {
             $post_id = $jwt->{'post_id'};
             $plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
 
-            $content = get_post_field('post_content', $post_id);
+            $post = get_post($post_id);
+            // get the content of the post and apply the blocks
+            // this adds the "shortcode" to the content if the Gutenberg block is used
+            // the shortcode is then parsed in WP_Lightning_Paywall with a regex
+            $content = do_blocks($post->post_content);
             $paywall = new WP_Lightning_Paywall($plugin, $content);
-            $protected = $paywall->getProtectedContent();
+            $protected = $paywall->get_protected_content();
             WP_Lightning::save_as_paid($post_id, $invoice['value']);
             $logger->info('Invoice paid', ['post_id'=> $post_id, 'invoice' => $invoice]);
             ob_end_clean();
