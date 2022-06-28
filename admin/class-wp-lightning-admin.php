@@ -204,4 +204,19 @@ class WP_Lightning_Admin {
         $widget = new TwentyunoWidget(["lnurl" => $lnurl]);
 		register_widget($widget);
 	}
+
+    /**
+     * Reset the existing values in the wallet settings options
+     * before saving the current wallet options
+     */
+    function reset_wallet_on_update($new_value, $old_value, $option) {
+        // Get the difference between the 2 array
+        $diff = array_diff($new_value, $old_value);
+        // If any difference is found (new wallet used), reset all the values and only use the new ones
+        if (!empty($diff)) {
+            $empty_settings = array_fill_keys(array_keys($old_value), "");
+            $new_value = array_merge($empty_settings, $diff);
+        }
+        return $new_value;
+    }
 }

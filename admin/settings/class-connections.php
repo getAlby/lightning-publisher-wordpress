@@ -281,4 +281,27 @@ class LNP_ConnectionPage extends LNP_SettingsPage
 
         $this->add_admin_notice($message, $type);
     }
+
+    /**
+     * Get the active tab based on the wallet setting saved in the database
+     * Overrides the parent method
+     */
+    public function get_active_tab_id() {
+        $connection_options = $this->plugin->getConnectionOptions();
+        if (!empty($connection_options['lnd_address'])) {
+            return 'lnd';
+        } elseif (!empty($connection_options['lnbits_apikey'])) {
+            return 'lnbits';
+        } elseif (!empty($connection_options['lnaddress_address']) || !empty($connection_options['lnaddress_lnurl'])) {
+            return 'lnaddress';
+        } elseif (!empty($connection_options['btcpay_host'])) {
+            return 'btcpay';
+        } elseif (!empty($connection_options['lndhub_url']) && !empty($connection_options['lndhub_login']) && !empty($connection_options['lndhub_password'])) {
+            return 'lndhub';
+        }else {
+            return isset($_GET['tab'])
+                ? sanitize_text_field($_GET['tab'])
+                : key($this->tabs);
+        }
+    }
 }
