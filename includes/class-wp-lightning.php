@@ -338,6 +338,9 @@ class WP_Lightning
 		$this->loader->add_action('init', $this->plugin_admin, 'init_donation_block');
 		// Register the subscription widget
 		$this->loader->add_action('widgets_init', $this->plugin_admin, 'widget_init');
+
+		// Reset other wallet settings when saving a new wallet configuration
+		$this->loader->add_filter('pre_update_option_lnp_connection', $this->plugin_admin,'reset_wallet_on_update', 10, 3);
 	}
 
 	/**
