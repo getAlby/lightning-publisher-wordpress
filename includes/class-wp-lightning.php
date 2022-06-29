@@ -355,6 +355,7 @@ class WP_Lightning
         // Register the subscription widget
         $this->loader->add_action('widgets_init', $this->plugin_admin, 'widget_init');
 
+
         // Reset other wallet settings when saving a new wallet configuration
         $this->loader->add_filter('pre_update_option_lnp_connection', $this->plugin_admin, 'reset_wallet_on_update', 10, 3);
     }
@@ -381,6 +382,10 @@ class WP_Lightning
         if (!empty($this->paywall_options['lnurl_rss'])) {
             // Add URL as RSS Item
             $this->loader->add_action('rss2_item', $this->plugin_public, 'add_lnurl_to_rss_item_filter');
+        }
+
+        if (!empty($this->general_options['add_v4v_rss_tag'])) {
+            $this->loader->add_action('rss2_head', $this->plugin_public, 'add_v4v_rss_tag');
         }
 
         // Apply Paywall to the content
@@ -547,9 +552,9 @@ class WP_Lightning
         }
     }
 
-    public static function has_paid_for_post($post_id)
+    public function has_paid_for_post($post_id)
     {
-        $paid_post_ids = self::get_paid_post_ids();
+        $paid_post_ids = WP_Lightning::get_paid_post_ids();
         return in_array($post_id, $paid_post_ids);
     }
 
@@ -558,9 +563,9 @@ class WP_Lightning
      * and increment the paid amount on the post
      * must only be called once (can be exploited currently)
      */
-    public static function save_as_paid($post_id, $amount_paid = 0)
+    public function save_as_paid($post_id, $amount_paid = 0)
     {
-        $paid_post_ids = self::get_paid_post_ids();
+        $paid_post_ids = WP_Lightning::get_paid_post_ids();
         if (!in_array($post_id, $paid_post_ids)) {
             $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
             if (is_numeric($amount_received)) {
@@ -573,7 +578,12 @@ class WP_Lightning
             array_push($paid_post_ids, $post_id);
         }
         $jwt = JWT\JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
-        setcookie('wplnp', $jwt, time() + time() + 60 * 60 * 24 * 180, '/');
+        if (!empty($this->general_options["cookie_timeframe_days"])) {
+            $days = intval($this->general_options["cookie_timeframe_days"]);
+        } else {
+            $days = 180;
+        }
+        setcookie('wplnp', $jwt, time() + 60 * 60 * 24 * $days, '/');
     }
 
 }

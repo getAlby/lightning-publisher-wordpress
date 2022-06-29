@@ -148,7 +148,10 @@ class WP_Lightning_Paywall
     protected function format_unpaid()
     {
         $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($this->options['button_text']) ? 'Pay now' : $this->options['button_text']);
-        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s</div>', $this->teaser, get_the_ID(), $button);
+        if (!empty($this->options['description'])) {
+            $description = sprintf('<p class="wp-lnp-description">%s</p>', $this->options['description']);
+        }
+        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, get_the_ID(), $description, $button);
     }
 
     /**
@@ -179,7 +182,7 @@ class WP_Lightning_Paywall
                 }
             }
 
-            if (WP_Lightning::has_paid_for_post(get_the_ID())) {
+            if ($this->plugin->has_paid_for_post(get_the_ID())) {
                 return $this->format_paid();
             }
 

@@ -32,6 +32,10 @@ class LNP_ConnectionPage extends LNP_SettingsPage
     {
         // Tabs
         $this->tabs = array(
+            'alby' => array(
+                'title'       => __('Alby Wallet', 'lnp-alby'),
+                'description' => __('Create or connect a getalby.com account. Alby manages a lightning wallet for you', 'lnp-alby'),
+            ),
             'lnd' => array(
                 'title'       => __('LND', 'lnp-alby'),
                 'description' => __('Connect your LND node', 'lnp-alby'),
@@ -51,10 +55,6 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'lnaddress' => array(
                 'title'       => __('LN Address', 'lnp-alby'),
                 'description' => __('Connect using Lightning Address Config', 'lnp-alby'),
-            ),
-            'alby' => array(
-                'title'       => __('Alby Wallet', 'lnp-alby'),
-                'description' => __('We create and manage a lightning wallet for you', 'lnp-alby'),
             ),
         );
 

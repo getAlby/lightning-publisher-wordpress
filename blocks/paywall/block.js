@@ -14,6 +14,9 @@
                 button_text: {
                     type: 'string',
                 },
+                description: {
+                    type: 'string',
+                },
                 timeout: {
                     type: 'number',
                 },
@@ -28,6 +31,7 @@
                 const {
                     amount,
                     button_text,
+                    description,
                     timeout,
                     timein,
                     total
@@ -62,6 +66,15 @@
                                 props.setAttributes({ button_text: v });
                             },
                             value: button_text,
+                        }
+                    ),
+                    el(
+                        TextControl, {
+                            label: __("Description", "alby"),
+                            onChange: (v) => {
+                                props.setAttributes({ description: v });
+                            },
+                            value: description,
                         }
                     ),
                     el(

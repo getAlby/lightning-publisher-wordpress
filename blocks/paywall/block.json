@@ -12,6 +12,9 @@
     "button_text": {
       "type": "string"
     },
+    "description": {
+      "type": "string"
+    },
     "timein": {
       "type": "number"
     },

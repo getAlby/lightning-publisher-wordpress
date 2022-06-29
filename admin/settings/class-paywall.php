@@ -72,6 +72,14 @@ class LNP_PaywallPage extends LNP_SettingsPage
         $fields[] = array(
             'tab'     => 'paywall',
             'field'   => array(
+                'name'  => 'description',
+                'label' => __('Description', 'lnp-alby'),
+            ),
+        );
+
+        $fields[] = array(
+            'tab'     => 'paywall',
+            'field'   => array(
                 'type'        => 'number',
                 'name'        => 'amount',
                 'label'       => __('Default Amount', 'lnp-alby'),

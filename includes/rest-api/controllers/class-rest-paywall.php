@@ -169,7 +169,7 @@ class LNP_PaywallController extends \WP_REST_Controller
             } else {
                 $amount = $jwt->{"amount"}; // fallback to the jwt data
             }
-            WP_Lightning::save_as_paid($post_id, $amount);
+            $plugin->save_as_paid($post_id, $amount);
             $logger->info('Invoice paid', ['post_id'=> $post_id, 'invoice' => $invoice]);
             ob_end_clean();
             wp_send_json($protected, 200);

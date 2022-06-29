@@ -129,4 +129,24 @@ class WP_Lightning_Public
 
         return $donationWidget->get_donation_block_html();
     }
+
+    public function add_v4v_rss_tag()
+    {
+        $address = $this->plugin->getGeneralOptions()['v4v_node_key'];
+        $custom_key = $this->plugin->getGeneralOptions()['v4v_custom_key'];
+        $custom_value = $this->plugin->getGeneralOptions()['v4v_custom_value'];
+
+        $tag = array();
+        $tag[] = '<podcast:value>';
+        $tag[] = '<podcast:valueRecipient name="' . get_bloginfo('name') .'" type="node" address="' . $address . '"';
+        if (!empty($custom_key)) {
+            $tag[] = ' customKey="' . $custom_key . '"';
+        }
+        if (!empty($custom_value)) {
+            $tag[] = ' customValue="' . $custom_value . '"';
+        }
+        $tag[] = ' split="100" />';
+        $tag[] = '</podcast:value>';
+        echo join(' ', $tag);
+    }
 }
