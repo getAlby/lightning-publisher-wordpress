@@ -11,7 +11,7 @@ defined('WPINC') || die; ?>
     </div>
     <div class="card">
         <h2 class="title">Total Payments Sum</h2>
-        <h3><?php echo $this->get_total_payments_sum(); ?> SAT</h3>
+        <h3><?php echo $this->get_total_payments_sum(); ?> sats</h3>
     </div>
     <div class="card">
         <h2 class="title">Top 10 Posts</h2>
