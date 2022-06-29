@@ -3,8 +3,8 @@
   "apiVersion": 2,
   "name": "alby/paywall",
   "title": "Lightning Paywall",
-  "icon": "index-card",
-  "category": "layout",
+  "icon": "money-alt",
+  "category": "design",
   "attributes": {
     "amount": {
       "type": "number"
@@ -30,6 +30,8 @@
   },
   "example": {
     "attributes": {
+      "amount": 21,
+      "button_text": "Read now!"
     }
   },
   "editorScript": "file:./block.js",

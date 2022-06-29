@@ -7,8 +7,8 @@
     blocks.registerBlockType(
         'alby/twentyuno-widget', {
             title: __('Twentyuno Payment Widget', 'alby'),
-            icon: 'index-card',
-            category: 'layout',
+            icon: 'heart',
+            category: 'widgets',
             attributes: {
                 name: {
                     type: 'string',

@@ -3,8 +3,8 @@
   "apiVersion": 2,
   "name": "alby/twentyuno-widget",
   "title": "Twentyuno Payment Widget",
-  "icon": "index-card",
-  "category": "layout",
+  "icon": "heart",
+  "category": "widgets",
   "attributes": {
     "name": {
       "type": "string",
