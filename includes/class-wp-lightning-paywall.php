@@ -73,7 +73,7 @@ class WP_Lightning_Paywall
     protected $status = 1;
 
     /**
-     * Paywall Options.
+     * Default Paywall Options.
      *
      * @since    1.0.0
      * @access   protected
@@ -166,17 +166,19 @@ class WP_Lightning_Paywall
                 return $this->format_paid();
             }
 
-            if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 24 * 60 * 60) {
+            if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 60 * 60) {
                 return $this->format_paid();
             }
 
-            if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 24 * 60 * 60) {
+            if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 60 * 60) {
                 return $this->format_paid();
             }
 
-            $amount_received = get_post_meta(get_the_ID(), '_lnp_amount_received', true);
-            if (!empty($this->options['total']) && $amount_received >= $this->options['total']) {
-                return $this->format_paid();
+            if (!empty($this->options['total'])) {
+                $amount_received = get_post_meta(get_the_ID(), '_lnp_amount_received', true);
+                if ($amount_received >= $this->options['total']) {
+                    return $this->format_paid();
+                }
             }
 
             if (WP_Lightning::has_paid_for_post(get_the_ID())) {

@@ -9,7 +9,7 @@
     "amount": {
       "type": "number"
     },
-    "button": {
+    "button_text": {
       "type": "string"
     },
     "timein": {

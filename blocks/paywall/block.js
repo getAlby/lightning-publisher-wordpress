@@ -12,12 +12,24 @@
       },
       button_text: {
         type: 'string',
-      }
+      },
+      timeout: {
+        type: 'number',
+      },
+      timein: {
+        type: 'number',
+      },
+      total: {
+        type: 'number',
+      },
     },
     edit: function(props) {
       const {
         amount,
-        button_text
+        button_text,
+        timeout,
+        timein,
+        total
       } = props.attributes;
       return el(
         'div',
@@ -33,22 +45,57 @@
           TextControl, {
             label: __("Amount", "alby"),
             onChange: (v) => {
-              props.setAttributes({
-                amount: parseInt(v)
-              })
+              if (v !== "") {
+                v = parseInt(v);
+              }
+              props.setAttributes({ amount: v });
             },
-            value: amount || 1000,
+            value: amount
           }
         ),
         el(
           TextControl, {
             label: __("Button Label", "alby"),
             onChange: (v) => {
-              props.setAttributes({
-                button_text: v
-              })
+              props.setAttributes({ button_text: v });
             },
-            value: button_text || 'Pay now',
+            value: button_text,
+          }
+        ),
+        el(
+          TextControl, {
+            label: __("Disable the paywall x hours after publishing", "alby"),
+            onChange: (v) => {
+              if (v !== "") {
+                v = parseInt(v);
+              }
+              props.setAttributes({ timeout: v });
+            },
+            value: timeout,
+          }
+        ),
+        el(
+          TextControl, {
+            label: __("Enable the paywall only for x hours after publishing", "alby"),
+            onChange: (v) => {
+              if (v !== "") {
+                v = parseInt(v);
+              }
+              props.setAttributes({ timein: v });
+            },
+            value: timein,
+          }
+        ),
+        el(
+          TextControl, {
+            label: __("Disable paywall after X Satoshis have been received", "alby"),
+            onChange: (v) => {
+              if (v !== "") {
+                v = parseInt(v);
+              }
+              props.setAttributes({ total: v });
+            },
+            value: total,
           }
         ),
         el('hr', {

@@ -78,10 +78,6 @@ class LNP_PaywallController extends \WP_REST_Controller {
         $amount = $paywall_options['amount'];
         $response_data = ['post_id' => $post_id, 'amount' => $amount];
 
-        if (!$amount) {
-            $amount = 1000;
-        }
-
         $memo = substr($memo, 0, 64);
         $memo = preg_replace('/[^\w_ ]/', '', $memo);
         $invoice_params = [
@@ -100,7 +96,7 @@ class LNP_PaywallController extends \WP_REST_Controller {
             "exchange_rate" => 0
         ]);
 
-        $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
+        $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'amount' => $amount, 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
         $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
@@ -139,8 +135,8 @@ class LNP_PaywallController extends \WP_REST_Controller {
 
         // if we get a preimage we can check if the preimage matches the payment hash and accept it.
         if (!empty($preimage) && hash('sha256', hex2bin($preimage), false) == $jwt->{"r_hash"}) {
-            $invoice = ['settled' => true];
-            // if ew do not have a preimage we must check with the LN node if the invoice was paid.
+            $invoice = ['settled' => true, 'amount' => $jwt->{"amount"}];
+            // if we do not have a preimage we must check with the LN node if the invoice was paid.
         } else {
             $invoice_id = $jwt->{'invoice_id'};
             $invoice = $plugin->getLightningClient()->getInvoice($invoice_id);
@@ -158,7 +154,17 @@ class LNP_PaywallController extends \WP_REST_Controller {
             $content = do_blocks($post->post_content);
             $paywall = new WP_Lightning_Paywall($plugin, $content);
             $protected = $paywall->get_protected_content();
-            WP_Lightning::save_as_paid($post_id, $invoice['value']);
+
+            // fallback to use either value or amount from the invoice response
+            // the connections are inconsitent there
+            if (array_key_exists("value", $invoice)) {
+                $amount = $invoice["value"];
+            } elseif (array_key_exists("amount", $invoice)) {
+                $amount = $invoice["amount"];
+            } else {
+                $amount = $jwt->{"amount"}; // fallback to the jwt data
+            }
+            WP_Lightning::save_as_paid($post_id, $amount);
             $logger->info('Invoice paid', ['post_id'=> $post_id, 'invoice' => $invoice]);
             ob_end_clean();
             wp_send_json($protected, 200);
