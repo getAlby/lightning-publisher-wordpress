@@ -18,7 +18,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $this->page_title = __( 'Wallet Settings', 'lnp-alby' );
         $this->menu_title = __( 'Wallet Settings', 'lnp-alby' );
 
-        add_action('admin_notices', array($this, 'get_lnd_address_node_info'));
+        add_action('admin_notices', array($this, 'get_ln_node_info'));
         add_action('lnp_tab_before_alby', array($this, 'render_tab_alby_wallet'));
     }
 
@@ -33,11 +33,11 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $this->tabs = array(
             'lnd' => array(
                 'title'       => __('LND', 'lnp-alby' ),
-                'description' => __('Connect using LND', 'lnp-alby'),
+                'description' => __('Connect your LND node', 'lnp-alby'),
             ),
             'lndhub' => array(
                 'title'       => __('LNDHub', 'lnp-alby' ),
-                'description' => __('Connect using LNDHub', 'lnp-alby'),
+                'description' => __('Connect to an LNDHub account (for example Alby)', 'lnp-alby'),
             ),
             'lnbits' => array(
                 'title'       => __('LNbits', 'lnp-alby' ),
@@ -45,7 +45,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             ),
             'btcpay' => array(
                 'title'       => __('BTC Pay', 'lnp-alby' ),
-                'description' => __('Connect using BTCPay Server', 'lnp-alby'),
+                'description' => __('Connect to a BTCPay Server', 'lnp-alby'),
             ),
             'lnaddress' => array(
                 'title'       => __('LN Address', 'lnp-alby' ),
@@ -79,7 +79,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'url',
                 'name'        => 'lnd_address',
-                'label'       => __( 'Address', 'lnp-alby' ),
+                'label'       => __( 'REST Address (with port)', 'lnp-alby' ),
                 'description' => __( 'e.g. https://127.0.0.1:8080 - or <a href="#" id="load_from_lndconnect">click here to load details from a lndconnect</a>', 'lnp-alby'),
             ),
         );
@@ -98,7 +98,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'field'   => array(
                 'name'        => 'lnd_cert',
                 'label'       => __( 'TLS Certificate', 'lnp-alby' ),
-                'description' => __( 'TLS Certificate', 'lnp-alby'),
+                'description' => __( 'TLS Certificate in HEX format', 'lnp-alby'),
             ),
         );
 
@@ -111,7 +111,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'url',
                 'name'        => 'lndhub_url',
-                'label'       => __( 'LndHub Url', 'lnp-alby' ),
+                'label'       => __( 'LndHub Host', 'lnp-alby' ),
                 'description' => __( 'LndHub Host', 'lnp-alby'),
             ),
         );
@@ -168,7 +168,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
                 'type'        => 'url',
                 'name'        => 'btcpay_host',
                 'label'       => __( 'Host', 'lnp-alby' ),
-                'description' => __( 'BtcPay Host', 'lnp-alby'),
+                'description' => __( 'BTCPay Server Host (Greenfield API)', 'lnp-alby'),
             ),
         );
 
@@ -177,7 +177,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'field'   => array(
                 'name'        => 'btcpay_apikey',
                 'label'       => __( 'API Key', 'lnp-alby' ),
-                'description' => __( 'BtcPay Api Key', 'lnp-alby'),
+                'description' => __( 'BTCPay Api Key. (requires permission to "Create lightning invoice" and "Get invoice"', 'lnp-alby'),
             ),
         );
 
@@ -186,7 +186,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'field'   => array(
                 'name'        => 'btcpay_store_id',
                 'label'       => __( 'Store ID', 'lnp-alby' ),
-                'description' => __( 'BtcPay Store ID', 'lnp-alby'),
+                'description' => __( 'BTCPay Store ID', 'lnp-alby'),
             ),
         );
 
@@ -239,7 +239,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
 
 
 
-    public function get_lnd_address_node_info() {
+    public function get_ln_node_info() {
 
         // Don't run check on other settings pages
         if ( ! $this->is_current_page() )
