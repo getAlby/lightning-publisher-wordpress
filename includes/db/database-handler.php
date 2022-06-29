@@ -92,7 +92,7 @@ class LNP_DatabaseHandler
     public function total_payment_count()
     {
         global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");
+        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name WHERE state = 'settled'");
     }
 
     /**
@@ -103,7 +103,7 @@ class LNP_DatabaseHandler
         global $wpdb;
         return $wpdb->get_var("SELECT SUM(amount_in_satoshi) FROM $this->table_name WHERE state = 'settled'");
     }
-    
+
     /**
      * Get the top posts the database
      */
