@@ -8,7 +8,7 @@ abstract class LNP_SettingsPage
     protected $settings_path;
     protected $template_html;
     protected $option_name;
-    
+
     protected $tabs;
     protected $form_fields;
 
@@ -25,10 +25,10 @@ abstract class LNP_SettingsPage
         $this->plugin      = $plugin;
         $this->options     = array();
         $this->form_fields = array();
-        
+
         $this->set_translations();
         $this->set_options();
-        
+
         add_action('admin_menu', array($this, 'init_page'), 20);
         add_action('admin_init', array($this, 'init_fields'));
     }
@@ -63,12 +63,12 @@ abstract class LNP_SettingsPage
         // WP will then store all fields as array field_name => field_value
         register_setting(
             $this->settings_path,
-            $this->option_name, 
+            $this->option_name,
             array($this, 'sanitize')
         );
 
         // Register Tabbed sections
-        // This will register tabs as sections 
+        // This will register tabs as sections
         if (! empty($this->tabs) ) {
             // Create sections on the page
             foreach( $this->tabs as $id => $args )
@@ -101,7 +101,7 @@ abstract class LNP_SettingsPage
 
 
     /**
-     * Load options page HTML template 
+     * Load options page HTML template
      */
     public function renderer()
     {
@@ -170,7 +170,7 @@ abstract class LNP_SettingsPage
 
     /**
      * Path to template file which will render options page
-     * 
+     *
      * @param  string $filename [description]
      * @return strnig path to file or error if does not exist
      */
@@ -235,7 +235,7 @@ abstract class LNP_SettingsPage
     /**
      * Check if user is on this settings page
      * Use this to fire page specific code
-     * 
+     *
      * @return boolean [description]
      */
     public function is_current_page()
@@ -274,7 +274,7 @@ abstract class LNP_SettingsPage
         $active   = $this->get_active_tab_id();
         $output   = array();
         $output[] = '<h2 class="nav-tab-wrapper">';
-        
+
         foreach ( $this->tabs as $id => $args)
         {
             $output[] = sprintf(
@@ -299,7 +299,7 @@ abstract class LNP_SettingsPage
 
         $active = $this->get_active_tab_id();
 
-        foreach ( $this->tabs as $id => $args) 
+        foreach ( $this->tabs as $id => $args)
         {
             // Open Tab
             printf(
@@ -332,7 +332,7 @@ abstract class LNP_SettingsPage
 
     /**
      * Display settings field from a page section in WP styled options table
-     * 
+     *
      * @param  [type] $tab_id [description]
      * @return mixed         Markup for options page
      */
@@ -340,7 +340,7 @@ abstract class LNP_SettingsPage
     {
 
         global $wp_settings_fields;
-        
+
         $page    = $this->option_name;
         $section = "{$this->option_name}_section_{$tab_id}";
 
@@ -354,16 +354,16 @@ abstract class LNP_SettingsPage
         foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $field )
         {
             $class = '';
-     
+
             if (! empty($field['args']['class']) ) {
                 $class = sprintf(
                     ' class="%s"',
                     esc_attr($field['args']['class'])
                 );
             }
-     
+
             echo "<tr{$class}>";
-     
+
             if (! empty($field['args']['label_for']) ) {
                 printf(
                     '<th scope="row"><label for="%s">%s</label></th>',
@@ -378,7 +378,7 @@ abstract class LNP_SettingsPage
                     $field['title']
                 );
             }
-     
+
             echo '<td>';
             call_user_func($field['callback'], $field['args']);
             echo '</td></tr>';
@@ -390,10 +390,10 @@ abstract class LNP_SettingsPage
 
     /**
      * Generate markup output for <input> element
-     * 
+     *
      * @param string $option_name [description]
      * @param array  $args        [description]
-     * 
+     *
      * @return misc
      */
     public function get_input( $field_args = array() )
@@ -418,7 +418,7 @@ abstract class LNP_SettingsPage
             'description'  => ''
         );
 
-        
+
         // Merge args with defaults
         // Keep empty values to avoid warnings
         $parsed_args = wp_parse_args($args['field'], $defaults);
@@ -434,21 +434,23 @@ abstract class LNP_SettingsPage
             return;
         }
 
-        
+
         // We will save HTML markup in array
         // and join() later
         $output = array();
 
-        
+
         // Checkbox specifc
         if ('checkbox' == $parsed_args['type'] ) {
             // Don't add autocomplete arg to checkbox
             unset($parsed_args['autocomplete']);
+            $output[] = '<input type="hidden" value="" ' . sprintf('name="%s[%s]"', $this->option_name, $parsed_args['name']) . ' />';
         }
-        
+
+
         // HTML output starts now
         $output[] = '<input';
-        
+
         /**
          * Will append args as input element attributes
          * Eg: <input type="text" etc...
@@ -492,14 +494,14 @@ abstract class LNP_SettingsPage
         }
 
         // Mark checkbox checked
-        if ('checkbox' == $parsed_args['type'] && 'on' == $parsed_args['value'] ) {
+        if ('checkbox' == $parsed_args['type'] && $this->get_field_value($args) == $parsed_args['value'] ) {
             $output[] = 'checked';
         }
 
         // Close input
         $output[] = '/>';
 
-        
+
         /**
          * For checkbox type we want to display label inline with input element
          */
