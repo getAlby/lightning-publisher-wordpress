@@ -79,20 +79,26 @@ class LNP_DatabaseHandler
         }
     }
 
-    public function get_payments($page, $items_per_page)
+    public function get_payments($page, $items_per_page, $state)
     {
         global $wpdb;
-
         $offset = (intval($page) - 1) * intval($items_per_page);
-        $query  = "SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
-
+        if ($state == 'all') {
+            $query  = "SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
+        } else {
+            $query  = "SELECT * FROM $this->table_name WHERE `state` = '$state' ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
+        }
         return $wpdb->get_results($query);
     }
 
-    public function total_payment_count()
+    public function total_payment_count($state)
     {
         global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name WHERE state = 'settled'");
+        if ($state == 'all') {
+            return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");
+        } else {
+            return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name WHERE `state` = '$state'");
+        }
     }
 
     /**

@@ -7,11 +7,11 @@ defined('WPINC') || die; ?>
     <h1><?php echo $this->get_page_title(); ?></h1>
     <div class="card">
         <h2 class="title">Total Payments</h2>
-        <h3><?php echo $this->get_total_payments(); ?></h3>
+        <h3><?php echo $this->get_total_payments() ?? 0; ?></h3>
     </div>
     <div class="card">
         <h2 class="title">Total Payments Sum</h2>
-        <h3><?php echo $this->get_total_payments_sum(); ?> sats</h3>
+        <h3><?php echo $this->get_total_payments_sum() ?? 0; ?> sats</h3>
     </div>
     <div class="card">
         <h2 class="title">Top 10 Posts</h2>
@@ -23,6 +23,13 @@ defined('WPINC') || die; ?>
     </div>
     <div class="card">
         <h2 class="title">Connected Wallet</h2>
-        <h4><?php echo $this->get_connected_wallet(); ?></h4>
+        <h4>
+            <?php
+                echo $this->get_connected_wallet();
+                if (!$this->check_connection_valid()) {
+                    echo "<br><a href='". admin_url('admin.php?page=lnp_settings_connections') ."'>Link your wallet</a>";
+                }
+            ?>
+        </h4>
     </div>
 </div>

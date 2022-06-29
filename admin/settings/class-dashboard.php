@@ -25,7 +25,7 @@ class LNP_Dashboard extends LNP_SettingsPage
     public function get_total_payments()
     {
         $database_handler = $this->plugin->getDatabaseHandler();
-        return $database_handler->total_payment_count();
+        return $database_handler->total_payment_count('settled');
     }
     
     /**
@@ -47,11 +47,12 @@ class LNP_Dashboard extends LNP_SettingsPage
         return $top_posts;
     }
 
+    /**
+     * Get the connected wallet
+     */
     public function get_connected_wallet()
     {
-        if ($this->plugin->getLightningClient()
-            && $this->plugin->getLightningClient()->isConnectionValid()
-        ) {
+        if ($this->check_connection_valid()) {
             $node_info = $this->plugin->getLightningClient()->getInfo();
             $message = sprintf(
                 '%s %s - %s',
@@ -64,5 +65,13 @@ class LNP_Dashboard extends LNP_SettingsPage
             $message = __('Wallet not connected', 'lnp-alby');
         }
         return $message;
+    }
+
+    /**
+     * Check if connection is valid
+     */
+    public function check_connection_valid() {
+        return $this->plugin->getLightningClient()
+        && $this->plugin->getLightningClient()->isConnectionValid();
     }
 }
