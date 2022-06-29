@@ -93,6 +93,9 @@ class LNP_DatabaseHandler
 
     public function total_payment_count($state)
     {
+        if (!in_array($state, ['all', 'settled', 'unpaid'])) {
+            $state = 'settled';
+        }
         global $wpdb;
         if ($state == 'all') {
             return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");

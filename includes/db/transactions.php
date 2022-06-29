@@ -36,7 +36,11 @@ class LNP_TransactionsTable extends WP_List_Table
         $hidden = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
         // Filter using state args
-        $state = (isset($_REQUEST['state']) ? $_REQUEST['state'] : 'all');
+        $state = (isset($_REQUEST['state']) ? $_REQUEST['state'] : 'settled');
+        if (!in_array($state, ['all', 'settled', 'unpaid'])) {
+            $state = 'settled';
+        }
+
 
         $perPage = 25;
         $currentPage = $this->get_pagenum();
@@ -204,23 +208,23 @@ class LNP_TransactionsTable extends WP_List_Table
      */
     protected function get_views(){
         $views = array();
-        $current = ( !empty($_REQUEST['state']) ? $_REQUEST['state'] : 'all');
-     
+        $current = ( !empty($_REQUEST['state']) ? $_REQUEST['state'] : 'settled');
+
         //All link
         $class = ($current == 'all' ? ' class="current"' :'');
         $all_url = remove_query_arg('state');
         $views['all'] = "<a href='{$all_url }' {$class} >All</a>";
-     
+
         //Settled link
         $settled_url = add_query_arg('state','settled');
         $class = ($current == 'settled' ? ' class="current"' :'');
         $views['settled'] = "<a href='{$settled_url}' {$class} >Settled</a>";
-     
+
         //unpaid link
         $unpaid_url = add_query_arg('state','unpaid');
         $class = ($current == 'unpaid' ? ' class="current"' :'');
         $views['unpaid'] = "<a href='{$unpaid_url}' {$class} >Unpaid</a>";
-     
+
         return $views;
     }
 }
