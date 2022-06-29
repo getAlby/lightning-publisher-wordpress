@@ -62,8 +62,8 @@ class WP_Lightning_Admin
     public function lightning_menu()
     {
         add_menu_page(
-            'Lightning Paywall',
-            'Lightning Paywall',
+            'LN Publisher',
+            'LN Publisher',
             'manage_options',
             'lnp_settings',
             null,
@@ -180,7 +180,7 @@ class WP_Lightning_Admin
     {
         $sanitized_attributes = array_map(
             function ($key, $value) {
-                return strval($key) . '="' . esc_html(strval($value)) . '"'; 
+                return strval($key) . '="' . esc_html(strval($value)) . '"';
             }, array_keys($attributes), array_values($attributes)
         );
         $shortcode_attributes = implode(" ", $sanitized_attributes);

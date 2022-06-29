@@ -15,7 +15,7 @@ class LNP_Dashboard extends LNP_SettingsPage
     protected function set_translations()
     {
         // Menu Item label
-        $this->page_title = __('Dashboard', 'lnp-alby');
+        $this->page_title = __('Lightning Publisher Dashboard', 'lnp-alby');
         $this->menu_title = __('Dashboard', 'lnp-alby');
     }
 
@@ -27,7 +27,7 @@ class LNP_Dashboard extends LNP_SettingsPage
         $database_handler = $this->plugin->getDatabaseHandler();
         return $database_handler->total_payment_count('settled');
     }
-    
+
     /**
      * Get the total payments sum
      */
@@ -36,7 +36,7 @@ class LNP_Dashboard extends LNP_SettingsPage
         $database_handler = $this->plugin->getDatabaseHandler();
         return $database_handler->total_payment_sum();
     }
-    
+
     /**
      * Get the top posts
      */
