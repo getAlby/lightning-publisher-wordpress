@@ -6,7 +6,7 @@
  * Lightning Paywall Class to manage the paywall initialization on
  * a given content.
  *
- * When applied to a content, it searches for the [ln ] shortcode,
+ * When applied to a content, it searches for the [lnpaywall ] shortcode,
  * parses the available options provided in the shortcode,
  * merges the provided options with the database options
  * and separates the protected and public part of the content.
@@ -120,7 +120,7 @@ class WP_Lightning_Paywall
      */
     protected function extract_options_from_shortcode()
     {
-        if (preg_match('/\[ln (.+)\]/i', $this->content, $m)) {
+        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
             return shortcode_parse_atts($m[1]);
         }
         return [];
@@ -131,7 +131,7 @@ class WP_Lightning_Paywall
      */
     public function split_public_protected()
     {
-        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[ln.+\](<\/p>)?/', $this->content, 2),2,null);
+        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[lnpaywall.+\](<\/p>)?/', $this->content, 2),2,null);
     }
 
     /**

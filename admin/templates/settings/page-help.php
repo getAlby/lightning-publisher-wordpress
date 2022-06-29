@@ -21,7 +21,7 @@ defined('WPINC') || die; ?>
 
     <h3>Usage</h3>
     <blockquote>
-        <p>[lnd-SHORT_CODE] eg: [lnd-amount]</p>
+        <p>[lnpaywall] eg: [lnpaywall amount="100"]</p>
     </blockquote>
 
 </div>

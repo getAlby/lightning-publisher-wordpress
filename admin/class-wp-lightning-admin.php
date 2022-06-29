@@ -180,7 +180,7 @@ class WP_Lightning_Admin {
     function render_paywall_shortcode( $attributes, $content ) {
         $sanitized_attributes = array_map(function($key, $value) { return strval($key) . '="' . esc_html(strval($value)) . '"'; }, array_keys($attributes), array_values($attributes));
         $shortcode_attributes = implode(" ", $sanitized_attributes);
-        return "[ln " . $shortcode_attributes . " ]";
+        return "[lnpaywall " . $shortcode_attributes . " ]";
     }
 
 	public function render_gutenberg( $atts )
