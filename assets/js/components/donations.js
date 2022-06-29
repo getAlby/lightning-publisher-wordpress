@@ -13,9 +13,9 @@ class LNP_DonationsWidget
          * @verify : Check/Verify payment has been made
          */
         this.endpoints = {
-            base: '/wp-json/lnp-alby/v1',
-            donate: '/wp-json/lnp-alby/v1' + '/donate',
-            verify: '/wp-json/lnp-alby/v1' + '/verify',
+            base: LN_Paywall.rest_base,
+            donate: LN_Paywall.rest_base + '/donate',
+            verify: LN_Paywall.rest_base + '/verify',
         }
 
         // Widget wrapper CSS class
@@ -82,15 +82,15 @@ class LNP_DonationsWidget
     /**
      *
      * API Calls
-     * 
+     *
      */
-    
+
 
     /**
      * Create invoice when donate button is clicked
      */
     requestPayment()
-    {   
+    {
         const that     = this;
         const response = this.postRequest('donate', {
             amount: that.getAmount(),
@@ -113,7 +113,7 @@ class LNP_DonationsWidget
 
                 return; // Stop here
             }
-            
+
             that.clearInvoice();
             that.showError('Error creating invoice');
         });
@@ -194,7 +194,7 @@ class LNP_DonationsWidget
         });
     }
 
-    
+
 
     /**
      * Fetch wrapper
@@ -214,7 +214,7 @@ class LNP_DonationsWidget
             referrerPolicy: 'no-referrer',
             body: JSON.stringify(data)
         });
-        
+
         return response.json();
     }
 
@@ -234,13 +234,13 @@ class LNP_DonationsWidget
             </div>
         `;
     }
-    
+
 
     setInvoice( data )
     {
         this.invoice = data;
     }
-    
+
     // Reset invoice
     clearInvoice()
     {
@@ -269,11 +269,11 @@ class LNP_DonationsWidget
         }
     }
 
-    
+
     /**
      * Utils for DOM manipulation
      */
-    
+
     // document.querySelector() wrapper
     get(selector)
     {
@@ -285,7 +285,7 @@ class LNP_DonationsWidget
 
     /**
      * document.querySelectorAll() wrapper
-     * 
+     *
      * @param  {string} selector
      * @return {array}  Array of all elements
      */
