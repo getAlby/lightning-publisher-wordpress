@@ -108,9 +108,17 @@ class WP_Lightning_Public
 
     public function hook_meta_tags()
     {
-        if (!empty($this->plugin->getPaywallOptions()['lnurl_meta_tag']) && $this->plugin->getPaywallOptions()['lnurl_meta_tag']) {
-            $lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
-            echo '<meta name="lightning" content="lnurlp:' . $lnurl . '" />';
+        if (
+            (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag']) && $this->plugin->getGeneralOptions()['lnurl_meta_tag']) ||
+            (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp']) && $this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'])
+        ) {
+            if (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp']) {
+                $lnurl = $this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'];
+            } else {
+                $lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
+            }
+            $lnurl_without_protocol = preg_replace('/^https?:\/\//', '', $lnurl);
+            echo '<meta name="lightning" content="lnurlp:' . $lnurl_without_protocol . '" />';
         }
     }
 

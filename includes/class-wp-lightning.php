@@ -80,6 +80,16 @@ class WP_Lightning
     protected $paywall_options;
 
     /**
+     * The general options.
+     *
+     * @since  1.0.0
+     * @access protected
+     * @var    array    $general_options    The general options.
+     */
+    protected $general_options;
+
+
+    /**
      * The donation options.
      *
      * @since  1.0.0
@@ -171,6 +181,7 @@ class WP_Lightning
         include_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-donation.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-paywall.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-connections.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-general.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-help.php';
 
         // Admin stuff
@@ -282,11 +293,13 @@ class WP_Lightning
         $paywall_page    = new LNP_PaywallPage($this, 'lnp_settings');
         $connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
         //$donation_page   = new LNP_DonationPage($this, 'lnp_settings');
+        $general_page   = new LNP_GeneralPage($this, 'lnp_settings');
         $help_page = new LNP_HelpPage($this, 'lnp_settings');
 
         // get page options
         $this->connection_options = $connection_page->options;
         $this->paywall_options    = $paywall_page->options;
+        $this->general_options    = $general_page->options;
         //$this->donation_options   = $donation_page->options;
     }
 
@@ -483,6 +496,14 @@ class WP_Lightning
     public function getPaywallOptions()
     {
         return $this->paywall_options;
+    }
+
+    /**
+     * Get the general options
+     */
+    public function getGeneralOptions()
+    {
+        return $this->general_options;
     }
 
     /**
