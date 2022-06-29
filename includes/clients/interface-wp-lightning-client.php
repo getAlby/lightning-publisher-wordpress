@@ -9,7 +9,8 @@
  * @package    WP_Lightning
  * @subpackage WP_Lightning/includes/clients
  */
-interface WP_Lightning_Client_Interface {
+interface WP_Lightning_Client_Interface
+{
     public function addInvoice($params);
     public function getInvoice($params);
     public function isInvoicePaid();

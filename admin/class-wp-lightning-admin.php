@@ -11,77 +11,83 @@
  * @package    WP_Lightning
  * @subpackage WP_Lightning/admin
  */
-class WP_Lightning_Admin {
+class WP_Lightning_Admin
+{
 
-	/**
+    /**
      * Main Plugin.
      *
-     * @since    1.0.0
-     * @access   private
-     * @var      WP_Lightning    $plugin    The main plugin object.
+     * @since  1.0.0
+     * @access private
+     * @var    WP_Lightning    $plugin    The main plugin object.
      */
     private $plugin;
 
-	/**
+    /**
      * Initialize the class and set its properties.
      *
-     * @since    1.0.0
-     * @param    WP_Lightning    $plugin       The main plugin object.
+     * @since 1.0.0
+     * @param WP_Lightning $plugin The main plugin object.
      */
     public function __construct($plugin)
     {
         $this->plugin = $plugin;
     }
 
-	/**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles() {
+    /**
+     * Register the stylesheets for the admin area.
+     *
+     * @since 1.0.0
+     */
+    public function enqueue_styles()
+    {
 
-		wp_enqueue_style( $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'css/wp-lightning-admin.css', array(), $this->plugin->get_version(), 'all' );
-	}
+        wp_enqueue_style($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'css/wp-lightning-admin.css', array(), $this->plugin->get_version(), 'all');
+    }
 
-	/**
-	 * Register the JavaScript for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts() {
+    /**
+     * Register the JavaScript for the admin area.
+     *
+     * @since 1.0.0
+     */
+    public function enqueue_scripts()
+    {
 
-		wp_enqueue_script(  $this->plugin->get_plugin_name(), plugin_dir_url( __FILE__ ) . 'js/wp-lightning-admin.js', array( 'jquery' ), $this->plugin->get_version(), true );
-	}
+        wp_enqueue_script($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'js/wp-lightning-admin.js', array( 'jquery' ), $this->plugin->get_version(), true);
+    }
 
-	/**
-	 * Admin Page
-	 */
-	public function lightning_menu()
-	{
-		add_menu_page(
-			'Lightning Paywall',
-			'Lightning Paywall',
-			'manage_options',
-			'lnp_settings',
-			null,
-			'dashicons-superhero'
-		);
-	}
+    /**
+     * Admin Page
+     */
+    public function lightning_menu()
+    {
+        add_menu_page(
+            'Lightning Paywall',
+            'Lightning Paywall',
+            'manage_options',
+            'lnp_settings',
+            null,
+            'dashicons-superhero'
+        );
+    }
 
 
-	/**
+    /**
      * Add Block
+     *
      * @return [type] [description]
      */
-    public function init_donation_block() {
+    public function init_donation_block()
+    {
 
         // Gutenberg is not active.
-        if ( ! function_exists( 'register_block_type' ) ) {
+        if (! function_exists('register_block_type') ) {
             return;
         }
 
         register_block_type(dirname(__DIR__, 1) . '/blocks/donate/block.json');
-        register_block_type(dirname(__DIR__, 1) . '/blocks/paywall/block.json',
+        register_block_type(
+            dirname(__DIR__, 1) . '/blocks/paywall/block.json',
             array(
                 'render_callback' => [$this, 'render_paywall_shortcode'],
             )
@@ -108,7 +114,8 @@ class WP_Lightning_Admin {
             $twentyuno_block_editor_css_path
         );
 
-        register_block_type(dirname(__DIR__, 1) . '/blocks/twentyuno/block.json',
+        register_block_type(
+            dirname(__DIR__, 1) . '/blocks/twentyuno/block.json',
             array(
                 'render_callback' => [$this, 'render_twentyuno_widget_block'],
             )
@@ -133,7 +140,8 @@ class WP_Lightning_Admin {
 
 
 
-        register_block_type( 'alby/donate', array(
+        register_block_type(
+            'alby/donate', array(
             'api_version'     => 2,
             'title'           => 'Alby: Bitcoin Donation',
             'category'        => 'common',
@@ -147,10 +155,12 @@ class WP_Lightning_Admin {
                 ]
             ],
             'render_callback' => (array($this, 'render_gutenberg')),
-        ));
+            )
+        );
     }
 
-    public function render_twentyuno_widget_block( $attrs) {
+    public function render_twentyuno_widget_block( $attrs)
+    {
         $name = !empty($attrs['name']) ? strip_tags($attrs["name"]) : '';
         $color = !empty($attrs['color']) ? strip_tags($attrs["color"]) : '';
         $image = !empty($attrs['image']) ? strip_tags($attrs["image"]) : '';
@@ -166,39 +176,47 @@ class WP_Lightning_Admin {
           </div>';
     }
 
-    function render_paywall_shortcode( $attributes, $content ) {
-        $sanitized_attributes = array_map(function($key, $value) { return strval($key) . '="' . esc_html(strval($value)) . '"'; }, array_keys($attributes), array_values($attributes));
+    function render_paywall_shortcode( $attributes, $content )
+    {
+        $sanitized_attributes = array_map(
+            function ($key, $value) {
+                return strval($key) . '="' . esc_html(strval($value)) . '"'; 
+            }, array_keys($attributes), array_values($attributes)
+        );
         $shortcode_attributes = implode(" ", $sanitized_attributes);
         return "[lnpaywall " . $shortcode_attributes . " ]";
     }
 
-	public function render_gutenberg( $atts )
+    public function render_gutenberg( $atts )
     {
         return 'nop';
-        $atts = shortcode_atts(array(
+        $atts = shortcode_atts(
+            array(
             'pay_block'     => 'true',
             'btc_format'    => '',
             'currency'      => '',
             'price'         => '',
             'duration_type' => '',
             'duration'      => '',
-        ), $atts);
+            ), $atts
+        );
 
         return do_shortcode("[alby_donation_block]");
     }
 
-	function widget_init()
-	{
+    function widget_init()
+    {
         $lnurl = lnurl\encodeUrl(get_rest_url(null, '/lnp-alby/v1/lnurlp'));
         $widget = new TwentyunoWidget(["lnurl" => $lnurl]);
-		register_widget($widget);
-	}
+        register_widget($widget);
+    }
 
     /**
      * Reset the existing values in the wallet settings options
      * before saving the current wallet options
      */
-    function reset_wallet_on_update($new_value, $old_value, $option) {
+    function reset_wallet_on_update($new_value, $old_value, $option)
+    {
         // Get the difference between the 2 array
         $diff = array_diff($new_value, $old_value);
         // If any difference is found (new wallet used), reset all the values and only use the new ones

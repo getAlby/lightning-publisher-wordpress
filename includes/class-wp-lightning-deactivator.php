@@ -9,15 +9,17 @@
  * @package    WP_Lightning
  * @subpackage WP_Lightning/includes
  */
-class WP_Lightning_Deactivator {
+class WP_Lightning_Deactivator
+{
 
-	/**
-	 * Clear temp data during deactivation
-	 *
-	 * @since    1.0.0
-	 */
-	public static function deactivate() {
+    /**
+     * Clear temp data during deactivation
+     *
+     * @since 1.0.0
+     */
+    public static function deactivate()
+    {
 
-	}
+    }
 
 }

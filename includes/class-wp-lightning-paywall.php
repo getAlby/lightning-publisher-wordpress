@@ -27,36 +27,36 @@ class WP_Lightning_Paywall
     /**
      * Main Plugin.
      *
-     * @since    1.0.0
-     * @access   private
-     * @var      WP_Lightning    $plugin    The main plugin object.
+     * @since  1.0.0
+     * @access private
+     * @var    WP_Lightning    $plugin    The main plugin object.
      */
     private $plugin;
 
     /**
      * Full content that the Paywall is blocking.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      string    $content    Full content that the Paywall is blocking.
+     * @since  1.0.0
+     * @access protected
+     * @var    string    $content    Full content that the Paywall is blocking.
      */
     protected $content;
 
     /**
      * Teaser of the content.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      string    $teaser    Teaser of the full content blocked by the Paywall.
+     * @since  1.0.0
+     * @access protected
+     * @var    string    $teaser    Teaser of the full content blocked by the Paywall.
      */
     protected $teaser;
 
     /**
      * Protected content of the content.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      string    $protected_content    Protected content of the full content blocked by the Paywall.
+     * @since  1.0.0
+     * @access protected
+     * @var    string    $protected_content    Protected content of the full content blocked by the Paywall.
      */
     protected $protected_content;
 
@@ -66,18 +66,18 @@ class WP_Lightning_Paywall
      * On - 1 (Hide the protected content)
      * Off - 0 (Show the protected content)
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      boolean    $status    On/Off status of the Paywall.
+     * @since  1.0.0
+     * @access protected
+     * @var    boolean    $status    On/Off status of the Paywall.
      */
     protected $status = 1;
 
     /**
      * Default Paywall Options.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      array    $options    Paywall options for displaying the shortcode.
+     * @since  1.0.0
+     * @access protected
+     * @var    array    $options    Paywall options for displaying the shortcode.
      */
     protected $options = [
         'paywall_text' => null,
@@ -94,7 +94,7 @@ class WP_Lightning_Paywall
      *
      * Set the paywall options and locate markers in the content.
      *
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function __construct($plugin, $content)
     {
@@ -115,7 +115,7 @@ class WP_Lightning_Paywall
     /**
      * Locate the shortcode/marker from the content for the paywall.
      *
-     * @since     1.0.0
+     * @since  1.0.0
      * @return array Array of shortcode properties of the paywall
      */
     protected function extract_options_from_shortcode()
@@ -131,7 +131,7 @@ class WP_Lightning_Paywall
      */
     public function split_public_protected()
     {
-        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[lnpaywall.+\](<\/p>)?/', $this->content, 2),2,null);
+        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[lnpaywall.+\](<\/p>)?/', $this->content, 2), 2, null);
     }
 
     /**
@@ -154,7 +154,7 @@ class WP_Lightning_Paywall
     /**
      * Get the content protected by Paywall
      *
-     * @since     1.0.0
+     * @since  1.0.0
      * @return string Returns the entire if Paywall is Off, only the teaser if Paywall is On
      */
     public function get_content()

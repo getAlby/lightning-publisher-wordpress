@@ -29,8 +29,8 @@ abstract class LNP_SettingsPage
         $this->set_translations();
         $this->set_options();
         
-        add_action( 'admin_menu', array($this, 'init_page'), 20 );
-        add_action( 'admin_init', array($this, 'init_fields') );
+        add_action('admin_menu', array($this, 'init_page'), 20);
+        add_action('admin_init', array($this, 'init_fields'));
     }
 
 
@@ -69,8 +69,7 @@ abstract class LNP_SettingsPage
 
         // Register Tabbed sections
         // This will register tabs as sections 
-        if ( ! empty($this->tabs) )
-        {
+        if (! empty($this->tabs) ) {
             // Create sections on the page
             foreach( $this->tabs as $id => $args )
             {
@@ -106,8 +105,9 @@ abstract class LNP_SettingsPage
      */
     public function renderer()
     {
-        if ( empty($this->template_html) )
+        if (empty($this->template_html) ) {
             return;
+        }
 
         // Show admin notice bar above tabs
         settings_errors();
@@ -121,8 +121,7 @@ abstract class LNP_SettingsPage
     {
         $new_input = array();
 
-        if ( is_array( $inputs) )
-        {
+        if (is_array($inputs) ) {
             foreach ($inputs as $key => $input)
             {
                 if (isset($input) && is_string($input)) {
@@ -141,15 +140,15 @@ abstract class LNP_SettingsPage
             ? $field['field']['name']
             : $field;
 
-        if ( ! isset($this->options[$name]) || empty($name) )
-        {
+        if (! isset($this->options[$name]) || empty($name) ) {
             return '';
         }
 
         $value = $this->options[$name];
 
-        if ( is_string($value) )
-            return esc_attr( $value );
+        if (is_string($value) ) {
+            return esc_attr($value);
+        }
 
         return $value;
     }
@@ -157,9 +156,11 @@ abstract class LNP_SettingsPage
 
     /**
      * Get currently active tab from $_GET
+     *
      * @return string or first tab
      */
-    public function get_active_tab_id() {
+    public function get_active_tab_id()
+    {
 
         return isset($_GET['tab'])
             ? sanitize_text_field($_GET['tab'])
@@ -173,7 +174,8 @@ abstract class LNP_SettingsPage
      * @param  string $filename [description]
      * @return strnig path to file or error if does not exist
      */
-    protected function get_template_path( $filename = '' ) {
+    protected function get_template_path( $filename = '' )
+    {
 
         $path = sprintf(
             '%s/admin/templates/%s',
@@ -182,8 +184,7 @@ abstract class LNP_SettingsPage
         );
 
         // Notice to developer
-        if ( ! file_exists($path) )
-        {
+        if (! file_exists($path) ) {
             _e('Error: Settings template does not exist', 'lnp-alby');
         }
 
@@ -202,20 +203,24 @@ abstract class LNP_SettingsPage
     }
 
 
-    protected function set_translations() {}
-    protected function set_form_fields() {}
+    protected function set_translations()
+    {
+    }
+    protected function set_form_fields()
+    {
+    }
 
 
     /**
      * Load all options for current settings page from DB
      */
-    protected function set_options() {
+    protected function set_options()
+    {
 
         $option_name = $this->option_name;
 
         // Load options for current tab only
-        if ( $this->tabs )
-        {
+        if ($this->tabs ) {
             $tab = isset($_GET['tab'])
                 ? $_GET['tab']
                 : key($this->tabs);
@@ -242,16 +247,18 @@ abstract class LNP_SettingsPage
 
 
 
-    public function add_admin_notice( $message = NULL, $type = 'info' ) {
+    public function add_admin_notice( $message = null, $type = 'info' )
+    {
 
-        if ( NULL === $message )
+        if (null === $message ) {
             return;
+        }
 
         $class = 'notice notice-' . $type;
         printf(
             '<div class="%1$s"><p>%2$s</p></div>',
-            esc_attr( $class ),
-            esc_html( $message )
+            esc_attr($class),
+            esc_html($message)
         );
     }
 
@@ -261,7 +268,8 @@ abstract class LNP_SettingsPage
     /**
      * Display all sections from a page as tabs
      */
-    public function do_tabs_settings_section_nav() {
+    public function do_tabs_settings_section_nav()
+    {
 
         $active   = $this->get_active_tab_id();
         $output   = array();
@@ -286,7 +294,8 @@ abstract class LNP_SettingsPage
     /**
      * Display all sections from a page as tabs
      */
-    public function do_tabs_settings_section() {
+    public function do_tabs_settings_section()
+    {
 
         $active = $this->get_active_tab_id();
 
@@ -301,23 +310,22 @@ abstract class LNP_SettingsPage
                     : '',
             );
 
-            if ( ! empty($args['description']) )
-            {
-                echo wpautop( $args['description'] );
+            if (! empty($args['description']) ) {
+                echo wpautop($args['description']);
             }
 
-            do_action( "lnp_tab_before_{$id}" );
+            do_action("lnp_tab_before_{$id}");
 
             // Open Table
             echo '<table class="form-table" role="presentation">';
 
             // Render fields
-            $this->do_section_settings_fields( $id );
+            $this->do_section_settings_fields($id);
 
             // Cloase table and tab
             echo '</table></div>';
 
-            do_action( "lnp_tab_after_{$id}" );
+            do_action("lnp_tab_after_{$id}");
         }
     }
 
@@ -328,7 +336,8 @@ abstract class LNP_SettingsPage
      * @param  [type] $tab_id [description]
      * @return mixed         Markup for options page
      */
-    public function do_section_settings_fields( $tab_id = '' ) {
+    public function do_section_settings_fields( $tab_id = '' )
+    {
 
         global $wp_settings_fields;
         
@@ -346,21 +355,19 @@ abstract class LNP_SettingsPage
         {
             $class = '';
      
-            if ( ! empty( $field['args']['class'] ) )
-            {
+            if (! empty($field['args']['class']) ) {
                 $class = sprintf(
                     ' class="%s"',
-                    esc_attr( $field['args']['class'] )
+                    esc_attr($field['args']['class'])
                 );
             }
      
             echo "<tr{$class}>";
      
-            if ( ! empty( $field['args']['label_for'] ) )
-            {
+            if (! empty($field['args']['label_for']) ) {
                 printf(
                     '<th scope="row"><label for="%s">%s</label></th>',
-                    esc_attr( $field['args']['label_for'] ),
+                    esc_attr($field['args']['label_for']),
                     $field['title']
                 );
             }
@@ -373,7 +380,7 @@ abstract class LNP_SettingsPage
             }
      
             echo '<td>';
-            call_user_func( $field['callback'], $field['args'] );
+            call_user_func($field['callback'], $field['args']);
             echo '</td></tr>';
         }
 
@@ -384,8 +391,8 @@ abstract class LNP_SettingsPage
     /**
      * Generate markup output for <input> element
      * 
-     * @param  string $option_name [description]
-     * @param  array   $args        [description]
+     * @param string $option_name [description]
+     * @param array  $args        [description]
      * 
      * @return misc
      */
@@ -419,8 +426,7 @@ abstract class LNP_SettingsPage
         /**
          * Special field: Checkbox group
          */
-        if ( 'checkbox_group' == $parsed_args['type'] )
-        {
+        if ('checkbox_group' == $parsed_args['type'] ) {
             $output = $this->get_field_checkbox_group($parsed_args);
             echo join(' ', $output);
 
@@ -435,8 +441,7 @@ abstract class LNP_SettingsPage
 
         
         // Checkbox specifc
-        if ( 'checkbox' == $parsed_args['type'] )
-        {
+        if ('checkbox' == $parsed_args['type'] ) {
             // Don't add autocomplete arg to checkbox
             unset($parsed_args['autocomplete']);
         }
@@ -455,14 +460,12 @@ abstract class LNP_SettingsPage
         foreach ( $parsed_args as $arg => $val )
         {
             // Don't create markup for these args
-            if ( in_array($arg, $skip) )
-            {
+            if (in_array($arg, $skip) ) {
                 continue;
             }
 
             // Append name attribute into array
-            if ( 'name' == $arg )
-            {
+            if ('name' == $arg ) {
                 // Append name="my_name"
                 $output[] = sprintf(
                     'name="%s[%s]"',
@@ -489,8 +492,7 @@ abstract class LNP_SettingsPage
         }
 
         // Mark checkbox checked
-        if ( 'checkbox' == $parsed_args['type'] && 'on' == $parsed_args['value'] )
-        {
+        if ('checkbox' == $parsed_args['type'] && 'on' == $parsed_args['value'] ) {
             $output[] = 'checked';
         }
 
@@ -501,8 +503,7 @@ abstract class LNP_SettingsPage
         /**
          * For checkbox type we want to display label inline with input element
          */
-        if ( 'checkbox' == $parsed_args['type'] )
-        {
+        if ('checkbox' == $parsed_args['type'] ) {
             // Append label
             $output[] = sprintf(
                 '<label for="%s">%s</label>',
@@ -515,8 +516,7 @@ abstract class LNP_SettingsPage
          * Additional description if provided
          * Extra "help" instructions block below the field
          */
-        if ( ! empty($parsed_args['description']) )
-        {
+        if (! empty($parsed_args['description']) ) {
             $output[] = sprintf(
                 '<p class="description">%s</p>',
                 $parsed_args['description']
@@ -531,6 +531,7 @@ abstract class LNP_SettingsPage
 
     /**
      * Custom markup for checkbox group field
+     *
      * @return [type] [description]
      */
     private function get_field_checkbox_group( $field )
@@ -572,8 +573,7 @@ abstract class LNP_SettingsPage
             );
 
             // Mark field as checked
-            if ( array_key_exists($input['value'], (array) $field['value']) )
-            {
+            if (array_key_exists($input['value'], (array) $field['value']) ) {
                 $output[] = 'checked="checked"';
             }
 
@@ -593,8 +593,7 @@ abstract class LNP_SettingsPage
          * Additional description if provided
          * Extra "help" instructions block below the field
          */
-        if ( ! empty($field['description']) )
-        {
+        if (! empty($field['description']) ) {
             $output[] = sprintf(
                 '<p class="description">%s</p>',
                 $field['description']

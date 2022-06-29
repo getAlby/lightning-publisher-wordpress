@@ -6,7 +6,7 @@ defined('WPINC') || die;
 /**
  * Hook for programatically adding something before widget
  */
-do_action( 'before_lnp_alby_donation_widget' );
+do_action('before_lnp_alby_donation_widget');
 
 /**
  * 
@@ -15,7 +15,6 @@ do_action( 'before_lnp_alby_donation_widget' );
  * Check what's inside by using:
  *
  * printf('<pre>%s</pre>', print_r($wplnp, true) );
- * 
  */
 
 // ?printf('<pre>%s</pre>', print_r($wplnp, true) );
@@ -28,8 +27,7 @@ do_action( 'before_lnp_alby_donation_widget' );
             <?php
 
             // Title
-            if ( ! empty($wplnp['widget_title']) )
-            {
+            if (! empty($wplnp['widget_title']) ) {
                 printf(
                     '<h2>%s</h2>',
                     sanitize_text_field($wplnp['widget_title'])
@@ -37,8 +35,7 @@ do_action( 'before_lnp_alby_donation_widget' );
             }
 
             // Description
-            if ( ! empty($wplnp['widget_description']) )
-            {
+            if (! empty($wplnp['widget_description']) ) {
                 printf(
                     '<p>%s</p>',
                     sanitize_text_field($wplnp['widget_description'])

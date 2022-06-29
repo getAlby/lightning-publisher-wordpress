@@ -1,16 +1,18 @@
 <?php
 
 // Exit if accessed directly
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
 
 /**
  * @file
  * REST API Endpoint to handle LNURL pay requests
  */
-class LNP_LnurlpController extends \WP_REST_Controller {
+class LNP_LnurlpController extends \WP_REST_Controller
+{
 
-    public function register_routes() {
+    public function register_routes()
+    {
 
         $this->namespace = 'lnp-alby/v1';
 
@@ -83,20 +85,22 @@ class LNP_LnurlpController extends \WP_REST_Controller {
         //  $description = $description . ' - ' . get_the_title($post_id);
         //}
 
-        $amount = intval( $request->get_param('amount') );
+        $amount = intval($request->get_param('amount'));
         if (empty($amount)) {
-          wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
-          return;
+            wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
+            return;
         }
         $description_hash = base64_encode(hash('sha256', '[["text/identifier", "' . site_url() .'"]["text/plain", "' . $description . '"]]', true));
 
-        $invoice = $this->plugin->getLightningClient()->addInvoice([
-          'memo' => substr($description, 0, 64),
-          'description_hash' => $description_hash,
-          'value' => $amount,
-          'expiry' => 1800,
-          'private' => true
-        ]);
+        $invoice = $this->plugin->getLightningClient()->addInvoice(
+            [
+            'memo' => substr($description, 0, 64),
+            'description_hash' => $description_hash,
+            'value' => $amount,
+            'expiry' => 1800,
+            'private' => true
+            ]
+        );
 
         $response = ['pr' => $invoice['payment_request'], 'routes' => []];
         ob_end_clean();
@@ -129,12 +133,13 @@ class LNP_LnurlpController extends \WP_REST_Controller {
     /**
      * Attributes
      */
-    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE ) {
+    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE )
+    {
 
         $params = array();
         $params['amount'] = array(
             'default'           => 0,
-            'description'       => __( 'Invoice amount', 'lnp-alby' ),
+            'description'       => __('Invoice amount', 'lnp-alby'),
             'type'              => 'integer',
             'sanitize_callback' => 'intval',
             'validate_callback' => 'rest_validate_request_arg',

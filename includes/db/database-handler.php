@@ -33,7 +33,7 @@ class LNP_DatabaseHandler
         KEY payment_hash (payment_hash)
         ) $charset_collate;";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        include_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
     }
 

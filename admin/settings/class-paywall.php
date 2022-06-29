@@ -14,10 +14,10 @@ class LNP_PaywallPage extends LNP_SettingsPage
         // Tabs
         $this->tabs   = array(
             'paywall' => array(
-                'title' => __( 'Paywall', 'lnp-alby' ),
+                'title' => __('Paywall', 'lnp-alby'),
             ),
             'advanced' => array(
-                'title' => __( 'Advanced', 'lnp-alby' ),
+                'title' => __('Advanced', 'lnp-alby'),
             ),
         );
 
@@ -31,15 +31,16 @@ class LNP_PaywallPage extends LNP_SettingsPage
     protected function set_translations()
     {
         // Menu Item label
-        $this->page_title = __( 'Paywall Settings', 'lnp-alby' );
-        $this->menu_title = __( 'Paywall Settings', 'lnp-alby' );
+        $this->page_title = __('Paywall Settings', 'lnp-alby');
+        $this->menu_title = __('Paywall Settings', 'lnp-alby');
     }
 
 
     /**
      * Array of form fields available on this page
      */
-    public function set_form_fields() {
+    public function set_form_fields()
+    {
 
         /**
          * Fields
@@ -64,7 +65,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'tab'     => 'paywall',
             'field'   => array(
                 'name'  => 'paywall_button_text',
-                'label' => __( 'Button Label', 'lnp-alby' ),
+                'label' => __('Button Label', 'lnp-alby'),
             ),
         );
 
@@ -73,8 +74,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'number',
                 'name'        => 'paywall_amount',
-                'label'       => __( 'Default Amount', 'lnp-alby' ),
-                'description' => __( 'Amount in SATS per article', 'lnp-alby'),
+                'label'       => __('Default Amount', 'lnp-alby'),
+                'description' => __('Amount in SATS per article', 'lnp-alby'),
             ),
         );
 
@@ -89,8 +90,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'number',
                 'name'        => 'paywall_timeout',
-                'label'       => __( 'Timeout', 'lnp-alby' ),
-                'description' => __( 'Make the article free X hours after it is published and enable the paywall after that', 'lnp-alby'),
+                'label'       => __('Timeout', 'lnp-alby'),
+                'description' => __('Make the article free X hours after it is published and enable the paywall after that', 'lnp-alby'),
             ),
         );
 
@@ -99,8 +100,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'number',
                 'name'        => 'paywall_timein',
-                'label'       => __( 'Timein', 'lnp-alby' ),
-                'description' => __( 'Enable the paywall X hours after the article is published', 'lnp-alby'),
+                'label'       => __('Timein', 'lnp-alby'),
+                'description' => __('Enable the paywall X hours after the article is published', 'lnp-alby'),
             ),
         );
 
@@ -109,8 +110,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'number',
                 'name'        => 'paywall_total',
-                'label'       => __( 'Total', 'lnp-alby' ),
-                'description' => __( 'Total amount to collect. After that amount the article will be free', 'lnp-alby'),
+                'label'       => __('Total', 'lnp-alby'),
+                'description' => __('Total amount to collect. After that amount the article will be free', 'lnp-alby'),
             ),
         );
 
@@ -119,8 +120,8 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'checkbox',
                 'name'        => 'paywall_disable_in_rss',
-                'label'       => __( 'Disable paywall in RSS?', 'lnp-alby' ),
-                'description' => __( 'Disable paywall in RSS items / show full content in RSS.', 'lnp-alby'),
+                'label'       => __('Disable paywall in RSS?', 'lnp-alby'),
+                'description' => __('Disable paywall in RSS items / show full content in RSS.', 'lnp-alby'),
             ),
         );
 

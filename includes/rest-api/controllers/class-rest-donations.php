@@ -3,16 +3,18 @@
 use \Firebase\JWT;
 
 // Exit if accessed directly
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
 
 /**
  * @file
  * REST API Endpoint that handles donations
  */
-class LNP_DonationsController extends \WP_REST_Controller {
+class LNP_DonationsController extends \WP_REST_Controller
+{
 
-    public function register_routes() {
+    public function register_routes()
+    {
 
         $this->namespace = 'lnp-alby/v1';
         $this->rest_base = 'donate';
@@ -50,22 +52,21 @@ class LNP_DonationsController extends \WP_REST_Controller {
      * @param  object $request WP_REST_Request
      * @return array           Invoice data or error message
      */
-    public function process_donate_request( $request ) {
+    public function process_donate_request( $request )
+    {
         ob_start();
         // Amount user is trying to donate
-        $amount  = intval( $request->get_param('amount') );
-        $post_id = intval( $request->get_param('post_id') );
+        $amount  = intval($request->get_param('amount'));
+        $post_id = intval($request->get_param('post_id'));
 
         // Don't allow less than 100 SATS
-        if ( $amount < 100 )
-        {
+        if ($amount < 100 ) {
             ob_end_clean();
             return new \WP_Error(__('Mimimum domation amount is 100 SATS', 'lnp-alby'));
         }
 
         // Don't allow less than 100 SATS
-        if ( ! $post_id )
-        {
+        if (! $post_id ) {
             ob_end_clean();
             return new \WP_Error(__('Invalid Request, post_id missing', 'lnp-alby'));
         }
@@ -102,8 +103,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
         );
 
         // No token
-        if ( empty($token) )
-        {
+        if (empty($token) ) {
             ob_end_clean();
             return wp_send_json_error($response, 404);
         }
@@ -121,11 +121,9 @@ class LNP_DonationsController extends \WP_REST_Controller {
         }
 
         // if we get a preimage we can check if the preimage matches the payment hash and accept it.
-        if (
-            ( ! empty($preimage) )
+        if (( ! empty($preimage) )
             && hash('sha256', hex2bin($preimage), false) == $jwt->{"r_hash"}
-            )
-        {
+        ) {
             $settled  = true;
             $response = array('settled' => true);
         }
@@ -137,13 +135,11 @@ class LNP_DonationsController extends \WP_REST_Controller {
         }
 
 
-        if ($invoice && $settled)
-        {
+        if ($invoice && $settled) {
             $post_id = $jwt->{'post_id'};
             $plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
 
-            if (!empty($post_id))
-            {
+            if (!empty($post_id)) {
                 $plugin->save_as_paid($post_id, $amount);
                 ob_end_clean();
                 wp_send_json_success($response, 200);
@@ -183,25 +179,30 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
         $plugin  = $this->get_plugin();
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
-        $plugin->getDatabaseHandler()->store_invoice([
+        $plugin->getDatabaseHandler()->store_invoice(
+            [
             "post_id" => $post_id,
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
             "amount" => $amount,
             "currency" => "",
             "exchange_rate" => 0
-        ]);
+            ]
+        );
 
-        $jwt_data = array_merge($response_data,
+        $jwt_data = array_merge(
+            $response_data,
             array(
                 'invoice_id' => $invoice['r_hash'],
                 'r_hash'     => $invoice['r_hash'],
                 'exp'        => time() + 60 * 10
-        ));
+            )
+        );
 
         $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
 
-        $response = array_merge($response_data,
+        $response = array_merge(
+            $response_data,
             array(
                 'token'           => $jwt,
                 'payment_request' => $invoice['payment_request']
@@ -238,13 +239,14 @@ class LNP_DonationsController extends \WP_REST_Controller {
     /**
      * Attributes
      */
-    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE ) {
+    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE )
+    {
 
         $params = array();
 
         $params['amount'] = array(
             'default'           => 0,
-            'description'       => __( 'Amount in SATS user wants to donate', 'lnp-alby' ),
+            'description'       => __('Amount in SATS user wants to donate', 'lnp-alby'),
             'type'              => 'integer',
             'sanitize_callback' => 'intval',
             'validate_callback' => 'rest_validate_request_arg',
@@ -252,7 +254,7 @@ class LNP_DonationsController extends \WP_REST_Controller {
 
         $params['post_id'] = array(
             'default'           => 0,
-            'description'       => __( 'Post where donation was made', 'lnp-alby' ),
+            'description'       => __('Post where donation was made', 'lnp-alby'),
             'type'              => 'integer',
             'sanitize_callback' => 'intval',
             'validate_callback' => 'rest_validate_request_arg',

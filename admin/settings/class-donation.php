@@ -14,10 +14,10 @@ class LNP_DonationPage extends LNP_SettingsPage
         // Tabs
         $this->tabs   = array(
             'integrations' => array(
-                'title' => __( 'Integrations', 'lnp-alby' ),
+                'title' => __('Integrations', 'lnp-alby'),
             ),
             'widget' => array(
-                'title' => __( 'Donation Widget', 'lnp-alby' ),
+                'title' => __('Donation Widget', 'lnp-alby'),
             ),
         );
 
@@ -54,8 +54,8 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'type'        => 'checkbox_group',
                 'name'        => 'donations_enabled_for',
                 'options'     => $this->get_post_types(),
-                'label'       => __( 'Auto add donation box', 'lnp-alby' ),
-                'description' => __( 'Enable this option to automatically append donation block to end of each post, for selected post type. You can still manually add donation box with shortcode or Gutenberg block', 'lnp-alby'),
+                'label'       => __('Auto add donation box', 'lnp-alby'),
+                'description' => __('Enable this option to automatically append donation block to end of each post, for selected post type. You can still manually add donation box with shortcode or Gutenberg block', 'lnp-alby'),
             ),
         );
 
@@ -67,12 +67,12 @@ class LNP_DonationPage extends LNP_SettingsPage
         $options   = array();
         $options[] = array(
             'value' => 'above',
-            'label' => __( 'Above content', 'lnp-alby' ),
+            'label' => __('Above content', 'lnp-alby'),
         );
 
         $options[] = array(
             'value' => 'below',
-            'label' => __( 'Below content', 'lnp-alby' ),
+            'label' => __('Below content', 'lnp-alby'),
         );
 
         $fields[] = array(
@@ -81,8 +81,8 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'type'        => 'checkbox_group',
                 'name'        => 'donations_autoadd',
                 'options'     => $options,
-                'label'       => __( 'Placement', 'lnp-alby' ),
-                'description' => __( 'Where to add donation box, if not selected donation box will not be inserted automatically', 'lnp-alby'),
+                'label'       => __('Placement', 'lnp-alby'),
+                'description' => __('Where to add donation box, if not selected donation box will not be inserted automatically', 'lnp-alby'),
             ),
         );
 
@@ -93,7 +93,7 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'type'    => 'number',
                 'name'    => 'widget_amount',
                 'default' => 100000,
-                'label'   => __( 'Default amount in SATS', 'lnp-alby' ),
+                'label'   => __('Default amount in SATS', 'lnp-alby'),
             ),
         );
 
@@ -103,7 +103,7 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'type'    => 'text',
                 'name'    => 'widget_title',
                 'default' => 'Show some love',
-                'label'   => __( 'Widget Title', 'lnp-alby' ),
+                'label'   => __('Widget Title', 'lnp-alby'),
             ),
         );
 
@@ -113,7 +113,7 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'type'    => 'text',
                 'name'    => 'widget_description',
                 'default' => 'Support us by donating SATS to keep us going',
-                'label'   => __( 'Widget Description', 'lnp-alby' ),
+                'label'   => __('Widget Description', 'lnp-alby'),
             ),
         );
 
@@ -123,8 +123,8 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'type'        => 'text',
                 'name'        => 'widget_thankyou',
                 'default'     => 'Woow, you are awesome! Thank you for your support!',
-                'label'       => __( 'Thank you message', 'lnp-alby' ),
-                'description' => __( 'Will be displayed after payment is processed', 'lnp-alby' ),
+                'label'       => __('Thank you message', 'lnp-alby'),
+                'description' => __('Will be displayed after payment is processed', 'lnp-alby'),
             ),
         );
 
@@ -134,7 +134,7 @@ class LNP_DonationPage extends LNP_SettingsPage
                 'type'    => 'text',
                 'name'    => 'widget_button_label',
                 'default' => 'Donate now',
-                'label'   => __( 'Widget Button Label', 'lnp-alby' ),
+                'label'   => __('Widget Button Label', 'lnp-alby'),
             ),
         );
 
@@ -150,10 +150,12 @@ class LNP_DonationPage extends LNP_SettingsPage
      * 
      * @return [array] array('post_type' => 'Label');
      */
-    private function get_post_types() {
+    private function get_post_types()
+    {
 
         /**
          * Docs:
+         *
          * @link https://developer.wordpress.org/reference/functions/get_post_types/
          */
         $types   = get_post_types(array('public' => true), 'objects');

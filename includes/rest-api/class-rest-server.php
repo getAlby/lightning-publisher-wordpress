@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /**
  * Class responsible for loading the REST API and all REST API namespaces.
@@ -22,7 +22,9 @@ class LNP_RESTServer
      *
      * @return void
      */
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
 
     /**
@@ -30,8 +32,9 @@ class LNP_RESTServer
      *
      * @return object Instance.
      */
-    final public static function instance() {
-        if ( null === static::$instance ) {
+    final public static function instance()
+    {
+        if (null === static::$instance ) {
             static::$instance = new static();
         }
         return static::$instance;
@@ -40,6 +43,7 @@ class LNP_RESTServer
 
     /**
      * Do stuff when initially loading class
+     *
      * @param [type] $plugin [description]
      */
     public function init()
@@ -57,6 +61,7 @@ class LNP_RESTServer
 
     /**
      * Set plugin instance in case we need it later
+     *
      * @param [type] $plugin [description]
      */
     public function set_plugin_instance( $plugin )
@@ -67,6 +72,7 @@ class LNP_RESTServer
 
     /**
      * Get plugin instance
+     *
      * @param [type] $plugin
      */
     public function get_plugin_instance()
@@ -96,7 +102,7 @@ class LNP_RESTServer
         foreach ( $classes as $file => $controller_class )
         {
             // Include file
-            require_once "controllers/{$file}.php";
+            include_once "controllers/{$file}.php";
 
             $class = new $controller_class; // Init class
             $class->register_routes(); // Register route
@@ -107,44 +113,48 @@ class LNP_RESTServer
     /**
      * Enable CORS if needed
      */
-    public function rest_send_cors_headers() {
+    public function rest_send_cors_headers()
+    {
 
         // Remove previous settings
-        remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+        remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
 
         // Add all subdomains
-        add_filter( 'rest_pre_serve_request', function( $served, $result, $request ) {
+        add_filter(
+            'rest_pre_serve_request', function ( $served, $result, $request ) {
 
-            $headers = $request->get_headers();
-            $origin = isset($headers['origin'])
+                $headers = $request->get_headers();
+                $origin = isset($headers['origin'])
                 ? $headers['origin'][0]
                 : 'https://' . $headers['host'][0];
-            /**
-             * List of allowed hosts
-             * Who is allowed to send requests to REST API Endpoints
-             */
-            $allowed = array(
+                /**
+                 * List of allowed hosts
+                 * Who is allowed to send requests to REST API Endpoints
+                 */
+                $allowed = array(
                 site_url(),
-            );
+                );
 
-            if ( in_array( untrailingslashit($origin), $allowed) )
-            {
-                header('Referrer-Policy: origin');
-                header('Access-Control-Allow-Origin: ' . $origin);
-                header('Access-Control-Allow-Methods: POST, OPTIONS');
-                header('Access-Control-Allow-Credentials: true');
-                header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization, X-WP-Nonce, Content-Disposition, Application, Content-Length');
-            }
+                if (in_array(untrailingslashit($origin), $allowed) ) {
+                    header('Referrer-Policy: origin');
+                    header('Access-Control-Allow-Origin: ' . $origin);
+                    header('Access-Control-Allow-Methods: POST, OPTIONS');
+                    header('Access-Control-Allow-Credentials: true');
+                    header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization, X-WP-Nonce, Content-Disposition, Application, Content-Length');
+                }
 
-            return $served;
+                return $served;
 
-        }, 1001, 3);
+            }, 1001, 3
+        );
     }
 
     /**
      * Prevent cloning.
      */
-    private function __clone() {}
+    private function __clone()
+    {
+    }
 
 
     /**
@@ -152,6 +162,6 @@ class LNP_RESTServer
      */
     final public function __wakeup()
     {
-        throw new Exception( __( 'Unserializing instances of this class is forbidden.', 'lnp-alby' ));
+        throw new Exception(__('Unserializing instances of this class is forbidden.', 'lnp-alby'));
     }
 }

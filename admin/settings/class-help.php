@@ -15,7 +15,7 @@ class LNP_HelpPage extends LNP_SettingsPage
     protected function set_translations()
     {
         // Menu Item label
-        $this->page_title = __( 'Help', 'lnp-alby' );
-        $this->menu_title = __( 'Help', 'lnp-alby' );
+        $this->page_title = __('Help', 'lnp-alby');
+        $this->menu_title = __('Help', 'lnp-alby');
     }
 }

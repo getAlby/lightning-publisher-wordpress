@@ -3,16 +3,18 @@
 use \Firebase\JWT;
 
 // Exit if accessed directly
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
 
 /**
  * @file
  * REST API Endpoint that handles lightning invoice creation and verification
  */
-class LNP_InvoicesController extends \WP_REST_Controller {
+class LNP_InvoicesController extends \WP_REST_Controller
+{
 
-    public function register_routes() {
+    public function register_routes()
+    {
 
         $this->namespace = 'lnp-alby/v1';
 
@@ -49,20 +51,21 @@ class LNP_InvoicesController extends \WP_REST_Controller {
      * @param  object $request WP_REST_Request
      * @return array           Invoice data or error message
      */
-    public function process_create_invoice_request( $request ) {
+    public function process_create_invoice_request( $request )
+    {
         ob_start();
         $plugin = $this->get_plugin();
         $logger = $plugin->get_logger();
-        $post_id = intval( $request->get_param('post_id') );
-        $amount = intval( $request->get_param('amount') );
-        $comment = intval( $request->get_param('comment') );
+        $post_id = intval($request->get_param('post_id'));
+        $amount = intval($request->get_param('amount'));
+        $comment = intval($request->get_param('comment'));
         $memo = $request->get_param('memo');
 
         if (!empty($post_id) && empty($memo)) {
-          $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
+            $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
         }
         if (empty($post_id) && empty($memo)) {
-          $memo = get_bloginfo('name');
+            $memo = get_bloginfo('name');
         }
 
         $memo = substr($memo, 0, 64);
@@ -76,7 +79,8 @@ class LNP_InvoicesController extends \WP_REST_Controller {
         ];
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
 
-        $plugin->getDatabaseHandler()->store_invoice([
+        $plugin->getDatabaseHandler()->store_invoice(
+            [
             "post_id" => $post_id,
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
@@ -84,7 +88,8 @@ class LNP_InvoicesController extends \WP_REST_Controller {
             "amount" => $amount,
             "currency" => "",
             "exchange_rate" => 0
-        ]);
+            ]
+        );
 
 
         $response_data = ['post_id' => $post_id, 'amount' => $amount];
@@ -177,13 +182,14 @@ class LNP_InvoicesController extends \WP_REST_Controller {
     /**
      * Attributes
      */
-    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE ) {
+    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE )
+    {
 
         $params = array();
 
         $params['post_id'] = array(
             'default'           => 0,
-            'description'       => __( 'ID of the post that is requested for payment', 'lnp-alby' ),
+            'description'       => __('ID of the post that is requested for payment', 'lnp-alby'),
             'type'              => 'integer',
             'sanitize_callback' => 'intval',
             'validate_callback' => 'rest_validate_request_arg',
@@ -191,7 +197,7 @@ class LNP_InvoicesController extends \WP_REST_Controller {
 
         $params['amount'] = array(
             'default'           => 0,
-            'description'       => __( 'Invoice amount', 'lnp-alby' ),
+            'description'       => __('Invoice amount', 'lnp-alby'),
             'type'              => 'integer',
             'sanitize_callback' => 'intval',
             'validate_callback' => 'rest_validate_request_arg',

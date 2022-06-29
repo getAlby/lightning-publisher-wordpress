@@ -7,7 +7,8 @@
  * @package    WP_Lightning
  * @subpackage WP_Lightning/includes/client
  */
-class WP_Lightning_LNDHub_Client extends Abstract_WP_Lightning_Client{
+class WP_Lightning_LNDHub_Client extends Abstract_WP_Lightning_Client
+{
 
     public function __construct($options)
     {

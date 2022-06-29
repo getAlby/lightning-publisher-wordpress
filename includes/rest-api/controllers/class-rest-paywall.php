@@ -3,16 +3,18 @@
 use \Firebase\JWT;
 
 // Exit if accessed directly
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
 
 /**
  * @file
  * REST API Endpoint that handles Paywall
  */
-class LNP_PaywallController extends \WP_REST_Controller {
+class LNP_PaywallController extends \WP_REST_Controller
+{
 
-    public function register_routes() {
+    public function register_routes()
+    {
 
         $this->namespace = 'lnp-alby/v1';
 
@@ -50,11 +52,12 @@ class LNP_PaywallController extends \WP_REST_Controller {
      * @param  object $request WP_REST_Request
      * @return array           Invoice data or error message
      */
-    public function process_paywall_payment_request( $request ) {
+    public function process_paywall_payment_request( $request )
+    {
         ob_start();
         $plugin = $this->get_plugin();
         $logger = $plugin->get_logger();
-        $post_id = intval( $request->get_param('post_id') );
+        $post_id = intval($request->get_param('post_id'));
 
         if (empty($post_id)) {
             $logger->error('Invalid request. missing post id');
@@ -87,14 +90,16 @@ class LNP_PaywallController extends \WP_REST_Controller {
             'private' => true
         ];
         $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
-        $plugin->getDatabaseHandler()->store_invoice([
+        $plugin->getDatabaseHandler()->store_invoice(
+            [
             "post_id" => $post_id,
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
             "amount" => $amount,
             "currency" => "",
             "exchange_rate" => 0
-        ]);
+            ]
+        );
 
         $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'amount' => $amount, 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
         $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
@@ -200,13 +205,14 @@ class LNP_PaywallController extends \WP_REST_Controller {
     /**
      * Attributes
      */
-    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE ) {
+    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE )
+    {
 
         $params = array();
 
         $params['post_id'] = array(
             'default'           => 0,
-            'description'       => __( 'ID of the post that is requested for payment', 'lnp-alby' ),
+            'description'       => __('ID of the post that is requested for payment', 'lnp-alby'),
             'type'              => 'integer',
             'sanitize_callback' => 'intval',
             'validate_callback' => 'rest_validate_request_arg',
