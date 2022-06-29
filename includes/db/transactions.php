@@ -35,13 +35,16 @@ class LNP_TransactionsTable extends WP_List_Table
         $columns = $this->get_columns();
         $hidden = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
-
+        // Filter using state args
+        $state = (isset($_REQUEST['state']) ? $_REQUEST['state'] : 'all');
 
         $perPage = 25;
         $currentPage = $this->get_pagenum();
-        $totalItems = $this->database_handler->total_payment_count();
+        $totalItems = $this->database_handler->total_payment_count($state);
 
-        $data = $this->table_data($currentPage, $perPage);
+        $this->views();
+
+        $data = $this->table_data($currentPage, $perPage, $state);
         usort($data, array(&$this, 'sort_data'));
 
         $this->set_pagination_args(
@@ -50,8 +53,7 @@ class LNP_TransactionsTable extends WP_List_Table
             'per_page'    => $perPage
             )
         );
-
-        $data = array_slice($data, (($currentPage - 1) * $perPage), $perPage);
+        // $data = array_slice($data, (($currentPage - 1) * $perPage), $perPage);
 
         $this->_column_headers = array($columns, $hidden, $sortable);
         $this->items = $data;
@@ -104,27 +106,29 @@ class LNP_TransactionsTable extends WP_List_Table
      *
      * @return Array
      */
-    private function table_data($page, $perPage)
+    private function table_data($page, $perPage, $state = 'all')
     {
         $data = array();
-        $payments = $this->database_handler->get_payments($page, $perPage);
+        $payments = $this->database_handler->get_payments($page, $perPage, $state);
         foreach ($payments as $payment) {
-            $post = empty($payment->post_id) ? null : get_post($payment->post_id);
-            $link = empty($payment->post_id) ? null : get_permalink($post);
-            $payment_hash = substr($payment->payment_hash, 0, 20) . '...';
-            $payment_request = substr($payment->payment_request, 0, 20) . '...';
-            // $link = get_permalink($post);
-            $data[] = array(
-                'post'          => (empty($post) ? "" : "<a href='$link'>$post->post_title</a>"),
-                'payment_hash'       => "<span title='$payment->payment_hash'>$payment_hash</span>",
-                'payment_request' => "<span title='$payment->payment_request'>$payment_request</span>",
-                'amount'        => $payment->amount_in_satoshi,
-                // 'exchange_rate'    => $payment->exchange_rate,
-                // 'exchange_currency' => $payment->exchange_currency,
-                'state' => $payment->state,
-                'created_at' => $payment->created_at,
-                'settled_at' => $payment->settled_at
-            );
+            if ($state == $payment->state || $state == 'all') {
+                $post = empty($payment->post_id) ? null : get_post($payment->post_id);
+                $link = empty($payment->post_id) ? null : get_permalink($post);
+                $payment_hash = substr($payment->payment_hash, 0, 20) . '...';
+                $payment_request = substr($payment->payment_request, 0, 20) . '...';
+                // $link = get_permalink($post);
+                $data[] = array(
+                    'post'          => (empty($post) ? "" : "<a href='$link'>$post->post_title</a>"),
+                    'payment_hash'       => "<span title='$payment->payment_hash'>$payment_hash</span>",
+                    'payment_request' => "<span title='$payment->payment_request'>$payment_request</span>",
+                    'amount'        => $payment->amount_in_satoshi,
+                    // 'exchange_rate'    => $payment->exchange_rate,
+                    // 'exchange_currency' => $payment->exchange_currency,
+                    'state' => $payment->state,
+                    'created_at' => $payment->created_at,
+                    'settled_at' => $payment->settled_at
+                );
+            }
         }
 
         return $data;
@@ -193,5 +197,30 @@ class LNP_TransactionsTable extends WP_List_Table
         }
 
         return -$result;
+    }
+
+    /**
+     * Get the filters for settled and unsettled transactions
+     */
+    protected function get_views(){
+        $views = array();
+        $current = ( !empty($_REQUEST['state']) ? $_REQUEST['state'] : 'all');
+     
+        //All link
+        $class = ($current == 'all' ? ' class="current"' :'');
+        $all_url = remove_query_arg('state');
+        $views['all'] = "<a href='{$all_url }' {$class} >All</a>";
+     
+        //Settled link
+        $settled_url = add_query_arg('state','settled');
+        $class = ($current == 'settled' ? ' class="current"' :'');
+        $views['settled'] = "<a href='{$settled_url}' {$class} >Settled</a>";
+     
+        //unpaid link
+        $unpaid_url = add_query_arg('state','unpaid');
+        $class = ($current == 'unpaid' ? ' class="current"' :'');
+        $views['unpaid'] = "<a href='{$unpaid_url}' {$class} >Unpaid</a>";
+     
+        return $views;
     }
 }

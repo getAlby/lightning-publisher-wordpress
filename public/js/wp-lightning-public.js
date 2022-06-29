@@ -98,9 +98,8 @@
             {
                 var button = options.target.querySelector("button.wp-lnp-btn");
                 button.outerHTML = `<div class="wp-lnp-qrcode">
-                <a href="lightning:${invoice.payment_request
-                }"><img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=${invoice.payment_request
-                }"></a>
+                <img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=${invoice.payment_request
+                }">
                 <br />
                 <a href="lightning:${invoice.payment_request
                 }">${invoice.payment_request.substr(0, 36)}...</a>
