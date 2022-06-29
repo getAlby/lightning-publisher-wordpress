@@ -278,13 +278,13 @@ class WP_Lightning
 		$balance_page = new LNP_BalancePage($this, 'lnp_settings', $this->database_handler);
 		$paywall_page    = new LNP_PaywallPage($this, 'lnp_settings');
 		$connection_page = new LNP_ConnectionPage($this, 'lnp_settings');
-		$donation_page   = new LNP_DonationPage($this, 'lnp_settings');
+		//$donation_page   = new LNP_DonationPage($this, 'lnp_settings');
 		$help_page = new LNP_HelpPage($this, 'lnp_settings');
 
 		// get page options
 		$this->connection_options = $connection_page->options;
 		$this->paywall_options    = $paywall_page->options;
-		$this->donation_options   = $donation_page->options;
+		//$this->donation_options   = $donation_page->options;
 	}
 
 	/**
