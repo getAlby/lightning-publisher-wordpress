@@ -568,12 +568,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "fe752aedc9fd8fcca3fe7ad05d419d32998a06da"
+                "reference": "43453bfd44284ccb73d1beb16f3d30ea888097c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/fe752aedc9fd8fcca3fe7ad05d419d32998a06da",
-                "reference": "fe752aedc9fd8fcca3fe7ad05d419d32998a06da",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/43453bfd44284ccb73d1beb16f3d30ea888097c1",
+                "reference": "43453bfd44284ccb73d1beb16f3d30ea888097c1",
                 "shasum": ""
             },
             "require": {
@@ -629,7 +629,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/1.5.1"
+                "source": "https://github.com/guzzle/promises/tree/master"
             },
             "funding": [
                 {
@@ -645,7 +645,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-22T20:56:57+00:00"
+            "time": "2022-06-28T20:38:13+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1056,12 +1056,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/btcpay-php.git",
-                "reference": "3208e450bc5d22cca9d017c881bf3598cea05b7b"
+                "reference": "f872c1ca7a6dd83ee38e9aef419074a959f5003c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/3208e450bc5d22cca9d017c881bf3598cea05b7b",
-                "reference": "3208e450bc5d22cca9d017c881bf3598cea05b7b",
+                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/f872c1ca7a6dd83ee38e9aef419074a959f5003c",
+                "reference": "f872c1ca7a6dd83ee38e9aef419074a959f5003c",
                 "shasum": ""
             },
             "require": {
@@ -1097,7 +1097,7 @@
             "support": {
                 "source": "https://github.com/bumi/btcpay-php/tree/main"
             },
-            "time": "2022-06-22T18:09:45+00:00"
+            "time": "2022-06-29T13:03:08+00:00"
         },
         {
             "name": "octan/lnbits",
@@ -1243,12 +1243,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "5f59b1b59025b3c66cf1ca0898247d9de39c6200"
+                "reference": "39bb9365314853cab68ac1c6e1952cad03f74cbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/5f59b1b59025b3c66cf1ca0898247d9de39c6200",
-                "reference": "5f59b1b59025b3c66cf1ca0898247d9de39c6200",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/39bb9365314853cab68ac1c6e1952cad03f74cbc",
+                "reference": "39bb9365314853cab68ac1c6e1952cad03f74cbc",
                 "shasum": ""
             },
             "require": {
@@ -1307,7 +1307,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-13T23:19:03+00:00"
+            "time": "2022-06-29T07:28:41+00:00"
         },
         {
             "name": "pleonasm/merkle-tree",
