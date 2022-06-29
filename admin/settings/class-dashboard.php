@@ -15,14 +15,15 @@ class LNP_Dashboard extends LNP_SettingsPage
     protected function set_translations()
     {
         // Menu Item label
-        $this->page_title = __( 'Dashboard', 'lnp-alby' );
-        $this->menu_title = __( 'Dashboard', 'lnp-alby' );
+        $this->page_title = __('Dashboard', 'lnp-alby');
+        $this->menu_title = __('Dashboard', 'lnp-alby');
     }
 
     /**
      * Get the total payments made
      */
-    public function get_total_payments() {
+    public function get_total_payments()
+    {
         $database_handler = $this->plugin->getDatabaseHandler();
         return $database_handler->total_payment_count();
     }
@@ -30,7 +31,8 @@ class LNP_Dashboard extends LNP_SettingsPage
     /**
      * Get the total payments sum
      */
-    public function get_total_payments_sum() {
+    public function get_total_payments_sum()
+    {
         $database_handler = $this->plugin->getDatabaseHandler();
         return $database_handler->total_payment_sum();
     }
@@ -38,15 +40,16 @@ class LNP_Dashboard extends LNP_SettingsPage
     /**
      * Get the top posts
      */
-    public function get_top_posts() {
+    public function get_top_posts()
+    {
         $database_handler = $this->plugin->getDatabaseHandler();
         $top_posts = $database_handler->top_posts();
         return $top_posts;
     }
 
-    public function get_connected_wallet() {
-        if (
-            $this->plugin->getLightningClient()
+    public function get_connected_wallet()
+    {
+        if ($this->plugin->getLightningClient()
             && $this->plugin->getLightningClient()->isConnectionValid()
         ) {
             $node_info = $this->plugin->getLightningClient()->getInfo();

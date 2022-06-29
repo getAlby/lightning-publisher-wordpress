@@ -13,16 +13,18 @@
 // Custom Tables
 require_once 'db/database-handler.php';
 
-class WP_Lightning_Activator {
+class WP_Lightning_Activator
+{
 
-	/**
-	 * Setup necessary tables during plugin activation
-	 *
-	 * @since    1.0.0
-	 */
-	public static function activate() {
-		$database_handler = new LNP_DatabaseHandler();
-    	$database_handler->init();
-	}
+    /**
+     * Setup necessary tables during plugin activation
+     *
+     * @since 1.0.0
+     */
+    public static function activate()
+    {
+        $database_handler = new LNP_DatabaseHandler();
+        $database_handler->init();
+    }
 
 }

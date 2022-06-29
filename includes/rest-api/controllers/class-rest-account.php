@@ -3,16 +3,18 @@
 use \Firebase\JWT;
 
 // Exit if accessed directly
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
 
 /**
  * @file
  * REST API Endpoint to create/login to an Alby account
  */
-class LNP_AccountController extends \WP_REST_Controller {
+class LNP_AccountController extends \WP_REST_Controller
+{
 
-    public function register_routes() {
+    public function register_routes()
+    {
 
         $this->namespace = 'lnp-alby/v1';
 
@@ -29,11 +31,12 @@ class LNP_AccountController extends \WP_REST_Controller {
         );
     }
 
-    public function check_permission() {
-      if (current_user_can('manage_options') || current_user_can('administrator')) {
-        return true;
-      }
-      return new \WP_Error('rest_forbidden', __('Invalid Request, Missing permissions', 'lnp-alby'), array( 'status' => 401 ));
+    public function check_permission()
+    {
+        if (current_user_can('manage_options') || current_user_can('administrator')) {
+            return true;
+        }
+        return new \WP_Error('rest_forbidden', __('Invalid Request, Missing permissions', 'lnp-alby'), array( 'status' => 401 ));
     }
 
     /**
@@ -56,13 +59,13 @@ class LNP_AccountController extends \WP_REST_Controller {
         try {
             $account = LNDHub\Client::createAlbyWallet($email, $password);
             if (!empty($account['lndhub']) && !empty($account['lndhub']['login'])) {
-              $logger->info('Alby Wallet Created');
-              ob_end_clean();
-              wp_send_json($account, 200);
+                $logger->info('Alby Wallet Created');
+                ob_end_clean();
+                wp_send_json($account, 200);
             } else {
-              $logger->info('Failed to Alby Wallet');
-              ob_end_clean();
-              wp_send_json($account, 422);
+                $logger->info('Failed to Alby Wallet');
+                ob_end_clean();
+                wp_send_json($account, 422);
             }
         }catch(Exception $e) {
             ob_end_clean();
@@ -97,7 +100,8 @@ class LNP_AccountController extends \WP_REST_Controller {
     /**
      * Attributes
      */
-    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE ) {
+    public function get_endpoint_args_for_item_schema( $method = \WP_REST_Server::CREATABLE )
+    {
 
         $params = array();
         return $params;

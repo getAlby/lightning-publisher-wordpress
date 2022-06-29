@@ -4,9 +4,11 @@
 defined('WPINC') || die;
 
 
-class LNP_DonationsWidget {
+class LNP_DonationsWidget
+{
 
-    function __construct( $plugin ) {
+    function __construct( $plugin )
+    {
 
         $this->plugin = $plugin;
     }
@@ -19,7 +21,8 @@ class LNP_DonationsWidget {
      * 
      * @return [type] [description]
      */
-    public function get_donation_template() {
+    public function get_donation_template()
+    {
 
         /**
          * Example usage:
@@ -27,10 +30,8 @@ class LNP_DonationsWidget {
          * add_filter('lnp_alby_donate_template' function( $filename ) {
          *     return 'my-custom-template-filename.php';
          * });
-         * 
-         *
          */
-        $filename = apply_filters( 'lnp_alby_donate_template', 'default.php', 10, 1 );
+        $filename = apply_filters('lnp_alby_donate_template', 'default.php', 10, 1);
 
         /**
          * Allow user to override default template filename with filter
@@ -39,7 +40,6 @@ class LNP_DonationsWidget {
          * "my-theme-name/lnp-alby/my-custom-template-filename.php"
          *
          * Fallback is always to default template located in plugin folder
-         * 
          */
         $template_names = array(
             untrailingslashit(get_stylesheet_directory()) . '/lnp-alby/' . $filename,
@@ -48,8 +48,7 @@ class LNP_DonationsWidget {
 
         foreach ( $template_names as $template )
         {
-            if ( file_exists($template) )
-            {
+            if (file_exists($template) ) {
                 return $template;
             }
         }
@@ -71,8 +70,7 @@ class LNP_DonationsWidget {
         $template  = $this->get_donation_template();
 
         // Nothing to incldue
-        if ( empty($placement) || ! $template )
-        {
+        if (empty($placement) || ! $template ) {
             return $content;
         }
 
@@ -81,26 +79,24 @@ class LNP_DonationsWidget {
         ob_start();
 
         // Include above content
-        if ( in_array('above', $placement) )
-        {
-            do_action( 'before_lnp_alby_donation_widget', 'above' );
+        if (in_array('above', $placement) ) {
+            do_action('before_lnp_alby_donation_widget', 'above');
 
-            require $template;
+            include $template;
 
-            do_action( 'after_lnp_alby_donation_widget', 'above' );
+            do_action('after_lnp_alby_donation_widget', 'above');
         }
 
         // WP_Post content
         echo $content;
 
         // Include below content
-        if ( in_array('below', $placement) )
-        {
-            do_action( 'before_lnp_alby_donation_widget', 'below' );
+        if (in_array('below', $placement) ) {
+            do_action('before_lnp_alby_donation_widget', 'below');
 
-            require $template;
+            include $template;
 
-            do_action( 'after_lnp_alby_donation_widget', 'below' );
+            do_action('after_lnp_alby_donation_widget', 'below');
         }
 
         // Include Js/CSS
@@ -124,7 +120,7 @@ class LNP_DonationsWidget {
 
         ob_start();
 
-        require $template;
+        include $template;
 
         // Include Js/CSS
         $this->load_scripts();
@@ -155,8 +151,7 @@ class LNP_DonationsWidget {
         $options['lnd_client'] = $this->plugin->getLightningClientType();
 
         // Return specifc option
-        if ( $option && isset($options[ $option ]) )
-        {
+        if ($option && isset($options[ $option ]) ) {
             return $options[ $option ];
         }
 
@@ -169,7 +164,8 @@ class LNP_DonationsWidget {
 
     /**
      * Check if donation box
-     * @param  string  $post_type [description]
+     *
+     * @param  string $post_type [description]
      * @return boolean            [description]
      */
     public function is_enabled_for_post_type( string $post_type )
@@ -180,8 +176,9 @@ class LNP_DonationsWidget {
             : array();
 
         // If no placement is selected don't include
-        if ( ! $placement )
+        if (! $placement ) {
             return array();
+        }
 
         // Post types enabled in options
         $post_types = ( isset($options['donations_enabled_for']) )
@@ -190,7 +187,7 @@ class LNP_DonationsWidget {
 
         // Check if current WP_Post post_type is in array of allowed ones
         // and return placement
-        return ( in_array( $post_type, $post_types ) )
+        return ( in_array($post_type, $post_types) )
             ? $placement
             : array();
     }

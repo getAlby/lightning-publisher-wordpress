@@ -4,8 +4,8 @@
 defined('WPINC') || die;
 
 if (!class_exists('WP_List_Table')) {
-    require_once(ABSPATH . 'wp-admin/includes/screen.php');
-    require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
+    include_once ABSPATH . 'wp-admin/includes/screen.php';
+    include_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 class LNP_TransactionsTable extends WP_List_Table
@@ -16,11 +16,13 @@ class LNP_TransactionsTable extends WP_List_Table
     {
         $this->database_handler = $database_handler;
 
-        parent::__construct(array(
+        parent::__construct(
+            array(
             'singular'  => 'wp_list_event',
             'plural'    => 'wp_list_events',
             'ajax'      => false
-        ));
+            )
+        );
     }
 
     /**
@@ -42,10 +44,12 @@ class LNP_TransactionsTable extends WP_List_Table
         $data = $this->table_data($currentPage, $perPage);
         usort($data, array(&$this, 'sort_data'));
 
-        $this->set_pagination_args(array(
+        $this->set_pagination_args(
+            array(
             'total_items' => $totalItems,
             'per_page'    => $perPage
-        ));
+            )
+        );
 
         $data = array_slice($data, (($currentPage - 1) * $perPage), $perPage);
 
@@ -129,27 +133,27 @@ class LNP_TransactionsTable extends WP_List_Table
     /**
      * Define what data to show on each column of the table
      *
-     * @param  Array $item        Data
-     * @param  String $column_name - Current column name
+     * @param Array  $item        Data
+     * @param String $column_name - Current column name
      *
      * @return Mixed
      */
     public function column_default($item, $column_name)
     {
         switch ($column_name) {
-            case 'post':
-            case 'payment_hash':
-            case 'payment_request':
-            case 'amount':
-            case 'exchange_rate':
-            case 'exchange_currency':
-            case 'state':
-            case 'created_at':
-            case 'settled_at':
-                return $item[$column_name];
+        case 'post':
+        case 'payment_hash':
+        case 'payment_request':
+        case 'amount':
+        case 'exchange_rate':
+        case 'exchange_currency':
+        case 'state':
+        case 'created_at':
+        case 'settled_at':
+            return $item[$column_name];
 
-            default:
-                return print_r($item, true);
+        default:
+            return print_r($item, true);
         }
     }
 

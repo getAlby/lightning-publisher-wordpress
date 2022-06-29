@@ -7,31 +7,32 @@
  * @package    WP_Lightning
  * @subpackage WP_Lightning/includes/client
  */
-abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Interface {
+abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Interface
+{
 
-	/**
+    /**
      * Underlying client library.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      mixed    $client    Underlying client library.
+     * @since  1.0.0
+     * @access protected
+     * @var    mixed    $client    Underlying client library.
      */
     protected $client;
-	
+    
     /**
      * Connection options.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      array    $options    Connection options.
+     * @since  1.0.0
+     * @access protected
+     * @var    array    $options    Connection options.
      */
     protected $options;
 
     /**
-	 * Set the options.
-	 *
-	 * @since    1.0.0
-	 */
+     * Set the options.
+     *
+     * @since 1.0.0
+     */
     public function __construct($options)
     {
         $this->options = $options;
@@ -40,7 +41,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Add Invoice
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function addInvoice($params)
     {
@@ -50,7 +51,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Get Invoice
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function getInvoice($params)
     {
@@ -60,7 +61,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Check if Invoice is paid
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function isInvoicePaid()
     {
@@ -70,7 +71,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Check for valid connection
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function isConnectionValid()
     {
@@ -80,7 +81,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Get information about the client
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function getInfo()
     {
@@ -90,7 +91,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Get address
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function getAddress()
     {
@@ -100,7 +101,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Set address
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function setAddress()
     {
@@ -110,7 +111,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Request
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function request()
     {
@@ -120,7 +121,7 @@ abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Inter
     /**
      * Client
      * 
-     * @since    1.0.0
+     * @since 1.0.0
      */
     public function client()
     {

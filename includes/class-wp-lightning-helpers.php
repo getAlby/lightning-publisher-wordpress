@@ -9,6 +9,7 @@
  * @package    WP_Lightning
  * @subpackage WP_Lightning/includes
  */
-class WP_Lightning_Helper {
+class WP_Lightning_Helper
+{
 
 }
