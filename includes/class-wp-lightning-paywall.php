@@ -147,10 +147,8 @@ class WP_Lightning_Paywall
      */
     protected function format_unpaid()
     {
-        $text   = '<p>' . sprintf(empty($this->options['paywall_text']) ? 'To continue reading the rest of this post, please pay <em>%s Sats</em>.' : $this->options['paywall_text'], $this->options['amount']) . '</p>';
         $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($this->options['button_text']) ? 'Pay now' : $this->options['button_text']);
-        // $autopay = '<p><label><input type="checkbox" value="1" class="wp-lnp-autopay" />Enable autopay<label</p>';
-        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, get_the_ID(), $text, $button);
+        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s</div>', $this->teaser, get_the_ID(), $button);
     }
 
     /**

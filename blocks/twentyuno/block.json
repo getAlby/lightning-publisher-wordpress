@@ -33,5 +33,6 @@
     }
   },
   "editorScript": "file:./block.js",
+  "editorStyle": "file:./editor.css",
   "style": "file:./style.css"
 }

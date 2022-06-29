@@ -108,22 +108,11 @@ class WP_Lightning_Admin {
             $twentyuno_block_editor_css_path
         );
 
-        register_block_type('alby/twentyuno-widget',[
-            "title" => "Twentyuno Payment Widget",
-            "icon" =>  "index-card",
-            "category" => "layout",
-            "attributes" => [
-              "name" => [
-                "type" => "string",
-                "source" => "attribute",
-                "attribute" => "name",
-                "selector" => "lightning-widget"
-              ]
-            ],
-            'editor_script' => 'alby-twentyuno-block-script-edit',
-            'editor_style' => 'alby-twentyuno-block-css-edit',
-            'render_callback' => [$this, 'render_twentyuno_widget_block'],
-        ]);
+        register_block_type(dirname(__DIR__, 1) . '/blocks/twentyuno/block.json',
+            array(
+                'render_callback' => [$this, 'render_twentyuno_widget_block'],
+            )
+        );
 
         // Path to Js that handles block functionality
         wp_register_script(

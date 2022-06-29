@@ -49,6 +49,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
         /**
          * Fields for section: Pricing
          */
+         /*
         $fields[] = array(
             'tab'     => 'paywall',
             'field'   => array(
@@ -57,6 +58,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'description' => __( 'Paywall text (use %s for the amount)', 'lnp-alby'),
             ),
         );
+        */
 
         $fields[] = array(
             'tab'     => 'paywall',
