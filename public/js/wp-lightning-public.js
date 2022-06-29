@@ -49,17 +49,18 @@
 
         function checkPaymentStatus(invoice, callback) {
             return function () {
+                let body = {
+                    token: invoice.token,
+                    preimage: window.LNP_CURRENT_PREIMAGE,
+                    t: Date.now()
+                };
                 fetch(wp_rest_base_url+'/paywall/verify', {
                     method: "POST",
                     credentials: "same-origin",
                     cache: "no-cache",
-                    body:
-                        "token=" +
-                        invoice.token +
-                        "&preimage=" +
-                        window.LNP_CURRENT_PREIMAGE,
+                    body: JSON.stringify(body),
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "Content-Type": "application/json",
                     },
                 }).then(function (response) {
                     if (response.ok) {
@@ -84,17 +85,13 @@
         }
 
         function requestPayment(params, options) {
-            var paramsQueryString = Object.keys(params)
-                .map((key) => `${key}=${params[key]}`)
-                .join("&");
-
             return fetch(wp_rest_base_url+'/paywall/pay', {
                 method: "POST",
                 credentials: "same-origin",
                 cache: "no-cache",
-                body: paramsQueryString,
+                body: JSON.stringify(params),
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "Content-Type": "application/json",
                 },
             })
                 .then(function (resp) {
