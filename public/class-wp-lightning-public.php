@@ -112,7 +112,7 @@ class WP_Lightning_Public
             (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag']) && $this->plugin->getGeneralOptions()['lnurl_meta_tag']) ||
             (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp']) && $this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'])
         ) {
-            if (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp']) {
+            if (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'])) {
                 $lnurl = $this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'];
             } else {
                 $lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
