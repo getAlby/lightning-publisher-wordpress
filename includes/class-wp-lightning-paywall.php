@@ -34,6 +34,15 @@ class WP_Lightning_Paywall
     private $plugin;
 
     /**
+     * ID of the post to which the paywall is applied
+     *
+     * @since  1.0.0
+     * @access protected
+     * @var    number    $post_id    Post ID
+     */
+    protected $post_id;
+
+    /**
      * Full content that the Paywall is blocking.
      *
      * @since  1.0.0
@@ -96,10 +105,11 @@ class WP_Lightning_Paywall
      *
      * @since 1.0.0
      */
-    public function __construct($plugin, $content)
+    public function __construct($plugin, $args)
     {
         $this->plugin = $plugin;
-        $this->content = $content;
+        $this->content = $args['content'];
+        $this->post_id = $args['post_id'];
 
         $shortcode_options = $this->extract_options_from_shortcode();
         if (!empty($shortcode_options)) {
@@ -151,7 +161,7 @@ class WP_Lightning_Paywall
         if (!empty($this->options['description'])) {
             $description = sprintf('<p class="wp-lnp-description">%s</p>', $this->options['description']);
         }
-        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, get_the_ID(), $description, $button);
+        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, $this->post_id, $description, $button);
     }
 
     /**
@@ -163,6 +173,16 @@ class WP_Lightning_Paywall
     public function get_content()
     {
         if ($this->status === 1) {
+            if (function_exists('wp_lnp_has_paid_for_post')) {
+                if(wp_lnp_has_paid_for_post($this->post_id)) {
+                    return $this->format_paid();
+                }
+            }
+            $paid_by_filter = apply_filters('wp_lnp_has_paid_for_post', false, $this->post_id);
+            if ($paid_by_filter) {
+                return $this->format_paid();
+            }
+
             if ($this->options['disable_in_rss'] && is_feed()) {
                 return $this->format_paid();
             }
@@ -176,13 +196,13 @@ class WP_Lightning_Paywall
             }
 
             if (!empty($this->options['total'])) {
-                $amount_received = get_post_meta(get_the_ID(), '_lnp_amount_received', true);
+                $amount_received = get_post_meta($this->post_id, '_lnp_amount_received', true);
                 if ($amount_received >= $this->options['total']) {
                     return $this->format_paid();
                 }
             }
 
-            if ($this->plugin->has_paid_for_post(get_the_ID())) {
+            if ($this->plugin->has_paid_for_post($this->post_id)) {
                 return $this->format_paid();
             }
 
