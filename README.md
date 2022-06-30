@@ -6,14 +6,14 @@ Lightning Publisher is a Bitcoin Lightning Paywall and Donation plugin for Wordp
 
 Clone the repository and install the dependency
 
-```
+```bash
 git clone https://github.com/getAlby/lightning-publisher-wordpress.git
 cd lightning-publisher-wordpress
 composer install # (maybe you need to add `--ignore-platform-reqs`)
 ```
 To build a .zip file of the WordPress plugin run:
-```
-./build.sh // this builds a `wordpress-lightning-publisher.zip`
+```bash
+./build.sh # this builds a `wordpress-lightning-publisher.zip`
 ```
 
 Then upload and activate the plugin.
