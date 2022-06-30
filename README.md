@@ -9,7 +9,8 @@ Clone the repository and install the dependency
 ```
 git clone https://github.com/bumi/wp-lightning
 cd wp-lightning
-composer install
+composer install # (maybe you need to add `--ignore-platform-reqs`)
+./build.sh
 ```
 
 Activate the plugin
