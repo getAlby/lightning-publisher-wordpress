@@ -1,24 +1,26 @@
-# WP-lightning
+# Lightning Publisher for WordPress
 
-WP Lightning is a Bitcoin Lightning Paywall and Donation plugin for Wordpress.
+Lightning Publisher is a Bitcoin Lightning Paywall and Donation plugin for Wordpress. It allows you to receive Bitcoin Lightning payments with your WordPress website.
 
 ## Installation
 
 Clone the repository and install the dependency
 
 ```
-git clone https://github.com/bumi/wp-lightning
-cd wp-lightning
+git clone https://github.com/getAlby/lightning-publisher-wordpress.git
+cd lightning-publisher-wordpress
 composer install # (maybe you need to add `--ignore-platform-reqs`)
-./build.sh
+```
+To build a .zip file of the WordPress plugin run:
+```
+./build.sh // this builds a `wordpress-lightning-publisher.zip`
 ```
 
-Activate the plugin
+Then upload and activate the plugin.
 
 ## Paywall options
 
 * Fixed amount
-* Flat fee for all articles
 * Free once a certrain amount is collected
 * Free after a certain time
 * Free until a certain time
@@ -102,6 +104,3 @@ The plugin also provides a set of REST API Endpoints for handling payments and d
 ## License
 
 MIT
-
-Initial code based on: https://github.com/ElementsProject/wordpress-lightning-publisher
-
