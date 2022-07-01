@@ -357,7 +357,7 @@ class WP_Lightning
 
 
         // Reset other wallet settings when saving a new wallet configuration
-        $this->loader->add_filter('pre_update_option_lnp_connection', $this->plugin_admin, 'reset_wallet_on_update', 10, 3);
+        //$this->loader->add_filter('pre_update_option_lnp_connection', $this->plugin_admin, 'reset_wallet_on_update', 10, 3);
     }
 
     /**
