@@ -94,7 +94,7 @@ class WP_Lightning_Public
      */
     public function ln_paywall_filter($content)
     {
-        $paywall = new WP_Lightning_Paywall($this->plugin, $content);
+        $paywall = new WP_Lightning_Paywall($this->plugin, [ "content" => $content, "post_id" => get_the_ID()]);
         return $paywall->get_content();
     }
 
