@@ -173,41 +173,41 @@ class WP_Lightning_Paywall
     public function get_content()
     {
         if ($this->status === 1) {
-            if (function_exists('wp_lnp_has_paid_for_post')) {
-                if(wp_lnp_has_paid_for_post($this->post_id)) {
-                    return $this->format_paid();
-                }
-            }
-            $paid_by_filter = apply_filters('wp_lnp_has_paid_for_post', false, $this->post_id);
-            if ($paid_by_filter) {
-                return $this->format_paid();
-            }
-
+            $show_paid = false;
             if ($this->options['disable_in_rss'] && is_feed()) {
-                return $this->format_paid();
+                $show_paid = true;
             }
 
             if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 60 * 60) {
-                return $this->format_paid();
+                $show_paid = true;
             }
 
             if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 60 * 60) {
-                return $this->format_paid();
+                $show_paid = true;
             }
 
             if (!empty($this->options['total'])) {
                 $amount_received = get_post_meta($this->post_id, '_lnp_amount_received', true);
                 if ($amount_received >= $this->options['total']) {
-                    return $this->format_paid();
+                    $show_paid = true;
                 }
             }
 
             if ($this->plugin->has_paid_for_post($this->post_id)) {
-                return $this->format_paid();
+                $show_paid = true;
             }
+            if (function_exists('wp_lnp_has_paid_for_post')) {
+                $show_paid = wp_lnp_has_paid_for_post($this->post_id);
+            }
+            $show_paid = apply_filters('wp_lnp_has_paid_for_post', $show_paid, $this->post_id);
 
-            return $this->format_unpaid();
+            if ($show_paid) {
+                return $this->format_paid();
+            } else {
+                return $this->format_unpaid();
+            }
         }
+        // if disabled
         return $this->format_paid();
     }
 
