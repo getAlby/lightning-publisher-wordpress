@@ -176,6 +176,7 @@ class WP_Lightning_Paywall
     protected function format_unpaid()
     {
         $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($this->options['button_text']) ? 'Pay now' : $this->options['button_text']);
+        $description = '';
         if (!empty($this->options['description'])) {
             $description = sprintf('<p class="wp-lnp-description">%s</p>', $this->options['description']);
         }
