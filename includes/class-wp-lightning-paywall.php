@@ -111,7 +111,8 @@ class WP_Lightning_Paywall
         $this->content = $args['content'];
         $this->post_id = $args['post_id'];
 
-        $shortcode_options = $this->extract_options_from_shortcode();
+        // Filter empty shortcode options as they should default to the global settings
+        $shortcode_options = array_filter($this->extract_options_from_shortcode());
         if (!empty($shortcode_options)) {
             $options_from_database = $this->plugin->getPaywallOptions();
             $this->options = array_merge($this->options, $options_from_database, $shortcode_options);
