@@ -79,6 +79,14 @@ class LNP_PaywallController extends \WP_REST_Controller
         }
         $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
         $amount = $paywall_options['amount'];
+        $currency = strtolower($paywall_options['currency']);
+
+        if ($currency != 'btc') {
+            $exchange_rate = $plugin->get_current_exchange_rate($currency);
+            $amount = $plugin->convert_to_sats($amount, $currency, $exchange_rate);
+        } else {
+            $exchange_rate = 1;
+        }
         $response_data = ['post_id' => $post_id, 'amount' => $amount];
 
         $memo = substr($memo, 0, 64);
@@ -96,8 +104,8 @@ class LNP_PaywallController extends \WP_REST_Controller
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
             "amount" => $amount,
-            "currency" => "",
-            "exchange_rate" => 0
+            "currency" => $currency,
+            "exchange_rate" => $exchange_rate
             ]
         );
 

@@ -83,11 +83,18 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'number',
                 'name'        => 'amount',
                 'label'       => __('Default Amount', 'lnp-alby'),
-                'description' => __('Amount in SATS per article', 'lnp-alby'),
+                'description' => __('Amount in smallest unit (e.g. cents/sats) per article', 'lnp-alby'),
             ),
         );
 
-
+        $fields[] = array(
+            'tab'     => 'paywall',
+            'field'   => array(
+                'name'        => 'currency',
+                'label'       => __('Currency', 'lnp-alby'),
+                'description' => __('eur, usd, gbp (default is btc)', 'lnp-alby'),
+            ),
+        );
 
 
         /**

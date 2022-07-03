@@ -9,6 +9,9 @@
     "amount": {
       "type": "number"
     },
+    "currency": {
+      "type": "string"
+    },
     "button_text": {
       "type": "string"
     },

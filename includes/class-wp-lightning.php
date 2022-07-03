@@ -586,4 +586,44 @@ class WP_Lightning
         setcookie('wplnp', $jwt, time() + 60 * 60 * 24 * $days, '/');
     }
 
+    public function get_current_exchange_rate($currency)
+    {
+        $transient_key = 'bitstamp_current_rate_' . strtolower($currency);
+        $bitstamp_url = 'https://www.bitstamp.net/api/v2/ticker/btc' . strtolower($currency);
+
+        // Check for transient, if none, update the rate
+        if ( false === ($data = get_transient($transient_key)) ) {
+            // Get remote HTML file
+            $response = wp_remote_get($bitstamp_url);
+            // Check for error
+            if ( is_wp_error($response) ) {
+                return;
+            }
+            // Parse remote HTML file
+            $data = wp_remote_retrieve_body($response);
+            // Check for error
+            if ( is_wp_error( $data ) ) {
+                return;
+            }
+
+            // Store rate in transient, expire after 10 minutes
+            set_transient($transient_key, $data, 10 * MINUTE_IN_SECONDS );
+        }
+        $data = json_decode($data);
+        return $data->{'last'};
+    }
+
+    public function convert_to_sats($amount_in_cents, $currency, $rate = null)
+    {
+        if (strtolower($currency) == 'btc') {
+            return $amount_in_cents;
+        }
+        if (empty($rate)) {
+            $rate = $this->get_current_exchange_rate($amount_in_cents, $currency);
+        }
+        $current_price_in_cents = floatval($rate) * 100.0;
+        $price_per_satoshi = 100000000.0 / $current_price_in_cents;
+        return ceil($amount_in_cents * $price_per_satoshi);
+    }
+
 }

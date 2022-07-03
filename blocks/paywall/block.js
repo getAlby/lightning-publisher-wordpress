@@ -2,6 +2,7 @@
     var __ = i18n.__;
     var el = element.createElement;
     var TextControl = components.TextControl;
+    var SelectControl = components.SelectControl;
     var useBlockProps = blockEditor.useBlockProps;
     var BlockControls = blockEditor.BlockControls;
 
@@ -10,6 +11,9 @@
             attributes: {
                 amount: {
                     type: 'number',
+                },
+                currency: {
+                    type: 'string',
                 },
                 button_text: {
                     type: 'string',
@@ -30,6 +34,7 @@
             edit: function (props) {
                 const {
                     amount,
+                    currency,
                     button_text,
                     description,
                     timeout,
@@ -49,7 +54,7 @@
                     ),
                     el(
                         TextControl, {
-                            label: __("Amount", "alby"),
+                            label: __("Amount (in smallest unit (e.g. cents))", "alby"),
                             onChange: (v) => {
                                 if (v !== "") {
                                     v = parseInt(v);
@@ -57,6 +62,22 @@
                                 props.setAttributes({ amount: v });
                             },
                             value: amount
+                        }
+                    ),
+                    el(
+                        SelectControl, {
+                            label: __("Currency", "alby"),
+                            onChange: (v) => {
+                                props.setAttributes({ currency: v });
+                            },
+                            value: currency,
+                            options: [
+                                { value: '', label: '' },
+                                { value: 'btc', label: 'BTC (sats)' },
+                                { value: 'usd', label: 'USD' },
+                                { value: 'eur', label: 'EUR' },
+                                { value: 'gbp', label: 'GBP' },
+                            ]
                         }
                     ),
                     el(

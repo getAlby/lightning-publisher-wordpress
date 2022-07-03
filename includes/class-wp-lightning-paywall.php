@@ -92,6 +92,7 @@ class WP_Lightning_Paywall
         'paywall_text' => null,
         'button_text'  => null,
         'amount'       => null,
+        'currency'     => 'btc',
         'total'        => null,
         'timeout'      => null,
         'timein'       => null,
@@ -111,16 +112,32 @@ class WP_Lightning_Paywall
         $this->content = $args['content'];
         $this->post_id = $args['post_id'];
 
-        // Filter empty shortcode options as they should default to the global settings
-        $shortcode_options = array_filter($this->extract_options_from_shortcode());
-        if (!empty($shortcode_options)) {
+        if ($this->content_has_shortcode()) {
+            // Filter empty shortcode options as they should default to the global settings
+            $shortcode_options = array_filter($this->extract_options_from_shortcode());
             $options_from_database = $this->plugin->getPaywallOptions();
             $this->options = array_merge($this->options, $options_from_database, $shortcode_options);
         } else {
             // If no shortcode found, do not enable the paywall
             $this->status = 0;
         }
+
         $this->split_public_protected();
+    }
+
+    /**
+     * Returns true if the content contains the lnpaywall shortcode
+     *
+     * @since  1.0.0
+     * @return boolean true if the content contains the shortcode
+     */
+    protected function content_has_shortcode()
+    {
+        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

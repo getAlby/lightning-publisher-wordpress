@@ -58,6 +58,20 @@ class LNP_InvoicesController extends \WP_REST_Controller
         $logger = $plugin->get_logger();
         $post_id = intval($request->get_param('post_id'));
         $amount = intval($request->get_param('amount'));
+        $currency = $request->get_param('currency');
+        if (empty($currency)) {
+            $currency = 'btc';
+        }
+        $currency = strtolower($currency);
+
+        // get sats amount
+        if ($currency != 'btc') {
+            $exchange_rate = $plugin->get_current_exchange_rate($currency);
+            $amount = $plugin->convert_to_sats($amount, $currency, $exchange_rate);
+        } else {
+            $exchange_rate = 1;
+        }
+
         $comment = intval($request->get_param('comment'));
         $memo = $request->get_param('memo');
 
@@ -86,8 +100,8 @@ class LNP_InvoicesController extends \WP_REST_Controller
             "payment_request" => $invoice['payment_request'],
             "comment" => $invoice['payment_request'],
             "amount" => $amount,
-            "currency" => "",
-            "exchange_rate" => 0
+            "currency" => $currency,
+            "exchange_rate" => $exchange_rate
             ]
         );
 
