@@ -2,6 +2,12 @@
 
 Lightning Publisher is a Bitcoin Lightning Paywall and Donation plugin for Wordpress. It allows you to receive Bitcoin Lightning payments with your WordPress website.
 
+## Demo
+
+Here quick Demo videos showing how to setup and use the plugin:
++ [Quck Start - setup + paywall setup](https://www.loom.com/share/095b49a87e444442ac7b297f9483dfa7)
++ [Admin Panel](https://www.loom.com/share/dbe501fe9d91445082a2c5c07a1a8ce8)
+
 ## Installation
 
 Clone the repository and install the dependency
