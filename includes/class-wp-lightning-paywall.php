@@ -216,7 +216,7 @@ class WP_Lightning_Paywall
                 $show_paid = true;
             }
             if (function_exists('wp_lnp_has_paid_for_post')) {
-                $show_paid = wp_lnp_has_paid_for_post($this->post_id);
+                $show_paid = wp_lnp_has_paid_for_post($show_paid, $this->post_id);
             }
             $show_paid = apply_filters('wp_lnp_has_paid_for_post', $show_paid, $this->post_id);
 
