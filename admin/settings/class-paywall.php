@@ -66,6 +66,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'name'  => 'button_text',
                 'label' => __('Button Label', 'lnp-alby'),
+                'description' => __('You can use %{formatted_amount}, %{length}, %{currency}, %{amount}', 'lnp-alby'),
             ),
         );
 
@@ -74,6 +75,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'name'  => 'description',
                 'label' => __('Description', 'lnp-alby'),
+                'description' => __('You can use %{formatted_amount}, %{length}, %{currency}, %{amount}', 'lnp-alby'),
             ),
         );
 

@@ -89,8 +89,8 @@ class WP_Lightning_Paywall
      * @var    array    $options    Paywall options for displaying the shortcode.
      */
     protected $options = [
-        'paywall_text' => null,
-        'button_text'  => null,
+        'description' => null,
+        'button_text'  => 'Pay now',
         'amount'       => null,
         'currency'     => 'btc',
         'total'        => null,
@@ -111,11 +111,13 @@ class WP_Lightning_Paywall
         $this->plugin = $plugin;
         $this->content = $args['content'];
         $this->post_id = $args['post_id'];
+        $this->content_length = strlen(wp_strip_all_tags($this->content));
 
         if ($this->content_has_shortcode()) {
             // Filter empty shortcode options as they should default to the global settings
             $shortcode_options = array_filter($this->extract_options_from_shortcode());
-            $options_from_database = $this->plugin->getPaywallOptions();
+            $options_from_database = array_filter($this->plugin->getPaywallOptions());
+
             $this->options = array_merge($this->options, $options_from_database, $shortcode_options);
         } else {
             // If no shortcode found, do not enable the paywall
@@ -125,63 +127,6 @@ class WP_Lightning_Paywall
         $this->split_public_protected();
     }
 
-    /**
-     * Returns true if the content contains the lnpaywall shortcode
-     *
-     * @since  1.0.0
-     * @return boolean true if the content contains the shortcode
-     */
-    protected function content_has_shortcode()
-    {
-        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Locate the shortcode/marker from the content for the paywall.
-     *
-     * @since  1.0.0
-     * @return array Array of shortcode properties of the paywall
-     */
-    protected function extract_options_from_shortcode()
-    {
-        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
-            return shortcode_parse_atts($m[1]);
-        }
-        return [];
-    }
-
-    /**
-     * Split the teaser and the protected content
-     */
-    public function split_public_protected()
-    {
-        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[lnpaywall.+\](<\/p>)?/', $this->content, 2), 2, null);
-    }
-
-    /**
-     * Format display for paid post
-     */
-    protected function format_paid()
-    {
-        return sprintf('%s%s', $this->teaser, $this->protected_content);
-    }
-
-    /**
-     * Format display for unpaid post. Injects the payment request HTML
-     */
-    protected function format_unpaid()
-    {
-        $button = sprintf('<button class="wp-lnp-btn">%s</button>', empty($this->options['button_text']) ? 'Pay now' : $this->options['button_text']);
-        $description = '';
-        if (!empty($this->options['description'])) {
-            $description = sprintf('<p class="wp-lnp-description">%s</p>', $this->options['description']);
-        }
-        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, $this->post_id, $description, $button);
-    }
 
     /**
      * Get the content protected by Paywall
@@ -239,10 +184,106 @@ class WP_Lightning_Paywall
     }
 
     /**
+     * Get the formatted amount
+     */
+    public function get_formatted_amount()
+    {
+        if ($this->options['currency'] != 'btc') {
+            $locale = get_locale();
+            $currency_formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+            $currency_formatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, $this->options['currency']);
+            return $currency_formatter->format(intval($this->options['amount']) / 100.0); // we have cents, but the formatter assumes "dollars" - we only support usd,eur,gbp (all have 2 digits for cents)
+        } else {
+            return number_format_i18n($this->options['amount']) . "sats";
+        }
+    }
+
+    /**
      * Get the protected content
      */
     public function get_protected_content()
     {
         return $this->protected_content;
+    }
+
+    /**
+     * Get the public content
+     */
+    public function get_public_content()
+    {
+        return $this->$teaser;
+    }
+
+    /**
+     * Returns true if the content contains the lnpaywall shortcode
+     *
+     * @since  1.0.0
+     * @return boolean true if the content contains the shortcode
+     */
+    protected function content_has_shortcode()
+    {
+        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Locate the shortcode/marker from the content for the paywall.
+     *
+     * @since  1.0.0
+     * @return array Array of shortcode properties of the paywall
+     */
+    protected function extract_options_from_shortcode()
+    {
+        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
+            return shortcode_parse_atts($m[1]);
+        }
+        return [];
+    }
+
+    /**
+     * Format display for paid post
+     */
+    protected function format_paid()
+    {
+        return sprintf('%s%s', $this->teaser, $this->protected_content);
+    }
+
+    /**
+     * Format display for unpaid post. Injects the payment request HTML
+     */
+    protected function format_unpaid()
+    {
+
+        $button = sprintf('<button class="wp-lnp-btn">%s</button>', $this->format_label($this->options['button_text']));
+        $description = '';
+        if (!empty($this->options['description'])) {
+            $description = sprintf('<p class="wp-lnp-description">%s</p>', $this->format_label($this->options['description']));
+        }
+        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, $this->post_id, $description, $button);
+    }
+
+    /**
+     * Replaces text place holders (e.g. %{amount} with the actual value)
+     */
+    protected function format_label($text)
+    {
+        return strtr($text, [
+            '%{amount}' => $this->options['amount'],
+            '%{currency}' => $this->options['currency'],
+            '%{formatted_amount}' => $this->get_formatted_amount(),
+            '%{length}' => $this->content_length
+        ]);
+
+    }
+
+    /**
+     * Split the teaser and the protected content
+     */
+    protected function split_public_protected()
+    {
+        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[lnpaywall.+\](<\/p>)?/', $this->content, 2), 2, null);
     }
 }
