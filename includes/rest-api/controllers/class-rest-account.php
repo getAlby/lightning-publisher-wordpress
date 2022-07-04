@@ -60,6 +60,14 @@ class LNP_AccountController extends \WP_REST_Controller
             $account = LNDHub\Client::createAlbyWallet($email, $password);
             if (!empty($account['lndhub']) && !empty($account['lndhub']['login'])) {
                 $logger->info('Alby Wallet Created');
+                // update node keysend settings
+                $lnp_general = get_option('lnp_general');
+                if (empty($lnp_general['v4v_node_key'])) {
+                    $lnp_general['v4v_node_key'] = $account['keysend_pubkey'];
+                    $lnp_general['v4v_custom_key'] = $account['keysend_custom_key'];
+                    $lnp_general['v4v_custom_value'] = $account['keysend_custom_value'];
+                    update_option('lnp_general', $lnp_general);
+                }
                 ob_end_clean();
                 wp_send_json($account, 200);
             } else {
