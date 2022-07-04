@@ -21,7 +21,7 @@ defined('WPINC') || die; ?>
             <?php endforeach; ?>
         </ol>
     </div>
-    <div class="card" style="float:left;width:49%;margin:10px 10px 10px 0">
+    <div class="card" style="float:left;width:49%;margin:10px 10px 10px 0;overflow:hidden">
         <h2 class="title">Connected Wallet</h2>
         <h4>
             <?php
