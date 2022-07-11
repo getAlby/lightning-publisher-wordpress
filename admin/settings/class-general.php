@@ -53,7 +53,7 @@ class LNP_GeneralPage extends LNP_SettingsPage
                 'name'  => 'lnurl_meta_tag',
                 'value' => 'on',
                 'label' => __('Enable Value4Value lightning meta tag', 'lnp-alby'),
-                'description' => __('Enable the lightning metatag which allows visitor to send sats to your page', 'lnp-alby'),
+                'description' => __('Enable the lightning metatag which allows visitors to send sats to your page', 'lnp-alby'),
             ),
         );
 

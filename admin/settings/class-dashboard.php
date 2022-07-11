@@ -15,7 +15,7 @@ class LNP_Dashboard extends LNP_SettingsPage
     protected function set_translations()
     {
         // Menu Item label
-        $this->page_title = __('Lightning Publisher Dashboard', 'lnp-alby');
+        $this->page_title = __('Dashboard', 'lnp-alby');
         $this->menu_title = __('Dashboard', 'lnp-alby');
     }
 

@@ -108,7 +108,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'number',
                 'name'        => 'timeout',
                 'label'       => __('Timeout', 'lnp-alby'),
-                'description' => __('Make the article free X hours after it is published and enable the paywall after that', 'lnp-alby'),
+                'description' => __('Remove paywall and make the article free X hours after it is published', 'lnp-alby'),
             ),
         );
 
@@ -118,7 +118,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'number',
                 'name'        => 'timein',
                 'label'       => __('Timein', 'lnp-alby'),
-                'description' => __('Enable the paywall X hours after the article is published', 'lnp-alby'),
+                'description' => __('Remove paywall and make the article free for X hours. Then after X hours enable the paywall.', 'lnp-alby'),
             ),
         );
 
@@ -128,7 +128,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'number',
                 'name'        => 'total',
                 'label'       => __('Total', 'lnp-alby'),
-                'description' => __('Total amount to collect. After that amount the article will be free', 'lnp-alby'),
+                'description' => __('Total amount to collect. After that amount is reached the paywall will be removed.', 'lnp-alby'),
             ),
         );
 
@@ -138,7 +138,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'checkbox',
                 'name'        => 'disable_in_rss',
                 'value'       => 'on',
-                'label'       => __('Disable paywall in RSS?', 'lnp-alby'),
+                'label'       => __('Disable paywall in RSS', 'lnp-alby'),
                 'description' => __('Disable paywall in RSS items / show full content in RSS.', 'lnp-alby'),
             ),
         );

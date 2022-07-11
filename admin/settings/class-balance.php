@@ -23,7 +23,7 @@ class LNP_BalancePage extends LNP_SettingsPage
     protected function set_translations()
     {
         // Menu Item label
-        $this->page_title = __('Lightning Paywall Transactions', 'lnp-alby');
+        $this->page_title = __('Transactions', 'lnp-alby');
         $this->menu_title = __('Transactions', 'lnp-alby');
     }
 }
