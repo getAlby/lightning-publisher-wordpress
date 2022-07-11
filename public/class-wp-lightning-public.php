@@ -130,6 +130,11 @@ class WP_Lightning_Public
         return $donationWidget->get_donation_block_html();
     }
 
+    public function add_v4v_rss_ns_tag()
+    {
+        echo 'xmlns:podcast="https://podcastindex.org/namespace/1.0"';
+    }
+
     public function add_v4v_rss_tag()
     {
         $address = $this->plugin->getGeneralOptions()['v4v_node_key'];
