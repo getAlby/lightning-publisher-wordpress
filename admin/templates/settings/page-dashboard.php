@@ -22,7 +22,7 @@ defined('WPINC') || die; ?>
         </ol>
     </div>
     <div class="card" style="float:left;width:49%;margin:10px 10px 10px 0;overflow:hidden">
-        <h2 class="title">Connected Wallet</h2>
+        <h2 class="title">Connected wallet</h2>
         <h4>
             <?php
                 echo $this->get_connected_wallet();
