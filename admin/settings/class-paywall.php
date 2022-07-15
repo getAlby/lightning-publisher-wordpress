@@ -65,7 +65,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'tab'     => 'paywall',
             'field'   => array(
                 'name'  => 'button_text',
-                'label' => __('Button Label', 'lnp-alby'),
+                'label' => __('Button label', 'lnp-alby'),
                 'description' => __('You can use %{formatted_amount}, %{length}, %{currency}, %{amount}', 'lnp-alby'),
             ),
         );
@@ -84,7 +84,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'type'        => 'number',
                 'name'        => 'amount',
-                'label'       => __('Default Amount', 'lnp-alby'),
+                'label'       => __('Default amount', 'lnp-alby'),
                 'description' => __('Amount in smallest unit (e.g. cents/sats) per article', 'lnp-alby'),
             ),
         );
@@ -94,7 +94,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
             'field'   => array(
                 'name'        => 'currency',
                 'label'       => __('Currency', 'lnp-alby'),
-                'description' => __('eur, usd, gbp (default is btc)', 'lnp-alby'),
+                'description' => __('EUR, USD, GBP (default is BTC (sats))', 'lnp-alby'),
             ),
         );
 
@@ -108,7 +108,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'number',
                 'name'        => 'timeout',
                 'label'       => __('Timeout', 'lnp-alby'),
-                'description' => __('Make the article free X hours after it is published and enable the paywall after that', 'lnp-alby'),
+                'description' => __('Disable the paywall X hours after the article is published.', 'lnp-alby'),
             ),
         );
 
@@ -118,7 +118,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'number',
                 'name'        => 'timein',
                 'label'       => __('Timein', 'lnp-alby'),
-                'description' => __('Enable the paywall X hours after the article is published', 'lnp-alby'),
+                'description' => __('Enable the paywall X hours after the article is published.', 'lnp-alby'),
             ),
         );
 
@@ -128,7 +128,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'number',
                 'name'        => 'total',
                 'label'       => __('Total', 'lnp-alby'),
-                'description' => __('Total amount to collect. After that amount the article will be free', 'lnp-alby'),
+                'description' => __('Total amount to collect. After that amount is reached, the paywall will be disabled.', 'lnp-alby'),
             ),
         );
 
