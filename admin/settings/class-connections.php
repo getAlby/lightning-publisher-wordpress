@@ -34,27 +34,27 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $this->tabs = array(
             'alby' => array(
                 'title'       => __('Alby Wallet', 'lnp-alby'),
-                'description' => __('Create or connect a getalby.com account. Alby manages a lightning wallet for you', 'lnp-alby'),
+                'description' => __('Create or connect a getalby.com account. Alby manages a Lightning wallet for you.', 'lnp-alby'),
             ),
             'lnd' => array(
                 'title'       => __('LND', 'lnp-alby'),
-                'description' => __('Connect your LND node', 'lnp-alby'),
+                'description' => __('Connect your LND node.', 'lnp-alby'),
             ),
             'lndhub' => array(
                 'title'       => __('LNDHub', 'lnp-alby'),
-                'description' => __('Connect to an LNDHub account (for example Alby)', 'lnp-alby'),
+                'description' => __('Connect to an LNDHub account (for example Alby).', 'lnp-alby'),
             ),
             'lnbits' => array(
                 'title'       => __('LNbits', 'lnp-alby'),
-                'description' => __('Connect to your LNbits account', 'lnp-alby'),
+                'description' => __('Connect to your LNbits account.', 'lnp-alby'),
             ),
             'btcpay' => array(
                 'title'       => __('BTC Pay', 'lnp-alby'),
-                'description' => __('Connect to a BTCPay Server', 'lnp-alby'),
+                'description' => __('Connect to a BTCPay Server.', 'lnp-alby'),
             ),
             'lnaddress' => array(
                 'title'       => __('LN Address', 'lnp-alby'),
-                'description' => __('Connect using Lightning Address Config', 'lnp-alby'),
+                'description' => __('Connect using a Lightning Address.', 'lnp-alby'),
             ),
         );
 
@@ -82,7 +82,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
                 'type'        => 'url',
                 'name'        => 'lnd_address',
                 'label'       => __('REST Address (with port)', 'lnp-alby'),
-                'description' => __('e.g. https://127.0.0.1:8080 - or <a href="#" id="load_from_lndconnect">click here to load details from a lndconnect</a>', 'lnp-alby'),
+                'description' => __('e.g. https://127.0.0.1:8080 - or <a href="#" id="load_from_lndconnect">click here to load details from a lndconnect connection</a>', 'lnp-alby'),
             ),
         );
 
