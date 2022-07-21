@@ -187,4 +187,4 @@ This plugin is powered by [Alby](https://getalby.com/) - We create tools to reth
 
 ## License
 
-MIT
+GPL 3.0 (as WordPress)
