@@ -74,7 +74,7 @@ class LNP_TransactionsTable extends WP_List_Table
             'post'          => 'Post',
             'payment_hash'       => 'Payment Hash',
             'payment_request' => 'Payment Request',
-            'amount'        => 'Amount In Satoshi',
+            'amount'        => 'Amount (in sats)',
             // 'exchange_rate'    => 'Exchange Rate',
             // 'exchange_currency' => 'Exchange Currency',
             'state' => 'State',

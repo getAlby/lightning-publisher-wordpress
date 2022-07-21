@@ -138,7 +138,7 @@ class LNP_PaywallPage extends LNP_SettingsPage
                 'type'        => 'checkbox',
                 'name'        => 'disable_in_rss',
                 'value'       => 'on',
-                'label'       => __('Disable paywall in RSS?', 'lnp-alby'),
+                'label'       => __('Disable paywall in RSS', 'lnp-alby'),
                 'description' => __('Disable paywall in RSS items / show full content in RSS.', 'lnp-alby'),
             ),
         );

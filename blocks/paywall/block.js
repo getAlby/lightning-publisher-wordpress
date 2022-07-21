@@ -100,7 +100,7 @@
                     ),
                     el(
                         TextControl, {
-                            label: __("Disable the paywall x hours after publishing", "alby"),
+                            label: __("Remove paywall and make the article free X hours after it is published", "alby"),
                             onChange: (v) => {
                                 if (v !== "") {
                                     v = parseInt(v);
@@ -112,7 +112,7 @@
                     ),
                     el(
                         TextControl, {
-                            label: __("Enable the paywall only for x hours after publishing", "alby"),
+                            label: __("Remove paywall and make the article free for X hours.", "alby"),
                             onChange: (v) => {
                                 if (v !== "") {
                                     v = parseInt(v);
@@ -124,7 +124,7 @@
                     ),
                     el(
                         TextControl, {
-                            label: __("Disable paywall after X Satoshis have been received", "alby"),
+                            label: __("Total amount to collect.", "alby"),
                             onChange: (v) => {
                                 if (v !== "") {
                                     v = parseInt(v);

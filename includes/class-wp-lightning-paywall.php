@@ -238,7 +238,12 @@ class WP_Lightning_Paywall
     protected function extract_options_from_shortcode()
     {
         if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
-            return shortcode_parse_atts($m[1]);
+            $atts = shortcode_parse_atts($m[1]);
+            if ($atts == "") {
+                return [];
+            } else {
+                return $atts;
+            }
         }
         return [];
     }

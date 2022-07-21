@@ -1,6 +1,55 @@
-# Lightning Publisher for WordPress
+# Bitcoin Lightning Publisher for WordPress
 
-Lightning Publisher is a Bitcoin Lightning Paywall and Donation plugin for Wordpress. It allows you to receive Bitcoin Lightning payments with your WordPress website.
+Bitcoin Lightning Publisher is a Bitcoin Lightning Paywall and Donation plugin for WordPress. 
+It allows you to accept Bitcoin Lightning payments with your WordPress website. You can monetize any digital content with instant microtransactions and receive payments directly from your visitors - no need for expensive service providers.
+
+The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations and value 4 value payments.
+Thanks to the Bitcoin Lightning Network you can create the best visitor experience with seamless one-click payments to your customers.
+
+
+### Features
+
+#### Paywall to sell content
+Sell any digital content (pay-per-post, pay-per-view, pay-per-download, etc.) with a highly configurable paywall
+
+* [WebLN enabled](https://www.webln.guide/) by default for easy on-click payments
+* Add a paywall to posts and pages to easily charge for any published content
+* Crowdfund option: make the content freely available after a certain amount is received
+* Time-in option: keep the article freely available for a certain time and then enable the paywall after that
+* Time-out option: make the article freely available after a certain time
+* Configure the price in Satoshis, EUR, USD, or GBP (with real-time exchange rate)
+* Configure the paywall with a shortcode (`[lnpaywall]`)
+* Or configure the paywall with a Gutenberg Block
+* Integrate with other tools and plugins like membership tools to control if the paywall should be enabled (see Paywall Hook section)
+
+
+#### Donation/Value4Value payments
+The plugin comes with various options to receive donations and Value 4 Value payments. 
+
+* Gutenberg block for a donation widget
+* Donation widget for themes
+* Enable the [Lightning meta tag](https://github.com/BitcoinAndLightningLayerSpecs/rfc/issues/1) to allow users to send payments (Value 4 Value)
+* Enable the `podcast:value` tag in your RSS feed to receive payments for your podcast
+
+
+### Lightning Node connections
+Connect to your exsisting Bitcoin Lightning node or simply create a new [Alby account](https://getalby.com/) to instantly receive lightning payments.
+
+* [LND](https://github.com/lightningnetwork/lnd/)
+* [LNDHub](https://github.com/getalby/lndhub.go) (e.g. BlueWallet)
+* [LNBits](https://lnbits.com/)
+* [BTCPay Server](https://btcpayserver.org/)
+* [Lightning Address](https://lightningaddress.com/)
+
+
+### REST-API for full advanced custom usage
+For more advanced, custom Lightning integrations you can use the REST API to create and verify invoices. The API also provides a [LNURL-pay](https://github.com/fiatjaf/lnurl-rfc/blob/luds/06.md) endpoint. See the REST-API section for details.
+
+
+## Requirements
+
+* WordPress 5.6 or higher
+* PHP 7.4 or higher
 
 ## Demo
 
@@ -9,6 +58,8 @@ Here quick Demo videos showing how to setup and use the plugin:
 + [Admin Panel](https://www.loom.com/share/dbe501fe9d91445082a2c5c07a1a8ce8)
 
 ## Installation
+
+Install from the WordPress Plugin directory or: 
 
 Clone the repository and install the dependency
 
@@ -24,16 +75,8 @@ To build a .zip file of the WordPress plugin run:
 
 Then upload and activate the plugin.
 
-## Paywall
 
-### Paywall options
-
-* Fixed amount
-* Free once a certrain amount is collected
-* Free after a certain time
-* Free until a certain time
-
-#### Paywall Hook to have custom logic when to enable/disable the paywall
+## Paywall Hook to have custom logic when to enable/disable the paywall
 
 To integrate with other plugins or to write custom conditions on when the paywall should be enabled a hook can be used. This means you can use a custom PHP function to decide if content should be behind the paywall or not.
 
@@ -69,11 +112,26 @@ function wp_lnp_has_paid_for_post($show_full_content, $post_id) {
 
 ```
 
-### Usage
+## Shortcode
 
-Use the plugin as a shortcode/widget/block.
+If you do not use the Gutenberg editor you can use the `[lnpaywall]` shortcode. The content after the shortcode will be behind the paywall.
+The following configuration options are possible: 
 
-## Plugin Folder Structure
+* amount
+* currency
+* description
+* button_text
+* total
+* timeout
+* timein
+
+#### Example
+
+```
+[lnpaywall amount=2121]
+```
+
+## Plugin folder structure
 
 Folder structure is based on https://github.com/DevinVinson/WordPress-Plugin-Boilerplate
 
@@ -116,35 +174,37 @@ The plugin also provides a set of REST API Endpoints for handling payments and d
 }
 ```
 
-#### Initiate Donation
+#### LNURL-pay
 
-- URL: `/lnp-alby/v1/donate`
-- Method: `POST`
+- URL: `/lnp-alby/v1/lnurlp`
+- Method: `GET`
 - Auth Required: No
-- Data example
 
 ```
 {
-    post_id: "xxx",
-    amount: "xxx"
+    "status":"OK",
+    "callback":"http:\/\/wp.play.getalby.com\/wp-json\/lnp-alby\/v1\/lnurlp\/callback",
+    "minSendable":10000,
+    "maxSendable":1000000000,
+    "tag":"payRequest",
+    "metadata":"[[\"text\/identifier\", \"http:\/\/wp.play.getalby.com\"][\"text\/plain\", \"Alby\"]]"
 }
 ```
 
-#### Verify Donation
-
-- URL: `/lnp-alby/v1/verify`
-- Method: `POST`
+- URL: `/lnp-alby/v1/lnurlp/callback`
+- Method: `GET`
 - Auth Required: No
-- Data example
 
-```
-{
-    amount: "xxx",
-    token: "xxx",
-    preimage: "xxx"
-}
-```
+
+## Get support
+
+Do you need help? Create an issue or reach out to us: support[at]getalby.com
+
+
+## About Alby
+
+This plugin is powered by [Alby](https://getalby.com/) - We create tools to rethink content monetization on the web.
 
 ## License
 
-MIT
+GPL 3.0 (as WordPress)
