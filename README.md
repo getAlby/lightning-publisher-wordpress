@@ -110,6 +110,24 @@ function wp_lnp_has_paid_for_post($show_full_content, $post_id) {
 
 ```
 
+## Shortcode
+
+If you do not use the Gutenberg editor you can use the `[lnpaywall]` shortcode. The content after the shortcode will be behind the paywall.
+The following configuration options are possible: 
+
+* amount
+* currency
+* description
+* button_text
+* total
+* timeout
+* timein
+
+#### Example
+
+```
+[lnpaywall amount=2121]
+```
 
 ## Plugin Folder Structure
 
