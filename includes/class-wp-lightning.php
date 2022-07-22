@@ -4,7 +4,7 @@ use \Firebase\JWT;
 use \Monolog\Logger;
 use \Monolog\Handler\StreamHandler;
 
-class WP_Lightning
+class BLN_Publisher
 {
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
@@ -12,7 +12,7 @@ class WP_Lightning
      *
      * @since  1.0.0
      * @access protected
-     * @var    WP_Lightning_Loader    $loader    Maintains and registers all hooks for the plugin.
+     * @var    BLN_Publisher_Loader    $loader    Maintains and registers all hooks for the plugin.
      */
     protected $loader;
 
@@ -39,7 +39,7 @@ class WP_Lightning
      *
      * @since  1.0.0
      * @access protected
-     * @var    WP_Lightning_Client_Interface   $lightningClient    The lightning client.
+     * @var    BLN_Publisher_Client_Interface   $lightningClient    The lightning client.
      */
     protected $lightningClient;
 
@@ -149,10 +149,10 @@ class WP_Lightning
      *
      * Include the following files that make up the plugin:
      *
-     * - WP_Lightning_Loader. Orchestrates the hooks of the plugin.
-     * - WP_Lightning_i18n. Defines internationalization functionality.
-     * - WP_Lightning_Admin. Defines all hooks for the admin area.
-     * - WP_Lightning_Public. Defines all hooks for the public side of the site.
+     * - BLN_Publisher_Loader. Orchestrates the hooks of the plugin.
+     * - BLN_Publisher_i18n. Defines internationalization functionality.
+     * - BLN_Publisher_Admin. Defines all hooks for the admin area.
+     * - BLN_Publisher_Public. Defines all hooks for the public side of the site.
      *
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
@@ -238,8 +238,8 @@ class WP_Lightning
          */
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/rest-api/class-rest-server.php';
 
-        $this->plugin_admin = new WP_Lightning_Admin($this);
-        $this->plugin_public = new WP_Lightning_Public($this);
+        $this->plugin_admin = new BLN_Publisher_Admin($this);
+        $this->plugin_public = new BLN_Publisher_Public($this);
     }
 
     /**
@@ -247,7 +247,7 @@ class WP_Lightning
      */
     private function initialize_loader()
     {
-        $this->loader = new WP_Lightning_Loader();
+        $this->loader = new BLN_Publisher_Loader();
     }
 
     /**
@@ -263,7 +263,7 @@ class WP_Lightning
     /**
      * Define the locale for this plugin for internationalization.
      *
-     * Uses the WP_Lightning_i18n class in order to set the domain and to register the hook
+     * Uses the BLN_Publisher_i18n class in order to set the domain and to register the hook
      * with WordPress.
      *
      * @since  1.0.0
@@ -272,7 +272,7 @@ class WP_Lightning
     private function set_locale()
     {
 
-        $plugin_i18n = new WP_Lightning_i18n();
+        $plugin_i18n = new BLN_Publisher_i18n();
 
         $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
     }
@@ -318,19 +318,19 @@ class WP_Lightning
         if (!$this->lightningClient) {
             if (!empty($this->connection_options['lnd_address'])) {
                 $this->lightningClientType = 'lnd';
-                $this->lightningClient = new WP_Lightning_LND_Client($this->connection_options);
+                $this->lightningClient = new BLN_Publisher_LND_Client($this->connection_options);
             } elseif (!empty($this->connection_options['lnbits_apikey'])) {
                 $this->lightningClientType = 'lnbits';
-                $this->lightningClient = new WP_Lightning_LNBits_Client($this->connection_options);
+                $this->lightningClient = new BLN_Publisher_LNBits_Client($this->connection_options);
             } elseif (!empty($this->connection_options['lnaddress_address']) || !empty($this->connection_options['lnaddress_lnurl'])) {
                 $this->lightningClientType = 'lnaddress';
-                $this->lightningClient = new WP_Lightning_LNAddress_Client($this->connection_options);
+                $this->lightningClient = new BLN_Publisher_LNAddress_Client($this->connection_options);
             } elseif (!empty($this->connection_options['btcpay_host'])) {
                 $this->lightningClientType = 'btcpay';
-                $this->lightningClient = new WP_Lightning_BTCPay_Client($this->connection_options);
+                $this->lightningClient = new BLN_Publisher_BTCPay_Client($this->connection_options);
             } elseif (!empty($this->connection_options['lndhub_url']) && !empty($this->connection_options['lndhub_login']) && !empty($this->connection_options['lndhub_password'])) {
                 $this->lightningClientType = 'lndhub';
-                $this->lightningClient = new WP_Lightning_LNDHub_Client($this->connection_options);
+                $this->lightningClient = new BLN_Publisher_LNDHub_Client($this->connection_options);
             }
         }
     }
@@ -348,7 +348,7 @@ class WP_Lightning
         $this->loader->add_action('admin_enqueue_scripts', $this->plugin_admin, 'enqueue_styles');
         // Load the js scripts for admin section
         $this->loader->add_action('admin_enqueue_scripts', $this->plugin_admin, 'enqueue_scripts');
-        // Add the WP Lightning menu to the Wordpress Dashboard
+        // Add the menu to the Wordpress Dashboard
         $this->loader->add_action('admin_menu', $this->plugin_admin, 'lightning_menu');
         // Register the donation block
         $this->loader->add_action('init', $this->plugin_admin, 'init_donation_block');
@@ -446,7 +446,7 @@ class WP_Lightning
      * The reference to the class that orchestrates the hooks with the plugin.
      *
      * @since  1.0.0
-     * @return WP_Lightning_Loader    Orchestrates the hooks of the plugin.
+     * @return BLN_Publisher_Loader    Orchestrates the hooks of the plugin.
      */
     public function get_loader()
     {
@@ -555,7 +555,7 @@ class WP_Lightning
 
     public function has_paid_for_post($post_id)
     {
-        $paid_post_ids = WP_Lightning::get_paid_post_ids();
+        $paid_post_ids = BLN_Publisher::get_paid_post_ids();
         return in_array($post_id, $paid_post_ids);
     }
 
@@ -566,7 +566,7 @@ class WP_Lightning
      */
     public function save_as_paid($post_id, $amount_paid = 0)
     {
-        $paid_post_ids = WP_Lightning::get_paid_post_ids();
+        $paid_post_ids = BLN_Publisher::get_paid_post_ids();
         if (!in_array($post_id, $paid_post_ids)) {
             $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
             if (is_numeric($amount_received)) {

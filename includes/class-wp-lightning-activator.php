@@ -6,14 +6,14 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes
  */
 
 // Custom Tables
 require_once 'db/database-handler.php';
 
-class WP_Lightning_Activator
+class BLN_Publisher_Activator
 {
 
     /**

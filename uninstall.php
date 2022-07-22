@@ -5,7 +5,7 @@
  *
  * @since 1.0.0
  *
- * @package WP_Lightning
+ * @package BLN_Publisher
  */
 
 // If uninstall not called from WordPress, then exit.

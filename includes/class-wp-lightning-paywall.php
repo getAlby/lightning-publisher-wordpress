@@ -19,17 +19,17 @@
  * the full content or the teaser.
  *
  * @since      1.0.0
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes
  */
-class WP_Lightning_Paywall
+class BLN_Publisher_Paywall
 {
     /**
      * Main Plugin.
      *
      * @since  1.0.0
      * @access private
-     * @var    WP_Lightning    $plugin    The main plugin object.
+     * @var    BLN_Publisher    $plugin    The main plugin object.
      */
     private $plugin;
 

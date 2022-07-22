@@ -6,10 +6,10 @@
  * This class defines all the helper functions for the plugin
  *
  * @since      1.0.0
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes
  */
-class WP_Lightning_Helper
+class BLN_Publisher_Helper
 {
 
 }

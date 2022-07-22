@@ -4,10 +4,10 @@
  * Abstract LND Lightning Client.
  *
  * @since      1.0.0
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes/client
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes/client
  */
-abstract class Abstract_WP_Lightning_Client implements WP_Lightning_Client_Interface
+abstract class Abstract_BLN_Publisher_Client implements BLN_Publisher_Client_Interface
 {
 
     /**

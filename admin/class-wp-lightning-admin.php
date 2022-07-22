@@ -8,10 +8,10 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    WP_Lightning
- * @subpackage WP_Lightning/admin
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/admin
  */
-class WP_Lightning_Admin
+class BLN_Publisher_Admin
 {
 
     /**
@@ -19,7 +19,7 @@ class WP_Lightning_Admin
      *
      * @since  1.0.0
      * @access private
-     * @var    WP_Lightning    $plugin    The main plugin object.
+     * @var    BLN_Publisher    $plugin    The main plugin object.
      */
     private $plugin;
 
@@ -27,7 +27,7 @@ class WP_Lightning_Admin
      * Initialize the class and set its properties.
      *
      * @since 1.0.0
-     * @param WP_Lightning $plugin The main plugin object.
+     * @param BLN_Publisher $plugin The main plugin object.
      */
     public function __construct($plugin)
     {

@@ -7,10 +7,10 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes
  */
-class WP_Lightning_Loader
+class BLN_Publisher_Loader
 {
 
     /**

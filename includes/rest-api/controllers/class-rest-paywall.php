@@ -68,9 +68,9 @@ class LNP_PaywallController extends \WP_REST_Controller
         $post = get_post($post_id);
         // get the content of the post and apply the blocks
         // this adds the "shortcode" to the content if the Gutenberg block is used
-        // the shortcode is then parsed in WP_Lightning_Paywall with a regex
+        // the shortcode is then parsed in BLN_Publisher_Paywall with a regex
         $content = do_blocks($post->post_content);
-        $paywall = new WP_Lightning_Paywall($plugin, ['content' => $content, 'post_id' => $post_id]);
+        $paywall = new BLN_Publisher_Paywall($plugin, ['content' => $content, 'post_id' => $post_id]);
         $paywall_options = $paywall->get_options();
         if (!$paywall_options) {
             $logger->error('Paywall options not found', ['post_id' => $post_id]);
@@ -163,9 +163,9 @@ class LNP_PaywallController extends \WP_REST_Controller
             $post = get_post($post_id);
             // get the content of the post and apply the blocks
             // this adds the "shortcode" to the content if the Gutenberg block is used
-            // the shortcode is then parsed in WP_Lightning_Paywall with a regex
+            // the shortcode is then parsed in BLN_Publisher_Paywall with a regex
             $content = do_blocks($post->post_content);
-            $paywall = new WP_Lightning_Paywall($plugin, ['content' => $content, 'post_id' => $post_id]);
+            $paywall = new BLN_Publisher_Paywall($plugin, ['content' => $content, 'post_id' => $post_id]);
             $protected = $paywall->get_protected_content();
 
             // fallback to use either value or amount from the invoice response

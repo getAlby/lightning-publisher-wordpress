@@ -7,10 +7,10 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes
  */
-class WP_Lightning_i18n
+class BLN_Publisher_i18n
 {
 
 

@@ -4,10 +4,10 @@
  * LNBits Lightning Client.
  *
  * @since      1.0.0
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes/client
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes/client
  */
-class WP_Lightning_LNBits_Client extends Abstract_WP_Lightning_Client
+class BLN_Publisher_LNBits_Client extends Abstract_BLN_Publisher_Client
 {
 
     public function __construct($options)

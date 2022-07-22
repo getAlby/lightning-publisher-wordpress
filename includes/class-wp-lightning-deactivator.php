@@ -6,10 +6,10 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    WP_Lightning
- * @subpackage WP_Lightning/includes
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/includes
  */
-class WP_Lightning_Deactivator
+class BLN_Publisher_Deactivator
 {
 
     /**

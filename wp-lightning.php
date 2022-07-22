@@ -7,16 +7,16 @@
  * admin area. This file also includes all of the dependencies used by the plugin,
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
- * 
+ *
  * @since   1.0.0
- * @package WP_Lightning
+ * @package BLN_Publisher
  *
  * @wordpress-plugin
- * Plugin Name:       WP Lightning Paywall
- * Description:       Wordpress content paywall using the lightning network. Directly connected to an LND node
+ * Plugin Name:       Bitcoin Lightning Publisher
+ * Description:       Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations directly to your preferred wallet.
  * Version:           1.0.0
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:           GPL-3.0
+ * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:       lnp-alby
  * Domain Path:       /languages
  */
@@ -40,7 +40,7 @@ define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url(__FILE__)));
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wp-lightning-activator.php
  */
-function activate_wp_lightning()
+function activate_bln_publisher()
 {
     include_once plugin_dir_path(__FILE__) . 'includes/class-wp-lightning-activator.php';
     WP_lightning_Activator::activate();
@@ -50,14 +50,14 @@ function activate_wp_lightning()
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-wp-lightning-deactivator.php
  */
-function deactivate_wp_lightning()
+function deactivate_bln_publisher()
 {
     include_once plugin_dir_path(__FILE__) . 'includes/class-wp-lightning-deactivator.php';
     WP_lightning_Deactivator::deactivate();
 }
 
-register_activation_hook(__FILE__, 'activate_wp_lightning');
-register_deactivation_hook(__FILE__, 'deactivate_wp_lightning');
+register_activation_hook(__FILE__, 'activate_bln_publisher');
+register_deactivation_hook(__FILE__, 'deactivate_bln_publisher');
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -74,11 +74,11 @@ require plugin_dir_path(__FILE__) . 'includes/class-wp-lightning.php';
  *
  * @since 1.0.0
  */
-function run_wp_lightning()
+function run_bln_publisher()
 {
 
-    $plugin = new WP_Lightning();
+    $plugin = new BLN_Publisher();
     $plugin->run();
 
 }
-run_wp_lightning();
+run_bln_publisher();

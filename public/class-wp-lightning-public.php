@@ -8,10 +8,10 @@ use Firebase\JWT;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    WP_Lightning
- * @subpackage WP_Lightning/public
+ * @package    BLN_Publisher
+ * @subpackage BLN_Publisher/public
  */
-class WP_Lightning_Public
+class BLN_Publisher_Public
 {
 
     /**
@@ -19,7 +19,7 @@ class WP_Lightning_Public
      *
      * @since  1.0.0
      * @access private
-     * @var    WP_Lightning    $plugin    The main plugin object.
+     * @var    BLN_Publisher    $plugin    The main plugin object.
      */
     private $plugin;
 
@@ -27,7 +27,7 @@ class WP_Lightning_Public
      * Initialize the class and set its properties.
      *
      * @since 1.0.0
-     * @param WP_Lightning $plugin The main plugin object.
+     * @param BLN_Publisher $plugin The main plugin object.
      */
     public function __construct($plugin)
     {
@@ -46,10 +46,10 @@ class WP_Lightning_Public
          * This function is provided for demonstration purposes only.
          *
          * An instance of this class should be passed to the run() function
-         * defined in WP_Lightning_Loader as all of the hooks are defined
+         * defined in BLN_Publisher_Loader as all of the hooks are defined
          * in that particular class.
          *
-         * The WP_Lightning_Loader will then create the relationship
+         * The BLN_Publisher_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
          */
@@ -70,10 +70,10 @@ class WP_Lightning_Public
          * This function is provided for demonstration purposes only.
          *
          * An instance of this class should be passed to the run() function
-         * defined in WP_Lightning_Loader as all of the hooks are defined
+         * defined in BLN_Publisher_Loader as all of the hooks are defined
          * in that particular class.
          *
-         * The WP_Lightning_Loader will then create the relationship
+         * The BLN_Publisher_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
          */
@@ -94,7 +94,7 @@ class WP_Lightning_Public
      */
     public function ln_paywall_filter($content)
     {
-        $paywall = new WP_Lightning_Paywall($this->plugin, [ "content" => $content, "post_id" => get_the_ID()]);
+        $paywall = new BLN_Publisher_Paywall($this->plugin, [ "content" => $content, "post_id" => get_the_ID()]);
         return $paywall->get_content();
     }
 
