@@ -89,6 +89,10 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 == Changelog ==
 [Version 1.0.0](https://github.com/getAlby/lightning-publisher-wordpress/releases)
 
+== Upgrade Notice ==
+
+= 1.0 =
+Initial release
 
 == Additional Info ==
 **Contributing**
