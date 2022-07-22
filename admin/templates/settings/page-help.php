@@ -6,23 +6,70 @@ defined('WPINC') || die; ?>
 <div class="wrap lnp">
     <h1><?php echo $this->get_page_title(); ?></h1>
 
+    <h3>Getting Started</h3>
+    <p>How to get started receiving lightning payments with your WordPress page</p>
+
+    <ol>
+        <li>
+            <strong>Configure your preferred Lightning wallet</strong>:
+            Go to <i>Wallet Settings</i> and configure your existing Wallet connection.<br>
+            If you do not have one, or want <a href="https://getalby.com/">Alby</a> to manage it for you then simply create a new account or use your existing <a href="https://getalby.com/">Alby account</a>.
+        </li>
+        <li>
+            <strong>Configure your paywall defaults</strong>:
+            Go to <i>Paywall Settings</i> to configure your default settings. Those can always be overwritten on an individual post level but defaults make it easy.
+        </li>
+        <li>
+            <strong>Enable Value 4 Value</strong>:
+            Go to <i>General Settings</i> to enable the Value 4 Value options for your site.<br>
+            This allows you to add the Lightning metatag and add the podcast:value tag to your RSS feed (mainly for the podcasters). Value 4 Value payments enable visitors to send microtransactions as they use your site.
+        </li>
+        <li>
+            <strong>Done</strong>:
+            Add the paywall or donation blocks to your posts using the Gutenberg Block editor or use the <i>[lnpaywall]</i> shortcode.<br>
+            In the Gutenberg block search for the Block "Lightning" (-"Lightning Paywall", "Twentyuno Lightning Payment Widget", "Lightning Donation"-)
+        </li>
+    </ol>
+
+    <hr>
+
+    <h3>Getting Help</h3>
+    <p>If you need help please reach out to support@getalby.com</p>
+
+    <hr>
+
     <h3>Shortcodes</h3>
     <p>
-        To configure each article the following shortcode attributes are available:
+        Use the [lnpaywall] shortcode to add and configrue a paywall to your post. Any content after the [lnpaywall] shortcode will be behind the paywall and only accessible to the user after a payment.
     </p>
-    <blockquote>
-        <ul>
-            <li>amount</li>
-            <li>total</li>
-            <li>timein</li>
-            <li>timeout</li>
-        </ul>
-    </blockquote>
+    <p>
+        Configure the paywall defaults in the <i>Paywall Settings</i> or overwrite the defaults with the following options: <code>amount</code>, <code>currency</code>, <code>button_text</code>, <code>total</code>, <code>timein</code>, <code>timeout</code>
+    </p>
+    <p>Examples:</p>
+    <p><code>[lnpaywall amount="100"]</code> (100 sats)<p>
+    <p><code>[lnpaywall amount="100" currency="eur"]</code> (100 EUR cents (1.00 EUR))</p>
+    <p><code>[lnpaywall button_text="Support our work"]</code> (100 EUR cents (1.00 EUR))</p>
 
-    <h3>Usage</h3>
-    <blockquote>
-        <p>[lnpaywall] eg: [lnpaywall amount="100"]</p>
-    </blockquote>
+    <hr>
+
+    <h3>Paywall Settings</h3>
+    <p>
+        The advanced Paywall Settings allow you to activate the paywall with certain options:
+    </p>
+    <ul style="list-style:disc">
+        <li>
+            <strong>Timeout</strong>: Option to determine the number of hours you want to keep the article behind a paywall before making it free.
+        </li>
+        <li>
+            <strong>Timein</strong>: Option to determine the number of hours you want to keep the article free before triggering the paywall.
+        </li>
+        <li>
+            <strong>Total</strong>: Crowdfund the amount of funds you want to receive and disable the paywall after the desired funds are collected.
+        </li>
+        <li>
+            <strong>Disable Paywall in RSS feeds</strong>: Show the full content in RSS feeds.
+        </li>
+    </ul>
 
     <h3>Wallet Settings</h3>
     <p>
@@ -36,6 +83,7 @@ defined('WPINC') || die; ?>
         <li>BTCPay: A self-hosted, open-source cryptocurrency payment processor. More information: https://btcpayserver.org/</li>
         <li>Lightning Address: A simple way for anyone to send you bitcoin instantly on the Lightning Network.It looks like a normal email address such as you@payaddress.com. But it only works if the website visitor uses a WebLN enabled wallet to pay. More information: https://lightningaddress.com/</li>
     </ul>
+
     <h3>General Settings</h3>
     <ul style="list-style:disc">
         <li>Value4Value Lightning meta tag: The meta tag gives websites a way to receive direct payments from their visitors. It allows websites to describe how and where they would like to receive payments. By enabling this feature you add the payment information directly into the code of the website. Wallets that can read this meta tag can send you payments without any additional payment widgets on your website. More information here: https://github.com/BitcoinAndLightningLayerSpecs/rfc/issues/1</li>
