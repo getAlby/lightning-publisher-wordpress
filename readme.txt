@@ -13,7 +13,7 @@ Contributors: getalby
 Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations.
 It allows you to monetize any digital content with instant microtransactions and receive payments from your visitors directly to your preferred wallet - no need for expensive service providers.
 
-The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments. 
+The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments.
 Using the Bitcoin Lightning Network you can create the best visitor experience with seamless one-click payments.
 
 
@@ -81,8 +81,8 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 
 1. Overview
 2. Paywall Settings
-3. Article with paywall
-4. Paying for an article with Alby
+3. Demo article with paywall
+4. Paying for a demo article with Alby
 5. Transaction history
 
 
@@ -96,9 +96,9 @@ Initial release
 
 == Additional Info ==
 **Contributing**
-This plugin is free and open source. We welcome and appreciate new contributions. 
+This plugin is free and open source. We welcome and appreciate new contributions.
 Visit the [code repository](https://github.com/getAlby/lightning-publisher-wordpress) and help us to improve the plugin.
 
 **Donations**
 Want to support the work on this plugin?
-Support the team behind it and send some sats to this Bitcoin Lightning Address hello@getalby.com 
+Support the team behind it and send some sats to this Bitcoin Lightning Address hello@getalby.com
