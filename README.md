@@ -1,9 +1,11 @@
 # Bitcoin Lightning Publisher for WordPress
 
+![Lightning Publisher](/assets/banner.png)
+
 Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations.
 It allows you to monetize any digital content with instant microtransactions and receive payments from your visitors directly to your preferred wallet - no need for expensive service providers.
 
-The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments. 
+The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments.
 Using the Bitcoin Lightning Network you can create the best visitor experience with seamless one-click payments.
 
 
@@ -24,7 +26,7 @@ Sell any digital content (pay-per-post, pay-per-view, pay-per-download, etc.) wi
 
 
 #### Donation/Value4Value payments
-The plugin comes with various options to receive donations and Value 4 Value payments. 
+The plugin comes with various options to receive donations and Value 4 Value payments.
 
 * Gutenberg block for a donation widget
 * Donation widget for themes
@@ -59,7 +61,7 @@ Here quick Demo videos showing how to setup and use the plugin:
 
 ## Installation
 
-Install from the WordPress Plugin directory or: 
+Install from the WordPress Plugin directory or:
 
 Clone the repository and install the dependency
 
@@ -115,7 +117,7 @@ function wp_lnp_has_paid_for_post($show_full_content, $post_id) {
 ## Shortcode
 
 If you do not use the Gutenberg editor you can use the `[lnpaywall]` shortcode. The content after the shortcode will be behind the paywall.
-The following configuration options are possible: 
+The following configuration options are possible:
 
 * amount
 * currency
