@@ -81,8 +81,9 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 
 1. Paywall Settings
 2. Wallet Settings
-3. Demo article with paywall
-4. Paying for a demo article with Alby
+3. Payment flow
+4. Demo article with paywall
+5. Paying for a demo article with Alby
 
 == Changelog ==
 [Version 1.0.0](https://github.com/getAlby/lightning-publisher-wordpress/releases)
