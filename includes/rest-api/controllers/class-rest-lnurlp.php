@@ -64,7 +64,7 @@ class LNP_LnurlpController extends \WP_REST_Controller
           'minSendable' => 10 * 1000, // millisatoshi
           'maxSendable' => 1000000 * 1000, // millisatoshi
           'tag' => 'payRequest',
-          'metadata' => '[["text/identifier", "' . site_url() .'"]["text/plain", "' . $description . '"]]'
+          'metadata' => '[["text/identifier", "' . site_url() .'"],["text/plain", "' . $description . '"]]'
         ];
         ob_end_clean();
         wp_send_json($response, 200);
@@ -90,7 +90,8 @@ class LNP_LnurlpController extends \WP_REST_Controller
             wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
             return;
         }
-        $description_hash = base64_encode(hash('sha256', '[["text/identifier", "' . site_url() .'"]["text/plain", "' . $description . '"]]', true));
+        $amount = ceil($amount / 1000); // amounts are sent in milli sats
+        $description_hash = base64_encode(hash('sha256', '[["text/identifier", "' . site_url() .'"],["text/plain", "' . $description . '"]]', true));
 
         $invoice = $this->plugin->getLightningClient()->addInvoice(
             [

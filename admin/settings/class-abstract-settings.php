@@ -179,7 +179,7 @@ abstract class LNP_SettingsPage
 
         $path = sprintf(
             '%s/admin/templates/%s',
-            WP_LN_ROOT_PATH,
+            BLN_PUBLISHER_ROOT_PATH,
             $filename
         );
 

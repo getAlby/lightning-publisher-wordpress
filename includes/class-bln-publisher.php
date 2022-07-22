@@ -126,12 +126,12 @@ class BLN_Publisher
      */
     public function __construct()
     {
-        if (defined('WP_LIGHTNING_VERSION')) {
-            $this->version = WP_LIGHTNING_VERSION;
+        if (defined('BLN_PUBLISHER_VERSION')) {
+            $this->version = BLN_PUBLISHER_VERSION;
         } else {
             $this->version = '1.0.0';
         }
-        $this->plugin_name = 'wp-lightning';
+        $this->plugin_name = 'bln-publisher';
         $this->load_dependencies();
         $this->initialize_loader();
         $this->initialize_logger();
@@ -191,47 +191,47 @@ class BLN_Publisher
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
          */
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-lightning-loader.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-bln-publisher-loader.php';
 
         /**
          * The class responsible for defining internationalization functionality
          * of the plugin.
          */
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-lightning-i18n.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-bln-publisher-i18n.php';
 
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
-        include_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wp-lightning-admin.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-bln-publisher-admin.php';
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
          * side of the site.
          */
-        include_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-lightning-public.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'public/class-bln-publisher-public.php';
 
         /**
          * The lightning client classes.
          */
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/lightning-address.php';
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/interface-wp-lightning-client.php';
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/abstract-class-wp-lightning-client.php';
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-wp-lightning-btcpay-client.php';
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-wp-lightning-lnaddress-client.php';
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-wp-lightning-lnbits-client.php';
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-wp-lightning-lnd-client.php';
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-wp-lightning-lndhub-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/interface-bln-publisher-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/abstract-class-bln-publisher-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-btcpay-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-lnaddress-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-lnbits-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-lnd-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-lndhub-client.php';
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
          * side of the site.
          */
-        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-lightning-paywall.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-bln-publisher-paywall.php';
 
         /**
          * The class responsible for donation widget
          */
-        include_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-lightning-donations-widget.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'public/class-bln-publisher-donations-widget.php';
 
         /**
          * The class responsible for REST API.
@@ -255,9 +255,9 @@ class BLN_Publisher
      */
     private function initialize_logger()
     {
-        $this->logger = new Logger('WP_LIGHTNING_LOGGER');
+        $this->logger = new Logger('BLN_PUBLISHER_LOGGER');
         $date = date('Y-m-d');
-        $this->logger->pushHandler(new StreamHandler(trailingslashit(wp_upload_dir()['basedir']). "wp-lightning-logs/{$date}.log", Logger::INFO));
+        $this->logger->pushHandler(new StreamHandler(trailingslashit(wp_upload_dir()['basedir']). "bln-publisher-logs/{$date}.log", Logger::INFO));
     }
 
     /**
@@ -541,7 +541,7 @@ class BLN_Publisher
         if (empty($wplnp)) { return [];
         }
         try {
-            $jwt = JWT\JWT::decode($wplnp, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
+            $jwt = JWT\JWT::decode($wplnp, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
             $paid_post_ids = $jwt->{'post_ids'};
             if (!is_array($paid_post_ids)) { return [];
             }
@@ -578,7 +578,7 @@ class BLN_Publisher
 
             array_push($paid_post_ids, $post_id);
         }
-        $jwt = JWT\JWT::encode(array('post_ids' => $paid_post_ids), WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM);
+        $jwt = JWT\JWT::encode(array('post_ids' => $paid_post_ids), BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM);
         if (!empty($this->general_options["cookie_timeframe_days"])) {
             $days = intval($this->general_options["cookie_timeframe_days"]);
         } else {

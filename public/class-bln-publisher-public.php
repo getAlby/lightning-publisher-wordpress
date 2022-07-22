@@ -54,7 +54,7 @@ class BLN_Publisher_Public
          * class.
          */
 
-        wp_enqueue_style($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'css/wp-lightning-public.css', array(), $this->plugin->get_version(), 'all');
+        wp_enqueue_style($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'css/bln-publisher-public.css', array(), $this->plugin->get_version(), 'all');
 
     }
 
@@ -78,9 +78,7 @@ class BLN_Publisher_Public
          * class.
          */
 
-        wp_enqueue_script($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'js/wp-lightning-public.js', array( 'jquery' ), $this->plugin->get_version(), true);
-
-        wp_enqueue_script('wpln/webln-js', plugin_dir_url(__FILE__) . 'js/webln.min.js', array(), $this->plugin->get_version(), true);
+        wp_enqueue_script($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'js/bln-publisher-public.js', $this->plugin->get_version(), true);
 
         wp_localize_script(
             $this->plugin->get_plugin_name(), 'LN_Paywall', array(

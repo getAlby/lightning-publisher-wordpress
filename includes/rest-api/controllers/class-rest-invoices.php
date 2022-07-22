@@ -109,7 +109,7 @@ class LNP_InvoicesController extends \WP_REST_Controller
         $response_data = ['post_id' => $post_id, 'amount' => $amount];
 
         $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
-        $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
+        $jwt = JWT\JWT::encode($jwt_data, BLN_PUBLISHER_PAYWALL_JWT_KEY,  BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM);
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
 
@@ -140,7 +140,7 @@ class LNP_InvoicesController extends \WP_REST_Controller
             return wp_send_json(['settled' => false], 404);
         }
         try {
-            $jwt = JWT\JWT::decode($token, new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM));
+            $jwt = JWT\JWT::decode($token, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
         } catch (Exception $e) {
             $logger->error('Unable to decode token');
             ob_end_clean();

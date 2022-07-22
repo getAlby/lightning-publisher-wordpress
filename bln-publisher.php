@@ -31,29 +31,29 @@ if (! defined('WPINC') ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  */
 define('WP_LIGHTNING_VERSION', '1.0.0');
-define('WP_LN_PAYWALL_JWT_KEY', hash_hmac('sha256', 'lnp-alby', AUTH_KEY));
-define('WP_LN_PAYWALL_JWT_ALGORITHM', 'HS256');
-define('WP_LN_ROOT_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
-define('WP_LN_ROOT_URI', untrailingslashit(plugin_dir_url(__FILE__)));
+define('BLN_PUBLISHER_PAYWALL_JWT_KEY', hash_hmac('sha256', 'lnp-alby', AUTH_KEY));
+define('BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM', 'HS256');
+define('BLN_PUBLISHER_ROOT_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
+define('BLN_PUBLISHER_ROOT_URI', untrailingslashit(plugin_dir_url(__FILE__)));
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-lightning-activator.php
+ * This action is documented in includes/class-bln-publisher-activator.php
  */
 function activate_bln_publisher()
 {
-    include_once plugin_dir_path(__FILE__) . 'includes/class-wp-lightning-activator.php';
-    WP_lightning_Activator::activate();
+    include_once plugin_dir_path(__FILE__) . 'includes/class-bln-publisher-activator.php';
+    BLN_Publisher_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-lightning-deactivator.php
+ * This action is documented in includes/class-bln-publisher-deactivator.php
  */
 function deactivate_bln_publisher()
 {
-    include_once plugin_dir_path(__FILE__) . 'includes/class-wp-lightning-deactivator.php';
-    WP_lightning_Deactivator::deactivate();
+    include_once plugin_dir_path(__FILE__) . 'includes/class-bln-publisher-deactivator.php';
+    BLN_Publisher_Deactivator::deactivate();
 }
 
 register_activation_hook(__FILE__, 'activate_bln_publisher');
@@ -63,7 +63,7 @@ register_deactivation_hook(__FILE__, 'deactivate_bln_publisher');
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path(__FILE__) . 'includes/class-wp-lightning.php';
+require plugin_dir_path(__FILE__) . 'includes/class-bln-publisher.php';
 
 /**
  * Begins execution of the plugin.

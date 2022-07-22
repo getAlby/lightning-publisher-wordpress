@@ -42,7 +42,7 @@ class BLN_Publisher_Admin
     public function enqueue_styles()
     {
 
-        wp_enqueue_style($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'css/wp-lightning-admin.css', array(), $this->plugin->get_version(), 'all');
+        wp_enqueue_style($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'css/bln-publisher-admin.css', array(), $this->plugin->get_version(), 'all');
     }
 
     /**
@@ -53,7 +53,7 @@ class BLN_Publisher_Admin
     public function enqueue_scripts()
     {
 
-        wp_enqueue_script($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'js/wp-lightning-admin.js', array( 'jquery' ), $this->plugin->get_version(), true);
+        wp_enqueue_script($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'js/bln-publisher-admin.js', array( 'jquery' ), $this->plugin->get_version(), true);
     }
 
     /**
@@ -96,7 +96,7 @@ class BLN_Publisher_Admin
         // The JS block script
         $twentyuno_block_js_path = sprintf(
             '%s/blocks/twentyuno/block.js',
-            untrailingslashit(WP_LN_ROOT_URI)
+            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
         );
         wp_register_script(
             'alby-twentyuno-block-script-edit',
@@ -107,7 +107,7 @@ class BLN_Publisher_Admin
         wp_register_script("twentyuno-widget-script", "https://embed.twentyuno.net/js/app.js");
         $twentyuno_block_editor_css_path = sprintf(
             '%s/blocks/twentyuno/editor.css',
-            untrailingslashit(WP_LN_ROOT_URI)
+            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
         );
         wp_register_style(
             'alby-twentyuno-block-css-edit',
@@ -126,7 +126,7 @@ class BLN_Publisher_Admin
             'alby/donate-js',
             sprintf(
                 '%s/assets/js/blocks/donation/donation.js',
-                untrailingslashit(WP_LN_ROOT_URI)
+                untrailingslashit(BLN_PUBLISHER_ROOT_URI)
             )
         );
 
@@ -134,7 +134,7 @@ class BLN_Publisher_Admin
             'alby/donate-css',
             sprintf(
                 '%s/assets/css/blocks/donation.css',
-                untrailingslashit(WP_LN_ROOT_URI)
+                untrailingslashit(BLN_PUBLISHER_ROOT_URI)
             )
         );
 

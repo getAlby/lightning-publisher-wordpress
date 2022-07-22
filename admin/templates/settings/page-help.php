@@ -35,6 +35,7 @@ defined('WPINC') || die; ?>
 
     <h3>Getting Help</h3>
     <p>If you need help please reach out to support@getalby.com</p>
+    <p>For more details please visit the <a href="https://github.com/getAlby/lightning-publisher-wordpress">GitHub repository</a>.</p>
 
     <hr>
 

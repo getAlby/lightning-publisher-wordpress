@@ -43,7 +43,7 @@ class LNP_DonationsWidget
          */
         $template_names = array(
             untrailingslashit(get_stylesheet_directory()) . '/lnp-alby/' . $filename,
-            WP_LN_ROOT_PATH . '/public/templates/donation/' . $filename,
+            BLN_PUBLISHER_ROOT_PATH . '/public/templates/donation/' . $filename,
         );
 
         foreach ( $template_names as $template )
@@ -205,7 +205,7 @@ class LNP_DonationsWidget
         // Enqueue script for Donation widget
         echo wp_get_script_tag(
             array(
-                'src'   => WP_LN_ROOT_URI . '/assets/js/components/donations.js',
+                'src'   => BLN_PUBLISHER_ROOT_URI . '/assets/js/components/donations.js',
                 'async' => true,
                 'defer' => true,
             )

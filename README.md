@@ -135,12 +135,12 @@ The following configuration options are possible:
 
 Folder structure is based on https://github.com/DevinVinson/WordPress-Plugin-Boilerplate
 
-- `wp-lightning.php` is the entrypoint of the plugin
+- `bln-publisher.php` is the entrypoint of the plugin
 - `includes` is where functionality shared between the admin area and the public-facing parts of the site reside
 - `admin` is for all admin-specific functionality
 - `public` is for all public-facing functionality
-- `includes/class-wp-lightning.php` is the main plugin class which handles including all the related classes.
-- `includes/class-wp-lightning-loader.php` is responsible for registering the action and filter hooks, and shortcodes.
+- `includes/class-bln-publisher.php` is the main plugin class which handles including all the related classes.
+- `includes/class-bln-publisher-loader.php` is responsible for registering the action and filter hooks, and shortcodes.
 
 ## REST API
 

@@ -112,7 +112,7 @@ class LNP_DonationsController extends \WP_REST_Controller
         try {
             $jwt = JWT\JWT::decode(
                 $token,
-                new JWT\Key(WP_LN_PAYWALL_JWT_KEY, WP_LN_PAYWALL_JWT_ALGORITHM)
+                new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM)
             );
         }
         catch (Exception $e) {
@@ -199,7 +199,7 @@ class LNP_DonationsController extends \WP_REST_Controller
             )
         );
 
-        $jwt = JWT\JWT::encode($jwt_data, WP_LN_PAYWALL_JWT_KEY,  WP_LN_PAYWALL_JWT_ALGORITHM);
+        $jwt = JWT\JWT::encode($jwt_data, BLN_PUBLISHER_PAYWALL_JWT_KEY,  BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM);
 
         $response = array_merge(
             $response_data,
