@@ -11,10 +11,10 @@ Contributors: getalby
 
 == Description ==
 Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations.
-You can monetize any digital content with instant microtransactions and receive payments directly from your visitors directly to your preferred wallet - no need for expensive service providers.
+It allows you to monetize any digital content with instant microtransactions and receive payments from your visitors directly to your preferred wallet - no need for expensive service providers.
 
-The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations and value 4 value payments. 
-Thanks to the Bitcoin Lightning Network you can create the best visitor experience with seamless one-click payments to your customers.
+The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments. 
+Using the Bitcoin Lightning Network you can create the best visitor experience with seamless one-click payments.
 
 
 **Benefits for you, the publisher:**
