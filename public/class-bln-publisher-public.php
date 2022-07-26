@@ -140,7 +140,7 @@ class BLN_Publisher_Public
         $custom_value = $this->plugin->getGeneralOptions()['v4v_custom_value'];
 
         $tag = array();
-        $tag[] = '<podcast:value>';
+        $tag[] = '<podcast:value type="lightning" method="keysend">';
         $tag[] = '<podcast:valueRecipient name="' . get_bloginfo('name') .'" type="node" address="' . $address . '"';
         if (!empty($custom_key)) {
             $tag[] = ' customKey="' . $custom_key . '"';
