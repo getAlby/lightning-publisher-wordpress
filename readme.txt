@@ -61,12 +61,13 @@ The plugin comes with various options to receive donations and Value 4 Value pay
 * Gutenberg block for a donation widget
 * Donation widget for themes
 * Enable the Lightning meta tag to allow users to send payments (Value 4 Value)
-* Enable the podcast:value tag in your RSS feed to receive payments for your podcast
+* Enable the [`podcast:value` tag](https://github.com/Podcastindex-org/podcast-namespace/blob/main/value/value.md) in your RSS feed to receive payments for your podcast
 
 === Lightning Node connections ===
 
-Connect to your exsisting Bitcoin Lightning node or simply create a new Alby account to instantly receive lightning payments.
+Connect to your exsisting Bitcoin Lightning node or simply create a new Alby account to instantly receive Lightning payments.
 
+* [Alby](https://getalby.com/)
 * LND
 * LNDHub (e.g. BlueWallet)
 * LNBits
