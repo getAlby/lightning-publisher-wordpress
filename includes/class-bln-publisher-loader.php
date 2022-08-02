@@ -1,5 +1,8 @@
 <?php
 
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
 /**
  * Register all actions and filters for the plugin.
  *

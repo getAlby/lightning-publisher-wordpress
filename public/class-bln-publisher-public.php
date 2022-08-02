@@ -2,6 +2,9 @@
 
 use Firebase\JWT;
 
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
 /**
  * The public-facing functionality of the plugin.
  *

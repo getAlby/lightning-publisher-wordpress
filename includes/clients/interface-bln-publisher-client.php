@@ -1,8 +1,11 @@
 <?php
 
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
 /**
  * Lightning Client Interface.
- * 
+ *
  * Defines the interfaces that are shared by the different client types
  *
  * @since      1.0.0

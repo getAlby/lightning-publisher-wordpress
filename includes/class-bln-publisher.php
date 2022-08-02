@@ -4,6 +4,9 @@ use \Firebase\JWT;
 use \Monolog\Logger;
 use \Monolog\Handler\StreamHandler;
 
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
 class BLN_Publisher
 {
     /**

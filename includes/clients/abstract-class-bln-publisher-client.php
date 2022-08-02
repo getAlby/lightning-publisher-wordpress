@@ -1,5 +1,8 @@
 <?php
 
+// If this file is called directly, abort.
+defined('WPINC') || die;
+
 /**
  * Abstract LND Lightning Client.
  *
@@ -18,7 +21,7 @@ abstract class Abstract_BLN_Publisher_Client implements BLN_Publisher_Client_Int
      * @var    mixed    $client    Underlying client library.
      */
     protected $client;
-    
+
     /**
      * Connection options.
      *
@@ -40,27 +43,27 @@ abstract class Abstract_BLN_Publisher_Client implements BLN_Publisher_Client_Int
 
     /**
      * Add Invoice
-     * 
+     *
      * @since 1.0.0
      */
     public function addInvoice($params)
     {
         return $this->client->addInvoice($params);
     }
-    
+
     /**
      * Get Invoice
-     * 
+     *
      * @since 1.0.0
      */
     public function getInvoice($params)
     {
         return $this->client->getInvoice($params);
     }
-    
+
     /**
      * Check if Invoice is paid
-     * 
+     *
      * @since 1.0.0
      */
     public function isInvoicePaid()
@@ -70,7 +73,7 @@ abstract class Abstract_BLN_Publisher_Client implements BLN_Publisher_Client_Int
 
     /**
      * Check for valid connection
-     * 
+     *
      * @since 1.0.0
      */
     public function isConnectionValid()
@@ -80,7 +83,7 @@ abstract class Abstract_BLN_Publisher_Client implements BLN_Publisher_Client_Int
 
     /**
      * Get information about the client
-     * 
+     *
      * @since 1.0.0
      */
     public function getInfo()
@@ -90,37 +93,37 @@ abstract class Abstract_BLN_Publisher_Client implements BLN_Publisher_Client_Int
 
     /**
      * Get address
-     * 
+     *
      * @since 1.0.0
      */
     public function getAddress()
     {
         return $this->client->getAddress();
     }
-   
+
     /**
      * Set address
-     * 
+     *
      * @since 1.0.0
      */
     public function setAddress()
     {
         return $this->client->setAddress();
     }
-    
+
     /**
      * Request
-     * 
+     *
      * @since 1.0.0
      */
     public function request()
     {
         return $this->client->request();
     }
-    
+
     /**
      * Client
-     * 
+     *
      * @since 1.0.0
      */
     public function client()

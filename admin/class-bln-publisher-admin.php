@@ -2,6 +2,9 @@
 
  use \tkijewski\lnurl;
 
+// If this file is called directly, abort.
+ defined('WPINC') || die;
+
 /**
  * The admin-specific functionality of the plugin.
  *

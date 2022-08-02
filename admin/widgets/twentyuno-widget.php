@@ -1,4 +1,6 @@
 <?php
+// If this file is called directly, abort.
+defined('WPINC') || die;
 
 class TwentyunoWidget extends WP_Widget
 {
