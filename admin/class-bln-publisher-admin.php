@@ -88,7 +88,7 @@ class BLN_Publisher_Admin
             return;
         }
 
-        register_block_type(dirname(__DIR__, 1) . '/blocks/donate/block.json');
+        //register_block_type(dirname(__DIR__, 1) . '/blocks/donate/block.json');
         register_block_type(
             dirname(__DIR__, 1) . '/blocks/paywall/block.json',
             array(
@@ -107,7 +107,13 @@ class BLN_Publisher_Admin
             ['wp-blocks', 'wp-i18n', 'wp-element'], // Required scripts for the block
             filemtime(dirname(__DIR__, 1) . '/blocks/twentyuno/block.js')
         );
-        wp_register_script("twentyuno-widget-script", "https://embed.twentyuno.net/js/app.js");
+
+        wp_register_script("twentyuno-widget-script.js",  sprintf(
+            '%s/public/js/twentyuno.js',
+            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
+        ));
+        wp_enqueue_script("twentyuno-widget-script.js");
+
         $twentyuno_block_editor_css_path = sprintf(
             '%s/blocks/twentyuno/editor.css',
             untrailingslashit(BLN_PUBLISHER_ROOT_URI)
@@ -124,6 +130,7 @@ class BLN_Publisher_Admin
             )
         );
 
+        /*
         // Path to Js that handles block functionality
         wp_register_script(
             'alby/donate-js',
@@ -140,6 +147,7 @@ class BLN_Publisher_Admin
                 untrailingslashit(BLN_PUBLISHER_ROOT_URI)
             )
         );
+        */
 
 
 
@@ -174,7 +182,7 @@ class BLN_Publisher_Admin
                 name="'. $name . '"
                 accent="'. $color . '"
                 to="'. $lnurl .'"
-                image="'. $color . '"
+                image="'. $image . '"
             />
           </div>';
     }
