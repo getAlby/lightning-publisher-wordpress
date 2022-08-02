@@ -1,4 +1,5 @@
-=== Bitcoin, Lightning, Payments, Donations, Paywalls ===
+=== Bitcoin Lightning Publisher for WordPress ===
+
 Tags: bitcoin, lightning, payment, donation, paywall, rss, micropayments
 Requires at least: 5.6.0
 Tested up to: 6.0.1
