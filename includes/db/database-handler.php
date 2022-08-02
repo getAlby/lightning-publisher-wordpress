@@ -56,7 +56,7 @@ class LNP_DatabaseHandler
                     'state'             => 'unpaid',
                 )
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 
@@ -75,7 +75,7 @@ class LNP_DatabaseHandler
                     'payment_hash' => $hash,
                 )
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 

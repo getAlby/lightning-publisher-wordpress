@@ -52,19 +52,27 @@ class LNP_Dashboard extends LNP_SettingsPage
      */
     public function get_connected_wallet()
     {
-        if ($this->check_connection_valid()) {
-            $node_info = $this->plugin->getLightningClient()->getInfo();
-            $message = sprintf(
-                '%s %s - %s',
-                __('Connected to:', 'lnp-alby'),
-                $node_info['alias'],
-                $node_info['identity_pubkey']
+        try {
+            if ($this->check_connection_valid()) {
+                $node_info = $this->plugin->getLightningClient()->getInfo();
+                $message = sprintf(
+                    '%s %s - %s',
+                    __('Connected to:', 'lnp-alby'),
+                    $node_info['alias'],
+                    $node_info['identity_pubkey']
+                );
+            }
+            else {
+                $message = __('Wallet not connected', 'lnp-alby');
+            }
+            return $message;
+        } catch (\Exception $e) {
+            return sprintf(
+                '%s %s',
+                __('Connection Error, please check log for details', 'lnp-alby'),
+                $e
             );
         }
-        else {
-            $message = __('Wallet not connected', 'lnp-alby');
-        }
-        return $message;
     }
 
     /**

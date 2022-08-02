@@ -75,7 +75,7 @@ class LNP_AccountController extends \WP_REST_Controller
                 ob_end_clean();
                 wp_send_json($account, 422);
             }
-        }catch(Exception $e) {
+        }catch(\Exception $e) {
             ob_end_clean();
             wp_send_json($e, 500);
         }

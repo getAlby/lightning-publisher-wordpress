@@ -115,7 +115,7 @@ class LNP_DonationsController extends \WP_REST_Controller
                 new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM)
             );
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             ob_end_clean();
             return wp_send_json_error($response, 404);
         }

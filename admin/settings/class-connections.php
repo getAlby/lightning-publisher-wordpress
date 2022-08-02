@@ -271,7 +271,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
                 $message = __('Wallet not connected', 'lnp-alby');
             }
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
 
             $type    = 'error';
             $message = sprintf(

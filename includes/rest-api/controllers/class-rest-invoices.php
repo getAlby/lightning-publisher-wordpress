@@ -141,7 +141,7 @@ class LNP_InvoicesController extends \WP_REST_Controller
         }
         try {
             $jwt = JWT\JWT::decode($token, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $logger->error('Unable to decode token');
             ob_end_clean();
             return wp_send_json(['settled' => false], 404);

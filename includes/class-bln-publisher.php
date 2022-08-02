@@ -547,7 +547,7 @@ class BLN_Publisher
             }
 
             return $paid_post_ids;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             //setcookie("wplnp", "", time() - 3600, '/'); // delete invalid JWT cookie
             return [];
         }
