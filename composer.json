@@ -1,7 +1,7 @@
 {
-  "name": "nomadiclab/wordpress-lightning-paywall",
-  "description": "WordPress Lightning Paywall",
-  "version": "0.0.1",
+  "name": "getalby/bitcoin-lightning-publisher",
+  "description": "Bitcoin Lightning Publisher for WordPress - Lightning powered paywalls and donations for WordPress.",
+  "version": "1.0.0",
   "license": "MIT",
   "minimum-stability": "dev",
   "require": {
