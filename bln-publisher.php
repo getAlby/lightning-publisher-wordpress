@@ -30,7 +30,7 @@ if (! defined('WPINC') ) {
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  */
-define('WP_LIGHTNING_VERSION', '1.0.0');
+define('BLN_PUBLISHER_VERSION', '1.0.0');
 define('BLN_PUBLISHER_PAYWALL_JWT_KEY', hash_hmac('sha256', 'lnp-alby', AUTH_KEY));
 define('BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM', 'HS256');
 define('BLN_PUBLISHER_ROOT_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
