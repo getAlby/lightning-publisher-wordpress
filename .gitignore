@@ -1,7 +1,7 @@
 # WP Lightning specific
 vendor
 .vimrc
-wordpress-lightning-publisher.zip
+bitcoin-lightning-publisher.zip
 wp-svn
 
 # Numerous always-ignore extensions
