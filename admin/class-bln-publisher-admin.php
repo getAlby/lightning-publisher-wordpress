@@ -76,11 +76,10 @@ class BLN_Publisher_Admin
 
 
     /**
-     * Add Block
+     * Add Gutenberg Blocks
      *
-     * @return [type] [description]
      */
-    public function init_donation_block()
+    public function init_gutenberg_blocks()
     {
 
         // Gutenberg is not active.
@@ -96,39 +95,17 @@ class BLN_Publisher_Admin
             )
         );
 
-        // The JS block script
-        $twentyuno_block_js_path = sprintf(
-            '%s/blocks/twentyuno/block.js',
-            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
-        );
-        wp_register_script(
-            'alby-twentyuno-block-script-edit',
-            $twentyuno_block_js_path,
-            ['wp-blocks', 'wp-i18n', 'wp-element'], // Required scripts for the block
-            filemtime(dirname(__DIR__, 1) . '/blocks/twentyuno/block.js')
-        );
-
-        wp_register_script("twentyuno-widget-script.js",  sprintf(
-            '%s/public/js/twentyuno.js',
-            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
-        ));
-        wp_enqueue_script("twentyuno-widget-script.js");
-
-        $twentyuno_block_editor_css_path = sprintf(
-            '%s/blocks/twentyuno/editor.css',
-            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
-        );
-        wp_register_style(
-            'alby-twentyuno-block-css-edit',
-            $twentyuno_block_editor_css_path
-        );
-
         register_block_type(
             dirname(__DIR__, 1) . '/blocks/twentyuno/block.json',
             array(
                 'render_callback' => [$this, 'render_twentyuno_widget_block'],
             )
         );
+
+        wp_enqueue_script("twentyuno-widget-script.js",  sprintf(
+            '%s/public/js/twentyuno.js',
+            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
+        ));
 
         /*
         // Path to Js that handles block functionality
@@ -148,26 +125,6 @@ class BLN_Publisher_Admin
             )
         );
         */
-
-
-
-        register_block_type(
-            'alby/donate', array(
-            'api_version'     => 2,
-            'title'           => 'Alby: Bitcoin Donation',
-            'category'        => 'common',
-            'description'     => 'Learning in progress',
-            'icon'            => 'icon-alby',
-            'editor_script'   => 'alby/donate-js',
-            'editor_style'    => 'alby/donate-css',
-            'attributes'      => [
-                'amount'      => [
-                    'type'    => 'number'
-                ]
-            ],
-            'render_callback' => (array($this, 'render_gutenberg')),
-            )
-        );
     }
 
     public function render_twentyuno_widget_block( $attrs)
@@ -196,45 +153,5 @@ class BLN_Publisher_Admin
         );
         $shortcode_attributes = implode(" ", $sanitized_attributes);
         return "[lnpaywall " . $shortcode_attributes . " ]";
-    }
-
-    public function render_gutenberg( $atts )
-    {
-        return 'nop';
-        $atts = shortcode_atts(
-            array(
-            'pay_block'     => 'true',
-            'btc_format'    => '',
-            'currency'      => '',
-            'price'         => '',
-            'duration_type' => '',
-            'duration'      => '',
-            ), $atts
-        );
-
-        return do_shortcode("[alby_donation_block]");
-    }
-
-    function widget_init()
-    {
-        $lnurl = lnurl\encodeUrl(get_rest_url(null, '/lnp-alby/v1/lnurlp'));
-        $widget = new TwentyunoWidget(["lnurl" => $lnurl]);
-        register_widget($widget);
-    }
-
-    /**
-     * Reset the existing values in the wallet settings options
-     * before saving the current wallet options
-     */
-    function reset_wallet_on_update($new_value, $old_value, $option)
-    {
-        // Get the difference between the 2 array
-        $diff = array_diff($new_value, $old_value);
-        // If any difference is found (new wallet used), reset all the values and only use the new ones
-        if (!empty($diff)) {
-            $empty_settings = array_fill_keys(array_keys($old_value), "");
-            $new_value = array_merge($empty_settings, $diff);
-        }
-        return $new_value;
     }
 }

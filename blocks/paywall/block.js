@@ -1,10 +1,9 @@
-(function (blocks, editor, i18n, element, components, _, blockEditor) {
+(function (blocks, i18n, element, components, _, blockEditor) {
     var __ = i18n.__;
     var el = element.createElement;
     var TextControl = components.TextControl;
     var SelectControl = components.SelectControl;
     var useBlockProps = blockEditor.useBlockProps;
-    var BlockControls = blockEditor.BlockControls;
 
     blocks.registerBlockType(
         'alby/paywall', {
@@ -149,7 +148,6 @@
     );
 })(
     window.wp.blocks,
-    window.wp.editor,
     window.wp.i18n,
     window.wp.element,
     window.wp.components,
