@@ -123,14 +123,6 @@ class BLN_Publisher_Public
         }
     }
 
-    public function sc_alby_donation_block()
-    {
-
-        $donationWidget = new LNP_DonationsWidget($this->plugin);
-
-        return $donationWidget->get_donation_block_html();
-    }
-
     public function add_v4v_rss_ns_tag()
     {
         echo 'xmlns:podcast="https://podcastindex.org/namespace/1.0"';

@@ -372,8 +372,6 @@ class BLN_Publisher
      */
     private function define_public_hooks()
     {
-        $donation_widget = new LNP_DonationsWidget($this);
-
         // Load the css styles for frotnend
         $this->loader->add_action('wp_enqueue_scripts', $this->plugin_public, 'enqueue_styles');
         // Load the js scripts for frotnend
@@ -394,8 +392,6 @@ class BLN_Publisher
 
         // Apply Paywall to the content
         $this->loader->add_filter('the_content', $this->plugin_public, 'ln_paywall_filter', 9); // 9 is the priority. this needs to run before wptexturize which changes for example the quotes. (10 is the default)
-        // Add donation widget to the content
-        $this->loader->add_filter('the_content', $donation_widget, 'set_donation_box');
     }
 
     /**
