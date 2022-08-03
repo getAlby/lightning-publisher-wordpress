@@ -44,7 +44,7 @@ defined('WPINC') || die; ?>
         const email = document.getElementById("alby_email").value;
         const password = document.getElementById("alby_password").value;
 
-        fetch("<?php echo home_url('/wp-json/lnp-alby/v1/account'); ?>", {
+        fetch("<?php echo get_rest_url(null, '/lnp-alby/v1/account'); ?>", {
                 method: "POST",
                 credentials: 'same-origin',
                 headers: {
