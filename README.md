@@ -62,9 +62,11 @@ Here quick Demo videos showing how to setup and use the plugin:
 
 ## Installation
 
-Install from the WordPress Plugin directory or:
+Install from the WordPress [Plugin directory](https://wordpress.org/plugins/) or:
 
-Clone the repository and install the dependency
+Download the zip from the [latest release](https://github.com/getAlby/lightning-publisher-wordpress/releases/latest) and install/activate it through the WordPress Plugin admin panel.
+
+To build the plugin yourself: clone the repository and install the dependency using [Composer](https://getcomposer.org/)
 
 ```bash
 git clone https://github.com/getAlby/lightning-publisher-wordpress.git
@@ -76,7 +78,7 @@ To build a .zip file of the WordPress plugin run:
 ./build.sh # this builds a `wordpress-lightning-publisher.zip`
 ```
 
-Then upload and activate the plugin.
+Then upload and activate the plugin through the WordPress Plugin admin panel.
 
 
 ## Paywall Hook to have custom logic when to enable/disable the paywall
