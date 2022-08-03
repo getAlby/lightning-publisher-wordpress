@@ -537,9 +537,9 @@ class BLN_Publisher
     {
         $wplnp = null;
         if (isset($_COOKIE['wplnp'])) {
-            $wplnp = $_COOKIE['wplnp'];
+            $wplnp = sanitize_text_field($_COOKIE['wplnp']);
         } elseif (isset($_GET['wplnp'])) {
-            $wplnp = $_GET['wplnp'];
+            $wplnp = sanitize_text_field($_GET['wplnp']);
         }
         if (empty($wplnp)) { return [];
         }

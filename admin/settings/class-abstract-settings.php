@@ -222,7 +222,7 @@ abstract class LNP_SettingsPage
         // Load options for current tab only
         if ($this->tabs ) {
             $tab = isset($_GET['tab'])
-                ? $_GET['tab']
+                ? sanitize_text_field($_GET['tab'])
                 : key($this->tabs);
 
             $option_name = "{$this->option_name}_{$tab}";
@@ -241,7 +241,7 @@ abstract class LNP_SettingsPage
     public function is_current_page()
     {
         return (
-            isset($_GET['page']) && strval($_GET['page']) == $this->settings_path
+            isset($_GET['page']) && strval(sanitize_text_field($_GET['page'])) == $this->settings_path
         );
     }
 
@@ -279,9 +279,9 @@ abstract class LNP_SettingsPage
         {
             $output[] = sprintf(
                 '<a href="#%s" class="%s">%s</a>',
-                $id,
+                sanitize_key($id),
                 ($id == $active) ? 'nav-tab nav-tab-active' : 'nav-tab',
-                $args['title']
+                esc_html($args['title'])
             );
         }
 
@@ -311,7 +311,7 @@ abstract class LNP_SettingsPage
             );
 
             if (! empty($args['description']) ) {
-                echo wpautop($args['description']);
+                echo wpautop(esc_html($args['description']));
             }
 
             do_action("lnp_tab_before_{$id}");
@@ -368,14 +368,14 @@ abstract class LNP_SettingsPage
                 printf(
                     '<th scope="row"><label for="%s">%s</label></th>',
                     esc_attr($field['args']['label_for']),
-                    $field['title']
+                    esc_html($field['title'])
                 );
             }
             else {
 
                 printf(
                     '<th scope="row">%s</th>',
-                    $field['title']
+                    esc_html($field['title'])
                 );
             }
 
@@ -444,7 +444,7 @@ abstract class LNP_SettingsPage
         if ('checkbox' == $parsed_args['type'] ) {
             // Don't add autocomplete arg to checkbox
             unset($parsed_args['autocomplete']);
-            $output[] = '<input type="hidden" value="" ' . sprintf('name="%s[%s]"', $this->option_name, $parsed_args['name']) . ' />';
+            $output[] = '<input type="hidden" value="" ' . sprintf('name="%s[%s]"', $this->option_name, esc_attr($parsed_args['name'])) . ' />';
         }
 
 
@@ -472,13 +472,13 @@ abstract class LNP_SettingsPage
                 $output[] = sprintf(
                     'name="%s[%s]"',
                     $this->option_name,
-                    $val
+                    esc_attr($val)
                 );
 
                 // Append id="my-name"
                 $output[] = sprintf(
                     'id="%s"',
-                    $val
+                    esc_attr($val)
                 );
 
                 continue;
@@ -488,8 +488,8 @@ abstract class LNP_SettingsPage
             // eg: placeholder="hi@me.com"
             $output[] = sprintf(
                 '%s="%s"',
-                $arg,
-                $val
+                esc_attr($arg),
+                esc_attr($val)
             );
         }
 
@@ -509,8 +509,8 @@ abstract class LNP_SettingsPage
             // Append label
             $output[] = sprintf(
                 '<label for="%s">%s</label>',
-                $parsed_args['name'],
-                esc_attr($parsed_args['label'])
+                esc_attr($parsed_args['name']),
+                esc_html($parsed_args['label'])
             );
         }
 
@@ -521,7 +521,7 @@ abstract class LNP_SettingsPage
         if (! empty($parsed_args['description']) ) {
             $output[] = sprintf(
                 '<p class="description">%s</p>',
-                $parsed_args['description']
+                esc_html($parsed_args['description'])
             );
         }
 
@@ -546,8 +546,8 @@ abstract class LNP_SettingsPage
             // Start <label> wrap
             $output[] = sprintf(
                 '<label for="%s-%s">',
-                $field['name'],
-                $input['value']
+                esc_attr($field['name']),
+                sec_attr($input['value'])
             );
 
             // Start input
@@ -557,21 +557,21 @@ abstract class LNP_SettingsPage
             $output[] = sprintf(
                 'name="%s[%s][%s]"',
                 $this->option_name,
-                $field['name'],
-                $input['value']
+                esc_attr($field['name']),
+                esc_attr($input['value'])
             );
 
             // CSS Class name
             $output[] = sprintf(
                 'class="%s"',
-                $field['class']
+                esc_attr($field['class'])
             );
 
             // Element ID
             $output[] = sprintf(
                 'id="%s-%s"',
-                $field['name'],
-                $input['value']
+                esc_attr($field['name']),
+                esc_attr($input['value'])
             );
 
             // Mark field as checked
@@ -585,7 +585,7 @@ abstract class LNP_SettingsPage
             // End label wrap
             $output[] = sprintf(
                 ' %s</label>',
-                esc_attr($input['label'])
+                esc_html($input['label'])
             );
 
             $output[] = '<br>';
@@ -598,7 +598,7 @@ abstract class LNP_SettingsPage
         if (! empty($field['description']) ) {
             $output[] = sprintf(
                 '<p class="description">%s</p>',
-                $field['description']
+                esc_html($field['description'])
             );
         }
 

@@ -36,7 +36,7 @@ class LNP_TransactionsTable extends WP_List_Table
         $hidden = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
         // Filter using state args
-        $state = (isset($_REQUEST['state']) ? $_REQUEST['state'] : 'settled');
+        $state = (isset($_REQUEST['state']) ? sanitize_key($_REQUEST['state']) : 'settled');
         if (!in_array($state, ['all', 'settled', 'unpaid'])) {
             $state = 'settled';
         }
@@ -185,12 +185,12 @@ class LNP_TransactionsTable extends WP_List_Table
 
         // If orderby is set, use this as the sort column
         if (!empty($_GET['orderby'])) {
-            $orderby = $_GET['orderby'];
+            $orderby = sanitize_sql_orderby($_GET['orderby']);
         }
 
         // If order is set use this as the order
         if (!empty($_GET['order'])) {
-            $order = $_GET['order'];
+            $order = sanitize_key($_GET['order']);
         }
 
 
@@ -208,7 +208,7 @@ class LNP_TransactionsTable extends WP_List_Table
      */
     protected function get_views(){
         $views = array();
-        $current = ( !empty($_REQUEST['state']) ? $_REQUEST['state'] : 'settled');
+        $current = ( !empty($_REQUEST['state']) ? sanitize_key($_REQUEST['state']) : 'settled');
 
         //All link
         $class = ($current == 'all' ? ' class="current"' :'');

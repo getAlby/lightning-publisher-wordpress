@@ -84,9 +84,9 @@ class LNP_DatabaseHandler
         global $wpdb;
         $offset = (intval($page) - 1) * intval($items_per_page);
         if ($state == 'all') {
-            $query  = "SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
+            $query  = $wpdb->prepare("SELECT * FROM $this->table_name ORDER BY created_at DESC LIMIT %d OFFSET %d", $items_per_page, $offset);
         } else {
-            $query  = "SELECT * FROM $this->table_name WHERE `state` = '$state' ORDER BY created_at DESC LIMIT ${items_per_page} OFFSET ${offset}";
+            $query  = $wpdb->prepare("SELECT * FROM $this->table_name WHERE state = %s ORDER BY created_at DESC LIMIT %d OFFSET %d", $state, $items_per_page, $offset);
         }
         return $wpdb->get_results($query);
     }
@@ -100,7 +100,8 @@ class LNP_DatabaseHandler
         if ($state == 'all') {
             return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");
         } else {
-            return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name WHERE `state` = '$state'");
+
+            return $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $this->table_name WHERE state = %s", $state));
         }
     }
 

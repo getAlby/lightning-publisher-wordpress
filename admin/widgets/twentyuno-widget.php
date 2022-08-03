@@ -24,7 +24,7 @@ class TwentyunoWidget extends WP_Widget
         ?>
         <?php echo $before_widget ?>
       <div class="wp-lnp-twentyuno-widget">
-        <lightning-widget name="<?php echo $title ?>" accent="<?php echo $color ?>" to="<?php echo $this->lnp_options['lnurl'] ?>" image="<?php echo $image ?>" />
+        <lightning-widget name="<?php esc_attr(echo $title) ?>" accent="<?php echo esc_attr($color) ?>" to="<?php echo esc_attr($this->lnp_options['lnurl']) ?>" image="<?php echo esc_attr($image) ?>" />
         <script src="https://embed.twentyuno.net/js/app.js"></script>
       </div>
         <?php echo $after_widget ?>
