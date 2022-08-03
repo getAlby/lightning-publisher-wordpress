@@ -2,7 +2,7 @@
 
 ![Lightning Publisher](/assets/banner.png)
 
-Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations.
+Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations / Value 4 Value payments.
 It allows you to monetize any digital content with instant microtransactions and receive payments from your visitors directly to your preferred wallet - no need for expensive service providers.
 
 The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments.
@@ -26,10 +26,11 @@ Sell any digital content (pay-per-post, pay-per-view, pay-per-download, etc.) wi
 
 
 #### Donation/Value4Value payments
-The plugin comes with various options to receive donations and Value 4 Value payments.
+The plugin comes with various options to receive donations and [Value 4 Value payments](https://blog.getalby.com/the-case-for-value-4-value/).
 
 * Gutenberg block for a donation widget
 * Donation widget for themes
+* Enable Value 4 Value tags for your website and feeds:
 * Enable the [Lightning meta tag](https://github.com/BitcoinAndLightningLayerSpecs/rfc/issues/1) to allow users to send payments (Value 4 Value)
 * Enable the [`podcast:value` tag](https://github.com/Podcastindex-org/podcast-namespace/blob/main/value/value.md) in your RSS feed to receive payments for your podcast
 
