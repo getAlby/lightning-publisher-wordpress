@@ -88,7 +88,7 @@ abstract class LNP_SettingsPage
                 add_settings_field(
                     $args['field']['name'],
                     $args['field']['label'],
-                    array($this, 'get_input'),
+                    array($this, 'print_input'),
                     $this->option_name,
                     "{$this->option_name}_section_"  . $args['tab'],
                     array(
@@ -272,12 +272,11 @@ abstract class LNP_SettingsPage
     {
 
         $active   = $this->get_active_tab_id();
-        $output   = array();
-        $output[] = '<h2 class="nav-tab-wrapper">';
+        echo '<h2 class="nav-tab-wrapper">';
 
         foreach ( $this->tabs as $id => $args)
         {
-            $output[] = sprintf(
+            echo sprintf(
                 '<a href="#%s" class="%s">%s</a>',
                 sanitize_key($id),
                 ($id == $active) ? 'nav-tab nav-tab-active' : 'nav-tab',
@@ -285,9 +284,7 @@ abstract class LNP_SettingsPage
             );
         }
 
-        $output[] = '</h2>';
-
-        echo join('', $output);
+        echo '</h2>';
     }
 
 
@@ -311,7 +308,7 @@ abstract class LNP_SettingsPage
             );
 
             if (! empty($args['description']) ) {
-                echo wpautop(esc_html($args['description']));
+                echo esc_html($args['description']);
             }
 
             do_action("lnp_tab_before_{$id}");
@@ -356,13 +353,11 @@ abstract class LNP_SettingsPage
             $class = '';
 
             if (! empty($field['args']['class']) ) {
-                $class = sprintf(
-                    ' class="%s"',
-                    esc_attr($field['args']['class'])
-                );
+                $class = $field['args']['class'];
+            } else {
             }
 
-            echo "<tr{$class}>";
+            printf('<tr class="%s">', esc_attr($class));
 
             if (! empty($field['args']['label_for']) ) {
                 printf(
@@ -396,7 +391,7 @@ abstract class LNP_SettingsPage
      *
      * @return misc
      */
-    public function get_input( $field_args = array() )
+    public function print_input( $field_args = array() )
     {
         // error_log(print_r($option_name, true));
         // error_log(print_r($args, true));
@@ -427,29 +422,20 @@ abstract class LNP_SettingsPage
          * Special field: Checkbox group
          */
         if ('checkbox_group' == $parsed_args['type'] ) {
-            $output = $this->get_field_checkbox_group($parsed_args);
-            echo join(' ', $output);
-
+            $this->print_field_checkbox_group($parsed_args);
             // Stop here
             return;
         }
-
-
-        // We will save HTML markup in array
-        // and join() later
-        $output = array();
-
 
         // Checkbox specifc
         if ('checkbox' == $parsed_args['type'] ) {
             // Don't add autocomplete arg to checkbox
             unset($parsed_args['autocomplete']);
-            $output[] = '<input type="hidden" value="" ' . sprintf('name="%s[%s]"', $this->option_name, esc_attr($parsed_args['name'])) . ' />';
+            printf('<input type="hidden" value="" name="%s[%s]" />', esc_attr($this->option_name), esc_attr($parsed_args['name']));
         }
 
 
-        // HTML output starts now
-        $output[] = '<input';
+        echo '<input ';
 
         /**
          * Will append args as input element attributes
@@ -469,15 +455,15 @@ abstract class LNP_SettingsPage
             // Append name attribute into array
             if ('name' == $arg ) {
                 // Append name="my_name"
-                $output[] = sprintf(
-                    'name="%s[%s]"',
-                    $this->option_name,
+                printf(
+                    ' name="%s[%s]"',
+                    esc_attr($this->option_name),
                     esc_attr($val)
                 );
 
                 // Append id="my-name"
-                $output[] = sprintf(
-                    'id="%s"',
+                printf(
+                    ' id="%s"',
                     esc_attr($val)
                 );
 
@@ -486,8 +472,8 @@ abstract class LNP_SettingsPage
 
             // Append all other input attributes
             // eg: placeholder="hi@me.com"
-            $output[] = sprintf(
-                '%s="%s"',
+            printf(
+                ' %s="%s"',
                 esc_attr($arg),
                 esc_attr($val)
             );
@@ -495,11 +481,11 @@ abstract class LNP_SettingsPage
 
         // Mark checkbox checked
         if ('checkbox' == $parsed_args['type'] && $this->get_field_value($args) == $parsed_args['value'] ) {
-            $output[] = 'checked';
+            echo ' checked';
         }
 
         // Close input
-        $output[] = '/>';
+        echo ' />';
 
 
         /**
@@ -507,7 +493,7 @@ abstract class LNP_SettingsPage
          */
         if ('checkbox' == $parsed_args['type'] ) {
             // Append label
-            $output[] = sprintf(
+            printf(
                 '<label for="%s">%s</label>',
                 esc_attr($parsed_args['name']),
                 esc_html($parsed_args['label'])
@@ -519,14 +505,11 @@ abstract class LNP_SettingsPage
          * Extra "help" instructions block below the field
          */
         if (! empty($parsed_args['description']) ) {
-            $output[] = sprintf(
+            printf(
                 '<p class="description">%s</p>',
                 esc_html($parsed_args['description'])
             );
         }
-
-        // Generate and return input field html output
-        echo join(' ', $output);
     }
 
 
@@ -534,61 +517,27 @@ abstract class LNP_SettingsPage
     /**
      * Custom markup for checkbox group field
      *
-     * @return [type] [description]
      */
-    private function get_field_checkbox_group( $field )
+    private function print_field_checkbox_group( $field )
     {
         $skip   = array('label', 'description');
-        $output = array();
 
         foreach ( $field['options'] as $input )
         {
             // Start <label> wrap
-            $output[] = sprintf(
+            printf(
                 '<label for="%s-%s">',
                 esc_attr($field['name']),
                 sec_attr($input['value'])
             );
 
-            // Start input
-            $output[] = '<input type="checkbox"';
+            printf('<input type="checkbox" name="%s[%s][%s]" class="%s" id="%s-%s" %s', esc_attr($this->option_name), esc_attr($field['name']), esc_attr($input['value']), esc_attr($field['class']), esc_attr($field['name']), esc_attr($input['value']), (array_key_exists($input['value'], (array) $field['value']) ? 'checked="checked"' : ""));
 
-            // Append name="my_name"
-            $output[] = sprintf(
-                'name="%s[%s][%s]"',
-                $this->option_name,
-                esc_attr($field['name']),
-                esc_attr($input['value'])
-            );
 
-            // CSS Class name
-            $output[] = sprintf(
-                'class="%s"',
-                esc_attr($field['class'])
-            );
-
-            // Element ID
-            $output[] = sprintf(
-                'id="%s-%s"',
-                esc_attr($field['name']),
-                esc_attr($input['value'])
-            );
-
-            // Mark field as checked
-            if (array_key_exists($input['value'], (array) $field['value']) ) {
-                $output[] = 'checked="checked"';
-            }
-
-            // Close input
-            $output[] = '>';
-
-            // End label wrap
-            $output[] = sprintf(
-                ' %s</label>',
+            printf(
+                ' %s</label><br>',
                 esc_html($input['label'])
             );
-
-            $output[] = '<br>';
         }
 
         /**
@@ -596,12 +545,10 @@ abstract class LNP_SettingsPage
          * Extra "help" instructions block below the field
          */
         if (! empty($field['description']) ) {
-            $output[] = sprintf(
+            printf(
                 '<p class="description">%s</p>',
                 esc_html($field['description'])
             );
         }
-
-        return $output;
     }
 }

@@ -119,7 +119,7 @@ class BLN_Publisher_Public
                 $lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
             }
             $lnurl_without_protocol = preg_replace('/^https?:\/\//', '', $lnurl);
-            echo '<meta name="lightning" content="lnurlp:' . $lnurl_without_protocol . '" />';
+            echo '<meta name="lightning" content="lnurlp:' . esc_attr($lnurl_without_protocol) . '" />';
         }
     }
 
@@ -136,12 +136,12 @@ class BLN_Publisher_Public
 
         $tag = array();
         $tag[] = '<podcast:value type="lightning" method="keysend">';
-        $tag[] = '<podcast:valueRecipient name="' . get_bloginfo('name') .'" type="node" address="' . $address . '"';
+        $tag[] = '<podcast:valueRecipient name="' . get_bloginfo('name') .'" type="node" address="' . esc_attr($address) . '"';
         if (!empty($custom_key)) {
-            $tag[] = ' customKey="' . $custom_key . '"';
+            $tag[] = ' customKey="' . esc_attr($custom_key) . '"';
         }
         if (!empty($custom_value)) {
-            $tag[] = ' customValue="' . $custom_value . '"';
+            $tag[] = ' customValue="' . esc_attr($custom_value) . '"';
         }
         $tag[] = ' split="100" />';
         $tag[] = '</podcast:value>';
