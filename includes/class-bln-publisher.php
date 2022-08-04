@@ -187,9 +187,6 @@ class BLN_Publisher
         include_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-general.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'admin/settings/class-help.php';
 
-        // Admin stuff
-        include_once plugin_dir_path(dirname(__FILE__)) . 'admin/widgets/twentyuno-widget.php';
-
         /**
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
@@ -230,11 +227,6 @@ class BLN_Publisher
          * side of the site.
          */
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-bln-publisher-paywall.php';
-
-        /**
-         * The class responsible for donation widget
-         */
-        include_once plugin_dir_path(dirname(__FILE__)) . 'public/class-bln-publisher-donations-widget.php';
 
         /**
          * The class responsible for REST API.
