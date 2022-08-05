@@ -125,7 +125,7 @@ class BLN_Publisher_Public
 
     public function add_v4v_rss_ns_tag()
     {
-        echo 'xmlns:podcast="https://podcastindex.org/namespace/1.0"';
+        echo ' xmlns:podcast="https://podcastindex.org/namespace/1.0" ';
     }
 
     public function add_v4v_rss_tag()
