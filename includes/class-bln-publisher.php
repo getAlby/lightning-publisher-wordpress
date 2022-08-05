@@ -553,13 +553,13 @@ class BLN_Publisher
     {
         $paid_post_ids = BLN_Publisher::get_paid_post_ids();
         if (!in_array($post_id, $paid_post_ids)) {
-            $amount_received = get_post_meta($post_id, '_lnp_amount_received', true);
+            $amount_received = get_post_meta($post_id, '_bln_amount_received', true);
             if (is_numeric($amount_received)) {
                 $amount = $amount_received + $amount_paid;
             } else {
                 $amount = $amount_paid;
             }
-            update_post_meta($post_id, '_lnp_amount_received', $amount);
+            update_post_meta($post_id, '_bln_amount_received', $amount);
 
             array_push($paid_post_ids, $post_id);
         }

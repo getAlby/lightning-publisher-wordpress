@@ -154,7 +154,7 @@ class BLN_Publisher_Paywall
             }
 
             if (!empty($this->options['total'])) {
-                $amount_received = get_post_meta($this->post_id, '_lnp_amount_received', true);
+                $amount_received = get_post_meta($this->post_id, '_bln_amount_received', true);
                 if ($amount_received >= $this->options['total']) {
                     $show_paid = true;
                 }
@@ -163,10 +163,10 @@ class BLN_Publisher_Paywall
             if ($this->plugin->has_paid_for_post($this->post_id)) {
                 $show_paid = true;
             }
-            if (function_exists('wp_lnp_has_paid_for_post')) {
+            if (function_exists('wp_bln_has_paid_for_post')) {
                 $show_paid = wp_lnp_has_paid_for_post($show_paid, $this->post_id);
             }
-            $show_paid = apply_filters('wp_lnp_has_paid_for_post', $show_paid, $this->post_id);
+            $show_paid = apply_filters('wp_bln_has_paid_for_post', $show_paid, $this->post_id);
 
             if ($show_paid) {
                 return $this->format_paid();

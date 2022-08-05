@@ -104,7 +104,7 @@ function show_full_content_for_post($show_full_content, $post_id) {
 }
 
 // Check out the `add_filter` documentation for more information: https://developer.wordpress.org/reference/functions/add_filter/
-add_filter('wp_lnp_has_paid_for_post', 'show_full_content_for_post', 10, 2);
+add_filter('wp_bln_has_paid_for_post', 'show_full_content_for_post', 10, 2);
 
 ```
 
@@ -112,7 +112,7 @@ Alternatively you can define a global function `wp_lnp_has_paid_for_post` which 
 
 ```php
 
-function wp_lnp_has_paid_for_post($show_full_content, $post_id) {
+function wp_bln_has_paid_for_post($show_full_content, $post_id) {
   return true; // show full content - disable the paywall
 }
 
