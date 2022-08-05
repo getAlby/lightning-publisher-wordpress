@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "118f0b211ed6c34f1ac613e1cfc04285",
+    "content-hash": "23404c60691b10af477b2f0ee9871438",
     "packages": [
         {
             "name": "bitwasp/bech32",
@@ -952,12 +952,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50"
+                "reference": "132eace138aa8cddcc31a4b7331cbc7effde63ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/720488632c590286b88b80e62aa3d3d551ad4a50",
-                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/132eace138aa8cddcc31a4b7331cbc7effde63ba",
+                "reference": "132eace138aa8cddcc31a4b7331cbc7effde63ba",
                 "shasum": ""
             },
             "require": {
@@ -1034,7 +1034,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.8.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.x"
             },
             "funding": [
                 {
@@ -1046,7 +1046,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-24T11:55:47+00:00"
+            "time": "2022-08-02T12:03:47+00:00"
         },
         {
             "name": "octan/btcpay",
@@ -2002,13 +2002,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/huedaya/php-lnurl.git",
-                "reference": "52360b071cd5ff420518f40c7327da10bcebb06b"
+                "url": "https://github.com/tkijewski/php-lnurl.git",
+                "reference": "c5b34d45235f1d244a0d48d071975390f7cf2244"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/huedaya/php-lnurl/zipball/52360b071cd5ff420518f40c7327da10bcebb06b",
-                "reference": "52360b071cd5ff420518f40c7327da10bcebb06b",
+                "url": "https://api.github.com/repos/tkijewski/php-lnurl/zipball/c5b34d45235f1d244a0d48d071975390f7cf2244",
+                "reference": "c5b34d45235f1d244a0d48d071975390f7cf2244",
                 "shasum": ""
             },
             "require": {
@@ -2045,9 +2045,10 @@
             "description": "PHP implementation of lnurl Spec",
             "homepage": "https://github.com/tkijewski/php-lnurl",
             "support": {
-                "source": "https://github.com/huedaya/php-lnurl/tree/v0.0.2"
+                "source": "https://github.com/tkijewski/php-lnurl/tree/master",
+                "issues": "https://github.com/tkijewski/php-lnurl/issues"
             },
-            "time": "2022-05-30T13:46:35+00:00"
+            "time": "2022-08-05T00:02:39+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
