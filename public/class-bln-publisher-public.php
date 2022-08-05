@@ -104,7 +104,7 @@ class BLN_Publisher_Public
         global $post;
         $pay_url = get_rest_url(null, '/lnp-alby/v1/lnurlp');
         $lnurl = preg_replace('/^https?:\/\//', 'lnurlp://', $pay_url);
-        echo '<payment:lnurl>' . $lnurl . '</payment:lnurl>';
+        echo '<payment:lnurl>' . esc_attr($lnurl) . '</payment:lnurl>';
     }
 
     public function hook_meta_tags()
@@ -134,17 +134,10 @@ class BLN_Publisher_Public
         $custom_key = $this->plugin->getGeneralOptions()['v4v_custom_key'];
         $custom_value = $this->plugin->getGeneralOptions()['v4v_custom_value'];
 
-        $tag = array();
-        $tag[] = '<podcast:value type="lightning" method="keysend">';
-        $tag[] = '<podcast:valueRecipient name="' . get_bloginfo('name') .'" type="node" address="' . esc_attr($address) . '"';
-        if (!empty($custom_key)) {
-            $tag[] = ' customKey="' . esc_attr($custom_key) . '"';
-        }
-        if (!empty($custom_value)) {
-            $tag[] = ' customValue="' . esc_attr($custom_value) . '"';
-        }
-        $tag[] = ' split="100" />';
-        $tag[] = '</podcast:value>';
-        echo join(' ', $tag);
+        ?>
+        <podcast:value type="lightning" method="keysend">
+            <podcast:valueRecipient type="node" split="100" name="<?php echo esc_attr(get_bloginfo('name')); ?>" address="<?php echo esc_attr($address); ?>" <?php if (!empty($custom_key)) { ?>customKey="<?php echo esc_attr($custom_key); ?>"<?php } ?> <?php if (!empty($custom_value)) { ?>customValue="<?php echo esc_attr($custom_value); ?>"<?php } ?> />
+        </podcast:value>
+        <?php
     }
 }
