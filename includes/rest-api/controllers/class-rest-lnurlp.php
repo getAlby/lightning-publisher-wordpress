@@ -48,8 +48,6 @@ class LNP_LnurlpController extends \WP_REST_Controller
     {
         ob_start();
         $plugin = $this->get_plugin();
-        $logger = $plugin->get_logger();
-
 
         $description = get_bloginfo('name');
         //$post_id = $wp_query->get('lnurl_post_id');
@@ -77,7 +75,6 @@ class LNP_LnurlpController extends \WP_REST_Controller
     {
         ob_start();
         $plugin = $this->get_plugin();
-        $logger = $plugin->get_logger();
 
         $description = get_bloginfo('name');
         //$post_id = intval( $request->get_param('amount') );

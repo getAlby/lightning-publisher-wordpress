@@ -11,8 +11,7 @@
     "octan/btcpay": "dev-main",
     "firebase/php-jwt": "dev-main",
     "jorijn/bitcoin-bolt11": "dev-master",
-    "tkijewski/php-lnurl": "dev-master",
-    "monolog/monolog": "2.x-dev"
+    "tkijewski/php-lnurl": "dev-master"
   },
   "repositories": [
     {

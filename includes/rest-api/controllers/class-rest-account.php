@@ -46,12 +46,10 @@ class LNP_AccountController extends \WP_REST_Controller
     {
         ob_start();
         $plugin = $this->get_plugin();
-        $logger = $plugin->get_logger();
 
         $email    = $request->get_param('email');
         $password = $request->get_param('password');
         if (empty($password) || empty($email)) {
-            $logger->error('Invalid request. Missing email/password');
             ob_end_clean();
             return new \WP_Error(__('Invalid Request, Missing required parameters', 'lnp-alby'));
         }
@@ -59,7 +57,6 @@ class LNP_AccountController extends \WP_REST_Controller
         try {
             $account = LNDHub\Client::createAlbyWallet($email, $password);
             if (!empty($account['lndhub']) && !empty($account['lndhub']['login'])) {
-                $logger->info('Alby Wallet Created');
                 // update node keysend settings
                 $lnp_general = get_option('lnp_general');
                 if (empty($lnp_general['v4v_node_key'])) {
@@ -71,7 +68,6 @@ class LNP_AccountController extends \WP_REST_Controller
                 ob_end_clean();
                 wp_send_json($account, 200);
             } else {
-                $logger->info('Failed to Alby Wallet');
                 ob_end_clean();
                 wp_send_json($account, 422);
             }

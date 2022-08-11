@@ -1,8 +1,6 @@
 <?php
 
 use \Firebase\JWT;
-use \Monolog\Logger;
-use \Monolog\Handler\StreamHandler;
 
 // If this file is called directly, abort.
 defined('WPINC') || die;
@@ -102,13 +100,6 @@ class BLN_Publisher
     protected $donation_options;
 
     /**
-     * The Monolog Logger
-     *
-     * @var Logger $logger
-     */
-    protected $logger;
-
-    /**
      * The Plugin Admin Class
      */
     protected $plugin_admin;
@@ -137,7 +128,6 @@ class BLN_Publisher
         $this->plugin_name = 'bln-publisher';
         $this->load_dependencies();
         $this->initialize_loader();
-        $this->initialize_logger();
         $this->set_locale();
         $this->read_database_options();
         $this->setup_client();
@@ -243,16 +233,6 @@ class BLN_Publisher
     private function initialize_loader()
     {
         $this->loader = new BLN_Publisher_Loader();
-    }
-
-    /**
-     * Initialize the logger instance
-     */
-    private function initialize_logger()
-    {
-        $this->logger = new Logger('BLN_PUBLISHER_LOGGER');
-        $date = date('Y-m-d');
-        $this->logger->pushHandler(new StreamHandler(trailingslashit(wp_upload_dir()['basedir']). "bln-publisher-logs/{$date}.log", Logger::INFO));
     }
 
     /**
@@ -503,16 +483,6 @@ class BLN_Publisher
     public function getDonationOptions()
     {
         return $this->donation_options;
-    }
-
-    /**
-     * Retrieve the Monolog logger
-     *
-     * @return Logger
-     */
-    public function get_logger()
-    {
-        return $this->logger;
     }
 
     public static function get_paid_post_ids()

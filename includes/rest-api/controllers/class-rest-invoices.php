@@ -55,7 +55,6 @@ class LNP_InvoicesController extends \WP_REST_Controller
     {
         ob_start();
         $plugin = $this->get_plugin();
-        $logger = $plugin->get_logger();
         $post_id = intval($request->get_param('post_id'));
         $amount = intval($request->get_param('amount'));
         $currency = $request->get_param('currency');
@@ -113,7 +112,6 @@ class LNP_InvoicesController extends \WP_REST_Controller
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
 
-        $logger->info('Invoice created successfully', $response);
         ob_end_clean();
         return rest_ensure_response($response);
     }
@@ -130,19 +128,16 @@ class LNP_InvoicesController extends \WP_REST_Controller
     {
         ob_start();
         $plugin = $this->get_plugin();
-        $logger = $plugin->get_logger();
         $token    = $request->get_param('token');
         $preimage = $request->get_param('preimage');
 
         if (empty($token)) {
-            $logger->error('Token not provided');
             ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
         try {
             $jwt = JWT\JWT::decode($token, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
         } catch (\Exception $e) {
-            $logger->error('Unable to decode token');
             ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
@@ -161,7 +156,6 @@ class LNP_InvoicesController extends \WP_REST_Controller
             $post_id = $jwt->{'post_id'};
             $plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
 
-            $logger->info('Invoice paid', ['payment_hash' => $jwt->{'r_hash'}]);
             ob_end_clean();
             wp_send_json(['settled' => true], 200);
         } else {

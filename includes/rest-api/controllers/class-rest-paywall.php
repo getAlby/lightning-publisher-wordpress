@@ -56,11 +56,9 @@ class LNP_PaywallController extends \WP_REST_Controller
     {
         ob_start();
         $plugin = $this->get_plugin();
-        $logger = $plugin->get_logger();
         $post_id = intval($request->get_param('post_id'));
 
         if (empty($post_id)) {
-            $logger->error('Invalid request. missing post id');
             ob_end_clean();
             return new \WP_Error(__('Invalid Request, Missing required parameters', 'lnp-alby'));
         }
@@ -73,7 +71,6 @@ class LNP_PaywallController extends \WP_REST_Controller
         $paywall = new BLN_Publisher_Paywall($plugin, ['content' => $content, 'post_id' => $post_id]);
         $paywall_options = $paywall->get_options();
         if (!$paywall_options) {
-            $logger->error('Paywall options not found', ['post_id' => $post_id]);
             ob_end_clean();
             return wp_send_json(['error' => 'invalid post'], 404);
         }
@@ -113,7 +110,6 @@ class LNP_PaywallController extends \WP_REST_Controller
         $jwt = JWT\JWT::encode($jwt_data, BLN_PUBLISHER_PAYWALL_JWT_KEY,  BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM);
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
-        $logger->info('Invoice created successfully', $response);
         ob_end_clean();
         return rest_ensure_response($response);
     }
@@ -130,18 +126,15 @@ class LNP_PaywallController extends \WP_REST_Controller
     {
         ob_start();
         $plugin = $this->get_plugin();
-        $logger = $plugin->get_logger();
         $token    = $request->get_param('token');
         $preimage = $request->get_param('preimage');
         if (empty($token)) {
-            $logger->error('Token not provided');
             ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
         try {
             $jwt = JWT\JWT::decode($token, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
         } catch (\Exception $e) {
-            $logger->error('Unable to decode token');
             ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
@@ -178,7 +171,6 @@ class LNP_PaywallController extends \WP_REST_Controller
                 $amount = $jwt->{"amount"}; // fallback to the jwt data
             }
             $plugin->save_as_paid($post_id, $amount);
-            $logger->info('Invoice paid', ['post_id'=> $post_id, 'invoice' => $invoice]);
             ob_end_clean();
             wp_send_json($protected, 200);
         } else {
