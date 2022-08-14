@@ -37,7 +37,7 @@ class LNP_TransactionsTable extends WP_List_Table
         $sortable = $this->get_sortable_columns();
         // Filter using state args
         $state = (isset($_REQUEST['state']) ? sanitize_key($_REQUEST['state']) : 'settled');
-        if (!in_array($state, ['all', 'settled', 'unpaid'])) {
+        if (!in_array($state, ['all', 'settled', 'unknown'])) {
             $state = 'settled';
         }
 
@@ -77,6 +77,7 @@ class LNP_TransactionsTable extends WP_List_Table
             'amount'        => 'Amount (in sats)',
             // 'exchange_rate'    => 'Exchange Rate',
             // 'exchange_currency' => 'Exchange Currency',
+            'comment' => 'Comment',
             'state' => 'State',
             'created_at' => 'Created At',
             'settled_at' => 'Settled At'
@@ -123,12 +124,13 @@ class LNP_TransactionsTable extends WP_List_Table
                 // $link = get_permalink($post);
                 $data[] = array(
                     'post'          => (empty($post) ? "" : "<a href='$link'>$post->post_title</a>"),
-                    'payment_hash'       => "<span title='$payment->payment_hash'>$payment_hash</span>",
-                    'payment_request' => "<span title='$payment->payment_request'>$payment_request</span>",
+                    'payment_hash'       => '<span title="' . esc_attr($payment->payment_hash) . '">' . esc_attr($payment_hash) . '</span>',
+                    'payment_request' => '<span title="' . esc_attr($payment->payment_request) . '">' . esc_attr($payment_request) . '</span>',
                     'amount'        => $payment->amount_in_satoshi,
                     // 'exchange_rate'    => $payment->exchange_rate,
                     // 'exchange_currency' => $payment->exchange_currency,
-                    'state' => $payment->state,
+                    'comment' => esc_html($payment->comment),
+                    'state' => esc_attr($payment->state),
                     'created_at' => $payment->created_at,
                     'settled_at' => $payment->settled_at
                 );
@@ -156,6 +158,7 @@ class LNP_TransactionsTable extends WP_List_Table
         case 'exchange_rate':
         case 'exchange_currency':
         case 'state':
+        case 'comment':
         case 'created_at':
         case 'settled_at':
             return $item[$column_name];
@@ -220,10 +223,10 @@ class LNP_TransactionsTable extends WP_List_Table
         $class = ($current == 'settled' ? ' class="current"' :'');
         $views['settled'] = "<a href='{$settled_url}' {$class} >Settled</a>";
 
-        //unpaid link
-        $unpaid_url = add_query_arg('state','unpaid');
-        $class = ($current == 'unpaid' ? ' class="current"' :'');
-        $views['unpaid'] = "<a href='{$unpaid_url}' {$class} >Unpaid</a>";
+        //unknown link
+        $unknown_url = add_query_arg('state','unknown');
+        $class = ($current == 'unknown' ? ' class="current"' :'');
+        $views['unknown'] = "<a href='{$unknown_url}' {$class} >Unknown</a>";
 
         return $views;
     }

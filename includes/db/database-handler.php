@@ -18,12 +18,13 @@ class LNP_DatabaseHandler
 
         $sql = "CREATE TABLE $this->table_name (
         id bigint(20) NOT NULL AUTO_INCREMENT,
-        post_id bigint(20) NOT NULL,
+        post_id bigint(20) DEFAULT NULL,
+        invoice_type tinytext DEFAULT NULL,
         payment_hash varchar(256) NOT NULL,
         payment_request text NOT NULL,
         comment text DEFAULT NULL,
         amount_in_satoshi int(10) DEFAULT 0 NOT NULL,
-        exchange_rate int(10) DEFAULT 0 NOT NULL,
+        exchange_rate int(10) DEFAULT 0 NULL,
         exchange_currency varchar(10) DEFAULT NULL,
         created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
         settled_at datetime DEFAULT NULL,
@@ -41,20 +42,17 @@ class LNP_DatabaseHandler
     {
         global $wpdb;
         // // TODO: implement get exchange rate functionality
+
+        $defaults = [
+            'post_id' => null, 'payment_hash' => null, 'payment_request' => null, 'comment' => null,
+            'amount_in_satoshi' => null, 'exchange_rate' => 1, 'exchange_currency' => null,
+            'invoice_type' => null, 'state' => 'unknown', 'created_at' => current_time('mysql')
+        ];
+        $invoice = array_merge($defaults, $args);
         try {
             $wpdb->insert(
                 $this->table_name,
-                array(
-                    'post_id'           => $args["post_id"],
-                    'payment_hash'      => $args["payment_hash"],
-                    'payment_request'   => $args["payment_request"],
-                    'comment'           => $args["comment"],
-                    'amount_in_satoshi' => $args["amount"],
-                    'exchange_rate'     => $args["exchange_rate"],
-                    'exchange_currency' => $args["currency"],
-                    'created_at'        => current_time('mysql'),
-                    'state'             => 'unpaid',
-                )
+                $invoice
             );
         } catch (\Exception $e) {
         }
@@ -93,14 +91,13 @@ class LNP_DatabaseHandler
 
     public function total_payment_count($state)
     {
-        if (!in_array($state, ['all', 'settled', 'unpaid'])) {
+        if (!in_array($state, ['all', 'settled', 'unknown'])) {
             $state = 'settled';
         }
         global $wpdb;
         if ($state == 'all') {
             return $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");
         } else {
-
             return $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $this->table_name WHERE state = %s", $state));
         }
     }
@@ -108,10 +105,17 @@ class LNP_DatabaseHandler
     /**
      * Get the payments sum from the database
      */
-    public function total_payment_sum()
+    public function total_payment_sum($state = 'settled')
     {
+        if (!in_array($state, ['all', 'settled', 'unknown'])) {
+            $state = 'settled';
+        }
         global $wpdb;
-        return $wpdb->get_var("SELECT SUM(amount_in_satoshi) FROM $this->table_name WHERE state = 'settled'");
+        if ($state == 'all') {
+            return $wpdb->get_var("SELECT SUM(amount_in_satoshi) FROM $this->table_name");
+        } else {
+            return $wpdb->get_var("SELECT SUM(amount_in_satoshi) FROM $this->table_name WHERE state = 'settled'");
+        }
     }
 
     /**

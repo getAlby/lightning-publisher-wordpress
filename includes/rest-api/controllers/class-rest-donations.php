@@ -184,8 +184,8 @@ class LNP_DonationsController extends \WP_REST_Controller
             "post_id" => $post_id,
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
-            "amount" => $amount,
-            "currency" => "",
+            "amount_in_satoshi" => $amount,
+            "exchange_currency" => "",
             "exchange_rate" => 0
             ]
         );

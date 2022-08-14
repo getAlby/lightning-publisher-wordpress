@@ -98,10 +98,11 @@ class LNP_PaywallController extends \WP_REST_Controller
         $plugin->getDatabaseHandler()->store_invoice(
             [
             "post_id" => $post_id,
+            "invoice_type" => "paywall",
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
-            "amount" => $amount,
-            "currency" => $currency,
+            "amount_in_satoshi" => $amount,
+            "exchange_currency" => $currency,
             "exchange_rate" => $exchange_rate
             ]
         );

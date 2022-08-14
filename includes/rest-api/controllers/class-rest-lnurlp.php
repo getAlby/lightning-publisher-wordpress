@@ -62,7 +62,9 @@ class LNP_LnurlpController extends \WP_REST_Controller
           'minSendable' => 10 * 1000, // millisatoshi
           'maxSendable' => 1000000 * 1000, // millisatoshi
           'tag' => 'payRequest',
-          'metadata' => '[["text/identifier", "' . site_url() .'"],["text/plain", "' . $description . '"]]'
+          'commentAllowed' => 128,
+          'payerData' => ["name" => ["mandatory" => false]],
+          'metadata' => $this->get_lnurlp_metadata()
         ];
         ob_end_clean();
         wp_send_json($response, 200);
@@ -76,35 +78,57 @@ class LNP_LnurlpController extends \WP_REST_Controller
         ob_start();
         $plugin = $this->get_plugin();
 
-        $description = get_bloginfo('name');
-        //$post_id = intval( $request->get_param('amount') );
-        //if (!empty($post_id)) {
-        //  $description = $description . ' - ' . get_the_title($post_id);
-        //}
 
+        // TODO: can we somehow use this as invoice memo, too?
+        $memo = "";
+        $payerData = $request->get_param('payerdata');
+        if ($payerData) {
+            $name = json_decode($payerData)->{'name'};
+            $memo = $memo . $name . ": ";
+        }
+        // set the comment as memo or default to the blog name
+        $comment = $request->get_param('comment');
+        if ($comment) {
+            $memo = $memo . $comment;
+        }
         $amount = intval($request->get_param('amount'));
         if (empty($amount)) {
             wp_send_json(['status' => 'ERROR', 'reason' => 'amount missing']);
             return;
         }
         $amount = ceil($amount / 1000); // amounts are sent in milli sats
-        $description_hash = base64_encode(hash('sha256', '[["text/identifier", "' . site_url() .'"],["text/plain", "' . $description . '"]]', true));
+        $description_hash = hash('sha256', $this->get_lnurlp_metadata(), false);
 
         $invoice = $this->plugin->getLightningClient()->addInvoice(
             [
-            'memo' => substr($description, 0, 64),
+            'memo' => '', // not supported when setting a description hash
             'description_hash' => $description_hash,
             'value' => $amount,
             'expiry' => 1800,
             'private' => true
             ]
         );
+        $plugin->getDatabaseHandler()->store_invoice([
+            "payment_hash" => $invoice['r_hash'],
+            "invoice_type" => "lnurl",
+            "payment_request" => $invoice['payment_request'],
+            "amount_in_satoshi" => $amount,
+            "comment" => $memo,
+        ]);
 
         $response = ['pr' => $invoice['payment_request'], 'routes' => []];
-        ob_end_clean();
+        //ob_end_clean();
         wp_send_json($response, 200);
     }
 
+    private function get_lnurlp_metadata() {
+        $description = get_bloginfo('name');
+        $identifier = site_url();
+        return json_encode([
+            ["text/identifier", $identifier],
+            ["text/plain", $description]
+        ]);
+    }
     /**
      * Main plugin instance
      *

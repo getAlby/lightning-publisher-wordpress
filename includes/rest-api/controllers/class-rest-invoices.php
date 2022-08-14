@@ -98,8 +98,8 @@ class LNP_InvoicesController extends \WP_REST_Controller
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
             "comment" => $invoice['payment_request'],
-            "amount" => $amount,
-            "currency" => $currency,
+            "amount_in_satoshi" => $amount,
+            "exchange_currency" => $currency,
             "exchange_rate" => $exchange_rate
             ]
         );
