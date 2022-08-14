@@ -131,13 +131,13 @@ class LNP_PaywallController extends \WP_REST_Controller
         $preimage = $request->get_param('preimage');
         if (empty($token)) {
             ob_end_clean();
-            return wp_send_json(['settled' => false], 404);
+            return wp_send_json(['settled' => false, 'error' => 'missing token'], 404);
         }
         try {
             $jwt = JWT\JWT::decode($token, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
         } catch (\Exception $e) {
             ob_end_clean();
-            return wp_send_json(['settled' => false], 404);
+            return wp_send_json(['settled' => false, 'error' => 'token decode error'], 404);
         }
 
         // if we get a preimage we can check if the preimage matches the payment hash and accept it.
