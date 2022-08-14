@@ -952,12 +952,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/btcpay-php.git",
-                "reference": "f872c1ca7a6dd83ee38e9aef419074a959f5003c"
+                "reference": "00d8ec1f506fa9ef73665cec8d78f1aaea4ed0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/f872c1ca7a6dd83ee38e9aef419074a959f5003c",
-                "reference": "f872c1ca7a6dd83ee38e9aef419074a959f5003c",
+                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/00d8ec1f506fa9ef73665cec8d78f1aaea4ed0f5",
+                "reference": "00d8ec1f506fa9ef73665cec8d78f1aaea4ed0f5",
                 "shasum": ""
             },
             "require": {
@@ -993,7 +993,7 @@
             "support": {
                 "source": "https://github.com/bumi/btcpay-php/tree/main"
             },
-            "time": "2022-06-29T13:03:08+00:00"
+            "time": "2022-08-14T11:13:48+00:00"
         },
         {
             "name": "octan/lnbits",
@@ -1001,12 +1001,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "39b79c5833f8f031716cc5141e83b2bcaa58ead0"
+                "reference": "8f9286ca40a9c0f15c76e7540106f9f202780a73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/39b79c5833f8f031716cc5141e83b2bcaa58ead0",
-                "reference": "39b79c5833f8f031716cc5141e83b2bcaa58ead0",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/8f9286ca40a9c0f15c76e7540106f9f202780a73",
+                "reference": "8f9286ca40a9c0f15c76e7540106f9f202780a73",
                 "shasum": ""
             },
             "require": {
@@ -1038,7 +1038,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2022-07-04T20:18:32+00:00"
+            "time": "2022-08-14T11:14:41+00:00"
         },
         {
             "name": "octan/lnd-rest",
@@ -1091,12 +1091,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lndhub-php.git",
-                "reference": "041616515cf1e7c6d137c7e3497edc0799ce8dc1"
+                "reference": "4cd977cf5ac4dcbab4fe37caa8e15f4c6748ba0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/041616515cf1e7c6d137c7e3497edc0799ce8dc1",
-                "reference": "041616515cf1e7c6d137c7e3497edc0799ce8dc1",
+                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/4cd977cf5ac4dcbab4fe37caa8e15f4c6748ba0d",
+                "reference": "4cd977cf5ac4dcbab4fe37caa8e15f4c6748ba0d",
                 "shasum": ""
             },
             "require": {
@@ -1131,7 +1131,7 @@
                 "source": "https://github.com/bumi/lndhub-php/tree/main",
                 "issues": "https://github.com/bumi/lndhub-php/issues"
             },
-            "time": "2022-08-02T00:30:40+00:00"
+            "time": "2022-08-14T11:15:43+00:00"
         },
         {
             "name": "phpoption/phpoption",
