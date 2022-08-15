@@ -101,7 +101,7 @@ class LNP_LnurlpController extends \WP_REST_Controller
 
         $invoice = $this->plugin->getLightningClient()->addInvoice(
             [
-            'memo' => '', // not supported when setting a description hash
+            'memo' => $memo, // not supported when setting a description hash
             'description_hash' => $description_hash,
             'value' => $amount,
             'expiry' => 1800,
