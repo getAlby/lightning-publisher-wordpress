@@ -1001,12 +1001,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "8f9286ca40a9c0f15c76e7540106f9f202780a73"
+                "reference": "94b4f3166ba47c576f99e8e418ebfb8e920a0048"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/8f9286ca40a9c0f15c76e7540106f9f202780a73",
-                "reference": "8f9286ca40a9c0f15c76e7540106f9f202780a73",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/94b4f3166ba47c576f99e8e418ebfb8e920a0048",
+                "reference": "94b4f3166ba47c576f99e8e418ebfb8e920a0048",
                 "shasum": ""
             },
             "require": {
@@ -1038,7 +1038,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2022-08-14T11:14:41+00:00"
+            "time": "2022-08-15T07:36:41+00:00"
         },
         {
             "name": "octan/lnd-rest",
@@ -1091,12 +1091,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lndhub-php.git",
-                "reference": "4cd977cf5ac4dcbab4fe37caa8e15f4c6748ba0d"
+                "reference": "17f6c4880b5fa94625c86bfa627d6a678960039e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/4cd977cf5ac4dcbab4fe37caa8e15f4c6748ba0d",
-                "reference": "4cd977cf5ac4dcbab4fe37caa8e15f4c6748ba0d",
+                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/17f6c4880b5fa94625c86bfa627d6a678960039e",
+                "reference": "17f6c4880b5fa94625c86bfa627d6a678960039e",
                 "shasum": ""
             },
             "require": {
@@ -1131,7 +1131,7 @@
                 "source": "https://github.com/bumi/lndhub-php/tree/main",
                 "issues": "https://github.com/bumi/lndhub-php/issues"
             },
-            "time": "2022-08-14T11:15:43+00:00"
+            "time": "2022-08-15T07:35:51+00:00"
         },
         {
             "name": "phpoption/phpoption",
