@@ -97,7 +97,7 @@ class LNP_LnurlpController extends \WP_REST_Controller
             return;
         }
         $amount = ceil($amount / 1000); // amounts are sent in milli sats
-        $description_hash = hash('sha256', $this->get_lnurlp_metadata(), false);
+        $description_hash = hash('sha256', $this->get_lnurlp_metadata($payerData), false);
 
         $invoice = $this->plugin->getLightningClient()->addInvoice(
             [
@@ -121,13 +121,17 @@ class LNP_LnurlpController extends \WP_REST_Controller
         wp_send_json($response, 200);
     }
 
-    private function get_lnurlp_metadata() {
+    private function get_lnurlp_metadata($payerData = null) {
         $description = get_bloginfo('name');
         $identifier = site_url();
-        return json_encode([
+        $metadata = json_encode([
             ["text/identifier", $identifier],
             ["text/plain", $description]
         ]);
+        if ($payerData) {
+            $metadata = $metadata . $payerData;
+        }
+        return $metadata;
     }
     /**
      * Main plugin instance
