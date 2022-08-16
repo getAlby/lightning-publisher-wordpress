@@ -1001,12 +1001,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "f59e859d09b393ba0878442571593d6bb5da95f5"
+                "reference": "05194869ccdb239e8b98262cb9daa8978de1c3ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/f59e859d09b393ba0878442571593d6bb5da95f5",
-                "reference": "f59e859d09b393ba0878442571593d6bb5da95f5",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/05194869ccdb239e8b98262cb9daa8978de1c3ac",
+                "reference": "05194869ccdb239e8b98262cb9daa8978de1c3ac",
                 "shasum": ""
             },
             "require": {
@@ -1038,7 +1038,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2022-08-16T22:04:02+00:00"
+            "time": "2022-08-16T22:38:09+00:00"
         },
         {
             "name": "octan/lnd-rest",
