@@ -97,12 +97,14 @@ class LNP_LnurlpController extends \WP_REST_Controller
             return;
         }
         $amount = ceil($amount / 1000); // amounts are sent in milli sats
-        $description_hash = hash('sha256', $this->get_lnurlp_metadata($payerData), false);
+        $unhashed_description = $this->get_lnurlp_metadata($payerData);
+        $description_hash = hash('sha256', $unhashed_description, false);
 
         $invoice = $this->plugin->getLightningClient()->addInvoice(
             [
             'memo' => $memo, // not supported when setting a description hash
             'description_hash' => $description_hash,
+            'unhashed_description' => $unhashed_description,
             'value' => $amount,
             'expiry' => 1800,
             'private' => true
