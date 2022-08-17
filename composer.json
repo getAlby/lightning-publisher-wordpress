@@ -1,7 +1,7 @@
 {
   "name": "getalby/bitcoin-lightning-publisher",
   "description": "Bitcoin Lightning Publisher for WordPress - Lightning powered paywalls and donations for WordPress.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "minimum-stability": "dev",
   "require": {
