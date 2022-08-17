@@ -16,7 +16,11 @@ class BLN_Publisher_BTCPay_Client extends Abstract_BLN_Publisher_Client
     public function __construct($options)
     {
         parent::__construct($options);
-        $this->client = new BTCPay\Client($this->options['btcpay_host'], $this->options['btcpay_apikey'], $this->options['btcpay_store_id']);
-        $this->client->init();
+        try {
+            $this->client = new BTCPay\Client($this->options['btcpay_host'], $this->options['btcpay_apikey'], $this->options['btcpay_store_id']);
+            $this->client->init();
+        } catch (\Exception $e) {
+            echo "Failed to connect to BTCPay Server: " . $e->getMessage();
+        }
     }
 }

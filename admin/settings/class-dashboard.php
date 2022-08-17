@@ -69,7 +69,7 @@ class LNP_Dashboard extends LNP_SettingsPage
         } catch (\Exception $e) {
             return sprintf(
                 '%s %s',
-                __('Connection Error, please check log for details', 'lnp-alby'),
+                __('Connection Error', 'lnp-alby'),
                 $e
             );
         }
@@ -79,7 +79,12 @@ class LNP_Dashboard extends LNP_SettingsPage
      * Check if connection is valid
      */
     public function check_connection_valid() {
-        return $this->plugin->getLightningClient()
-        && $this->plugin->getLightningClient()->isConnectionValid();
+        try {
+            return $this->plugin->getLightningClient()
+                && $this->plugin->getLightningClient()->isConnectionValid();
+        } catch (\Exception $e) {
+            echo "Failed to validate Lightning Wallet connection" . $e->getMessage();
+            return false;
+        }
     }
 }
