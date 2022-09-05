@@ -108,7 +108,7 @@ add_filter('wp_bln_has_paid_for_post', 'show_full_content_for_post', 10, 2);
 
 ```
 
-Alternatively you can define a global function `wp_lnp_has_paid_for_post` which gets called. Return `true` to disable the paywall and show the full content.
+Alternatively you can define a global function `wp_bln_has_paid_for_post` which gets called. Return `true` to disable the paywall and show the full content.
 
 ```php
 
