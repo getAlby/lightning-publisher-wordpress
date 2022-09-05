@@ -164,7 +164,7 @@ class BLN_Publisher_Paywall
                 $show_paid = true;
             }
             if (function_exists('wp_bln_has_paid_for_post')) {
-                $show_paid = wp_lnp_has_paid_for_post($show_paid, $this->post_id);
+                $show_paid = wp_bln_has_paid_for_post($show_paid, $this->post_id);
             }
             $show_paid = apply_filters('wp_bln_has_paid_for_post', $show_paid, $this->post_id);
 
