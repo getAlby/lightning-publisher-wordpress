@@ -64,6 +64,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         function checkPaymentStatus(invoice, callback)
         {
+            if (!invoice || !invoice.token) {
+                console.log("Ligthning invoice missing");
+                return;
+            }
             return function () {
                 let body = {
                     token: invoice.token,
@@ -128,6 +132,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 )
                 .then(
                     function (invoice) {
+                        if (!invoice || !invoice.payment_request) {
+                            console.log("Failed to generate lightning invoice", invoice);
+                            return;
+                        }
                         return pay(invoice, options);
                     }
                 );
