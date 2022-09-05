@@ -54,12 +54,10 @@ class LNP_PaywallController extends \WP_REST_Controller
      */
     public function process_paywall_payment_request( $request )
     {
-        ob_start();
         $plugin = $this->get_plugin();
         $post_id = intval($request->get_param('post_id'));
 
         if (empty($post_id)) {
-            ob_end_clean();
             return new \WP_Error(__('Invalid Request, Missing required parameters', 'lnp-alby'));
         }
 
@@ -71,7 +69,6 @@ class LNP_PaywallController extends \WP_REST_Controller
         $paywall = new BLN_Publisher_Paywall($plugin, ['content' => $content, 'post_id' => $post_id]);
         $paywall_options = $paywall->get_options();
         if (!$paywall_options) {
-            ob_end_clean();
             return wp_send_json(['error' => 'invalid post'], 404);
         }
         $memo = get_bloginfo('name') . ' - ' . get_the_title($post_id);
@@ -111,7 +108,6 @@ class LNP_PaywallController extends \WP_REST_Controller
         $jwt = JWT\JWT::encode($jwt_data, BLN_PUBLISHER_PAYWALL_JWT_KEY,  BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM);
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
-        ob_end_clean();
         return rest_ensure_response($response);
     }
 
@@ -125,18 +121,15 @@ class LNP_PaywallController extends \WP_REST_Controller
      */
     public function process_paywall_verify_request( $request )
     {
-        ob_start();
         $plugin = $this->get_plugin();
         $token    = $request->get_param('token');
         $preimage = $request->get_param('preimage');
         if (empty($token)) {
-            ob_end_clean();
             return wp_send_json(['settled' => false, 'error' => 'missing token'], 404);
         }
         try {
             $jwt = JWT\JWT::decode($token, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
         } catch (\Exception $e) {
-            ob_end_clean();
             return wp_send_json(['settled' => false, 'error' => 'token decode error'], 404);
         }
 
@@ -172,10 +165,8 @@ class LNP_PaywallController extends \WP_REST_Controller
                 $amount = $jwt->{"amount"}; // fallback to the jwt data
             }
             $plugin->save_as_paid($post_id, $amount);
-            ob_end_clean();
             wp_send_json($protected, 200);
         } else {
-            ob_end_clean();
             wp_send_json(['settled' => false], 402);
         }
     }
