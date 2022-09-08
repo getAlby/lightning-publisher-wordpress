@@ -2,6 +2,8 @@
 // If this file is called directly, abort.
 defined('WPINC') || die;
 
+require(__DIR__ .'/bolt11-payment-request-decoder.php');
+
 class LightningAddress
 {
     private $lnurl;
@@ -13,7 +15,7 @@ class LightningAddress
 
     public function __construct()
     {
-        $this->decoder = new PaymentRequestDecoderWithoutSatoshis();
+        $this->decoder = new Bolt11PaymentRequestDecoderWithoutSatoshis();
         $this->denormalizer = new \Jorijn\Bitcoin\Bolt11\Normalizer\PaymentRequestDenormalizer();
     }
 
@@ -48,24 +50,41 @@ class LightningAddress
 
         $invoice = $this->request('GET', $callbackUrl);
         $invoice['payment_request'] = $invoice['pr'];
-        $invoice['id'] = $invoice['verify']; // the id will be passed to the getInvoice function
 
         $pr = $this->denormalizer->denormalize($this->decoder->decode($invoice['pr']));
         $paymentHash = $pr->findTagByName(\Jorijn\Bitcoin\Bolt11\Model\Tag::PAYMENT_HASH)->getData();
 
         $invoice['r_hash'] = $paymentHash;
 
+        $verify_url = $invoice['verify'];
+        if (!empty($verify_url)) {
+            $query = parse_url($verify_url, PHP_URL_QUERY);
+            // Returns a string if the URL has parameters or NULL if not
+            if ($query) {
+                $verify_url .= '&payment_hash=' . $paymentHash;
+            } else {
+                $verify_url .= '?payment_hash=' . $paymentHash;
+            }
+        }
+
+        $invoice['id'] = $verify_url; // the id will be passed to the getInvoice function
+
         return $invoice;
     }
 
     public function getInvoice($id)
     {
+        $status = ['settled' => false];
+
         if (!empty($id)) {
-            $verify = $this->request('GET', $id);
-            return ['settled' => $verify['settled']];
-        } else {
-            return ['settled' => false];
+            try {
+                $verify = $this->request('GET', $id);
+                $status['settled'] = $verify['settled'];
+            } catch(Exception $e) {
+                // TODO: log somehow
+            }
         }
+        return $status;
     }
 
     public function isInvoicePaid($checkingId)

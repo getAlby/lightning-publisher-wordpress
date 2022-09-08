@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 // If this file is called directly, abort.
 defined('WPINC') || die;
 
-declare(strict_types=1);
 
 /* This is the payment request decoder without parsing amount values. parsing amount values requires some bc-match library which seems not always available in the default PHP installations.
  * We do not need number because we only want to get the payment hash
@@ -60,7 +61,7 @@ use Jorijn\Bitcoin\Bolt11\Exception\UnrecoverableSignatureException;
  *
  * This class is a PHP port from pre-existing BOLT11 libraries.
  */
-class PaymentRequestDecoderWithoutSatoshis
+class Bolt11PaymentRequestDecoderWithoutSatoshis
 {
     public const DIVISORS = [
         'm' => '1000.0000000000',

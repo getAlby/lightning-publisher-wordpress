@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/block.json",
+  "apiVersion": 2,
+  "name": "alby/webln-button",
+  "title": "WebLN Donate Button",
+  "icon": "money-alt",
+  "category": "design",
+  "attributes": {
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "button_text": {
+      "type": "string"
+    },
+    "success_message": {
+      "type": "string"
+    }
+  },
+  "example": {
+    "attributes": {
+      "amount": 21,
+      "button_text": "Drop us 21 sats!",
+      "success_message": "Thanks!"
+    }
+  },
+  "editorScript": "file:./block.js",
+  "editorStyle": "file:./editor.css",
+  "style": "file:./style.css"
+}

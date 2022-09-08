@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     t: Date.now()
                 };
                 fetch(
-                    wp_rest_base_url+'/paywall/verify', {
+                    wp_rest_base_url+'/invoices/verify', {
                         method: "POST",
                         credentials: "same-origin",
                         cache: "no-cache",
@@ -89,9 +89,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     function (response) {
                         if (response.ok) {
                             response.json().then(
-                                function (content) {
+                                function () {
                                     stopWatchingForPayment();
-                                    callback(content, invoice);
+                                    callback(invoice);
                                 }
                             );
                         }
@@ -102,8 +102,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         function showQRCode(invoice, options)
         {
-            var button = options.target.querySelector("button.wp-lnp-btn");
-            button.outerHTML = `<div class="wp-lnp-qrcode">
+            options.target.innerHTML = `<div class="wp-lnp-qrcode">
             <a href="lightning:${invoice.payment_request
             }"><img src="https://chart.googleapis.com/chart?&chld=M|0&cht=qr&chs=200x200&chl=${invoice.payment_request
             }"></a>
@@ -115,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         function requestPayment(params, options)
         {
             return fetch(
-                wp_rest_base_url+'/paywall/pay', {
+                wp_rest_base_url+'/invoices', {
                     method: "POST",
                     credentials: "same-origin",
                     cache: "no-cache",
@@ -141,11 +140,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 );
         }
 
-        function initPostPaywalls()
+        function initWeblnButtons()
         {
-            var buttons = document.querySelectorAll(
-                "[data-lnp-postid] button.wp-lnp-btn"
-            );
+            var buttons = document.querySelectorAll('.wp-lnp-webln-button')
             if (buttons.length === 0) {
                 return;
             }
@@ -156,21 +153,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
                             e.preventDefault();
                             this.setAttribute("disabled", "");
 
-                            this.innerHTML = LN_Paywall_Spinner;
-                            var wrapper = this.closest(".wp-lnp-wrapper");
+                            var thankyouMessage = this.dataset.success || "Thanks!";
+                            var paymentRequestArgs = { amount: this.dataset.amount, currency: this.dataset.currency };
+                            var wrapper = this.closest(".wp-lnp-webln-button-wrapper");
+
+                            wrapper.innerHTML = '<div class="wp-lnp-webln-button-spinner">' + LN_Paywall_Spinner + '</div>';
 
                             requestPayment(
-                                { post_id: wrapper.dataset.lnpPostid },
+                                paymentRequestArgs,
                                 { target: wrapper }
                             )
                             .then(
-                                function (content, invoice) {
-                                    wrapper.outerHTML = content;
+                                function (invoice) {
+                                    wrapper.innerHTML = '<div class="wp-lnp-webln-button-thanks">' + thankyouMessage + '</div>';
                                 }
                             )
                             .catch(
                                 function (e) {
-                                    console.log(e);
+                                    console.error(e);
                                     alert("sorry, something went wrong.");
                                 }
                             );
@@ -180,6 +180,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             );
         }
 
-        initPostPaywalls();
+        initWeblnButtons();
     })();
 });

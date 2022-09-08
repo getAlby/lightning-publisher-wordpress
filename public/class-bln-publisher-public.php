@@ -69,19 +69,9 @@ class BLN_Publisher_Public
     public function enqueue_scripts()
     {
 
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in BLN_Publisher_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The BLN_Publisher_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
         wp_enqueue_script($this->plugin->get_plugin_name(), plugin_dir_url(__FILE__) . 'js/bln-publisher-public.js', $this->plugin->get_version(), true);
+
+        wp_enqueue_script('bln-webln-button.js', plugin_dir_url(__FILE__) . 'js/bln-webln-button.js', $this->plugin->get_version(), true);
 
         wp_localize_script(
             $this->plugin->get_plugin_name(), 'LN_Paywall', array(

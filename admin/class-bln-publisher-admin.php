@@ -107,6 +107,14 @@ class BLN_Publisher_Admin
             untrailingslashit(BLN_PUBLISHER_ROOT_URI)
         ));
 
+        //register_block_type(dirname(__DIR__, 1) . '/blocks/donate/block.json');
+        register_block_type(
+            dirname(__DIR__, 1) . '/blocks/webln-button/block.json',
+            array(
+                'render_callback' => [$this, 'render_webln_donation_button'],
+            )
+        );
+
         /*
         // Path to Js that handles block functionality
         wp_register_script(
@@ -127,7 +135,7 @@ class BLN_Publisher_Admin
         */
     }
 
-    public function render_twentyuno_widget_block( $attrs)
+    function render_twentyuno_widget_block( $attrs)
     {
         $name = !empty($attrs['name']) ? strip_tags($attrs["name"]) : '';
         $color = !empty($attrs['color']) ? strip_tags($attrs["color"]) : '';
@@ -154,4 +162,18 @@ class BLN_Publisher_Admin
         $shortcode_attributes = implode(" ", $sanitized_attributes);
         return "[lnpaywall " . $shortcode_attributes . " ]";
     }
+
+    function render_webln_donation_button($attributes)
+    {
+        $amount = !empty($attributes['amount']) ? esc_attr($attributes["amount"]) : '';
+        $currency = !empty($attributes['currency']) ? esc_attr($attributes["currency"]) : '';
+        $button_text = !empty($attributes['button_text']) ? strip_tags($attributes["button_text"]) : '';
+        $success_message = !empty($attributes['success_message']) ? esc_attr($attributes["success_message"]) : '';
+
+        return '<div class="wp-lnp-webln-button-wrapper">
+            <button class="wp-lnp-webln-button" data-amount="' . $amount . '" data-currency="' . $currency . '" data-success="' . $success_message . '">'. $button_text .'</button>
+            </div>';
+    }
+
+
 }

@@ -53,7 +53,6 @@ class LNP_InvoicesController extends \WP_REST_Controller
      */
     public function process_create_invoice_request( $request )
     {
-        ob_start();
         $plugin = $this->get_plugin();
         $post_id = intval($request->get_param('post_id'));
         $amount = intval($request->get_param('amount'));
@@ -97,13 +96,12 @@ class LNP_InvoicesController extends \WP_REST_Controller
             "post_id" => $post_id,
             "payment_hash" => $invoice['r_hash'],
             "payment_request" => $invoice['payment_request'],
-            "comment" => $invoice['payment_request'],
+            "comment" => '',
             "amount_in_satoshi" => $amount,
             "exchange_currency" => $currency,
             "exchange_rate" => $exchange_rate
             ]
         );
-
 
         $response_data = ['post_id' => $post_id, 'amount' => $amount];
 
@@ -116,7 +114,6 @@ class LNP_InvoicesController extends \WP_REST_Controller
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
 
-        ob_end_clean();
         return rest_ensure_response($response);
     }
 
@@ -130,19 +127,16 @@ class LNP_InvoicesController extends \WP_REST_Controller
      */
     public function process_verify_invoice_request( $request )
     {
-        ob_start();
         $plugin = $this->get_plugin();
         $token    = $request->get_param('token');
         $preimage = $request->get_param('preimage');
 
         if (empty($token)) {
-            ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
         try {
             $jwt = JWT\JWT::decode($token, new JWT\Key(BLN_PUBLISHER_PAYWALL_JWT_KEY, BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM));
         } catch (\Exception $e) {
-            ob_end_clean();
             return wp_send_json(['settled' => false], 404);
         }
 
@@ -157,13 +151,10 @@ class LNP_InvoicesController extends \WP_REST_Controller
 
         // TODO check amount?
         if ($invoice && $invoice['settled']) { // && (int)$invoice['value'] == (int)$jwt->{'amount'}) {
-            $post_id = $jwt->{'post_id'};
             $plugin->getDatabaseHandler()->update_invoice_state($jwt->{'r_hash'}, 'settled');
 
-            ob_end_clean();
             wp_send_json(['settled' => true], 200);
         } else {
-            ob_end_clean();
             wp_send_json(['settled' => false], 402);
         }
     }

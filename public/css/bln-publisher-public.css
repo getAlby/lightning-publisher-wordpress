@@ -34,6 +34,12 @@
     display: inline;
 }
 
+.wp-lnp-copy svg {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
 .LNP_spinner {
     animation: LNP_rotate 2s linear infinite;
     z-index: 2;
