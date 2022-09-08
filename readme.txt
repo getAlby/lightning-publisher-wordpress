@@ -4,17 +4,17 @@ Tags: bitcoin, lightning, payment, donation, paywall, rss, micropayments
 Requires at least: 5.6.0
 Tested up to: 6.0.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv3
 Donate link: https://getalby.com
 Contributors: getalby
 
 
 == Description ==
-Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations.
+Bitcoin Lightning Publisher is a Paywall, Donation and Value 4 Value plugin for WordPress to accept instant Bitcoin Lightning payments.
 It allows you to monetize any digital content with instant microtransactions and receive payments from your visitors directly to your preferred wallet - no need for expensive service providers.
 
-The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments.
+The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations or Value 4 Value payments.
 Using the Bitcoin Lightning Network you can create the best visitor experience with seamless one-click payments.
 
 
@@ -32,10 +32,10 @@ Using the Bitcoin Lightning Network you can create the best visitor experience w
 
 
 **Use Case Examples:**
-- Accept donations / Value 4 Valye payments from your visitors
+- Accept donations / Value 4 Value payments from your visitors
 - Monetize any digital content on your website: Articles, pages, file, videos, music, podcasts
 - Receive payments (boosts and boostagrams) from podcasting apps via the Podcasting 2.0 `podcast:value` RSS standard
-- Integrate payments with your website functionaly
+- Integrate payments with your website functionality
 - many more
 
 
@@ -66,7 +66,7 @@ The plugin comes with various options to receive donations and Value 4 Value pay
 
 === Lightning Node connections ===
 
-Connect to your exsisting Bitcoin Lightning node or simply create a new Alby account to instantly receive Lightning payments.
+Connect to your existing Bitcoin Lightning node or simply create a new Alby account to instantly receive Lightning payments.
 
 * [Alby](https://getalby.com/)
 * LND

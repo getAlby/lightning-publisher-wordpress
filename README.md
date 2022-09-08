@@ -2,10 +2,10 @@
 
 ![Lightning Publisher](/assets/banner.png)
 
-Bitcoin Lightning Publisher is a Paywall and Donation plugin for WordPress to accept instant Bitcoin Lightning payments and donations / Value 4 Value payments.
+Bitcoin Lightning Publisher is a Paywall, Donation and Value 4 Value plugin for WordPress to accept instant Bitcoin Lightning payments.
 It allows you to monetize any digital content with instant microtransactions and receive payments from your visitors directly to your preferred wallet - no need for expensive service providers.
 
-The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations / Value 4 Value payments.
+The plugin is the easiest and most flexible plugin to sell your digital content and to receive donations or Value 4 Value payments.
 Using the Bitcoin Lightning Network you can create the best visitor experience with seamless one-click payments.
 
 
@@ -36,7 +36,7 @@ The plugin comes with various options to receive donations and [Value 4 Value pa
 
 
 ### Lightning Node connections
-Connect to your exsisting Bitcoin Lightning node or simply create a new [Alby account](https://getalby.com/) to instantly receive Lightning payments.
+Connect to your existing Bitcoin Lightning node or simply create a new [Alby account](https://getalby.com/) to instantly receive Lightning payments.
 
 * [Alby](https://getalby.com/)
 * [LND](https://github.com/lightningnetwork/lnd/)
@@ -152,7 +152,7 @@ Folder structure is based on https://github.com/DevinVinson/WordPress-Plugin-Boi
 
 The plugin also provides a set of REST API Endpoints for handling payments and donations.
 
-#### Intiate Payment for Paywall
+#### Initiate Payment for Paywall
 
 - URL: `/lnp-alby/v1/paywall/pay`
 - Method: `POST`
@@ -201,6 +201,33 @@ The plugin also provides a set of REST API Endpoints for handling payments and d
 - Method: `GET`
 - Auth Required: No
 
+#### Initiate a general payment to generate an invoice
+
+- URL: `/lnp-alby/v1/invoices`
+- Method: `POST`
+- Auth Required: No
+- Data example
+
+```
+{
+    amount: 123,
+    currency: 'btc'
+}
+```
+
+#### Verify Payment for an invoice
+
+- URL: `/lnp-alby/v1/invoices/verify`
+- Method: `POST`
+- Auth Required: No
+- Data example
+
+```
+{
+    token: "xxx", // the token from the invoice creation enpoint
+    preimage: "xxx"
+}
+```
 
 ## Get support
 
