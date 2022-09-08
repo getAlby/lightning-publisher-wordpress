@@ -92,6 +92,11 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 
 == Upgrade Notice ==
 
+= 1.1.0 =
+Add WebLN donation widget
+Add support for LNURL-verify (a proposal by Alby) to verify payments when connected to a Lightning Address
+Bugfix: use correct callback function name for the paywall check hook
+
 = 1.0.1 =
 Improve BTCPay Server connection
 
