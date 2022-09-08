@@ -202,7 +202,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
                 'type'        => 'email',
                 'name'        => 'lnaddress_address',
                 'label'       => __('Lightning Address', 'lnp-alby'),
-                'description' => __('Lightning Address (e.g. you@payaddress.co) - only works if the vistor supports WebLN!', 'lnp-alby'),
+                'description' => __('Lightning Address (e.g. you@payaddress.co) - currently only works if the vistor supports WebLN (or with a @getalby.com lightning address)', 'lnp-alby'),
             ),
         );
 

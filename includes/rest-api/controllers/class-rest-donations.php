@@ -132,6 +132,7 @@ class LNP_DonationsController extends \WP_REST_Controller
         {
             $invoice_id = $jwt->{'invoice_id'};
             $invoice    = $plugin->getLightningClient()->getInvoice($invoice_id);
+            $settled    = $invoice['settled'];
         }
 
 
@@ -190,10 +191,14 @@ class LNP_DonationsController extends \WP_REST_Controller
             ]
         );
 
+        // if the invoice includes a custom invoice_id we use that
+        // otherwise we default to the r_hash
+        // this is currently mainly used in the lightning address
+        $invoice_id = empty($invoice['id']) ? $invoice['r_hash'] : $invoice['id'];
         $jwt_data = array_merge(
             $response_data,
             array(
-                'invoice_id' => $invoice['r_hash'],
+                'invoice_id' => $invoice_id,
                 'r_hash'     => $invoice['r_hash'],
                 'exp'        => time() + 60 * 10
             )

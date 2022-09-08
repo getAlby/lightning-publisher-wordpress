@@ -13,7 +13,7 @@ class LightningAddress
 
     public function __construct()
     {
-        $this->decoder = new \Jorijn\Bitcoin\Bolt11\Encoder\PaymentRequestDecoder();
+        $this->decoder = new PaymentRequestDecoderWithoutSatoshis();
         $this->denormalizer = new \Jorijn\Bitcoin\Bolt11\Normalizer\PaymentRequestDenormalizer();
     }
 
@@ -48,6 +48,7 @@ class LightningAddress
 
         $invoice = $this->request('GET', $callbackUrl);
         $invoice['payment_request'] = $invoice['pr'];
+        $invoice['id'] = $invoice['verify']; // the id will be passed to the getInvoice function
 
         $pr = $this->denormalizer->denormalize($this->decoder->decode($invoice['pr']));
         $paymentHash = $pr->findTagByName(\Jorijn\Bitcoin\Bolt11\Model\Tag::PAYMENT_HASH)->getData();
@@ -57,9 +58,14 @@ class LightningAddress
         return $invoice;
     }
 
-    public function getInvoice($checkingId)
+    public function getInvoice($id)
     {
-        return ['settled' => false];
+        if (!empty($id)) {
+            $verify = $this->request('GET', $id);
+            return ['settled' => $verify['settled']];
+        } else {
+            return ['settled' => false];
+        }
     }
 
     public function isInvoicePaid($checkingId)
@@ -85,7 +91,7 @@ class LightningAddress
     private function request($method, $url, $body = null)
     {
         $headers = [
-        'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json'
         ];
 
         $request = new GuzzleHttp\Psr7\Request($method, $url, $headers, $body);

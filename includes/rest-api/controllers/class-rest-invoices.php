@@ -107,7 +107,11 @@ class LNP_InvoicesController extends \WP_REST_Controller
 
         $response_data = ['post_id' => $post_id, 'amount' => $amount];
 
-        $jwt_data = array_merge($response_data, ['invoice_id' => $invoice['r_hash'], 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
+        // if the invoice includes a custom invoice_id we use that
+        // otherwise we default to the r_hash
+        // this is currently mainly used in the lightning address
+        $invoice_id = empty($invoice['id']) ? $invoice['r_hash'] : $invoice['id'];
+        $jwt_data = array_merge($response_data, ['invoice_id' => $invoice_id, 'r_hash' => $invoice['r_hash'], 'exp' => time() + 60 * 10]);
         $jwt = JWT\JWT::encode($jwt_data, BLN_PUBLISHER_PAYWALL_JWT_KEY,  BLN_PUBLISHER_PAYWALL_JWT_ALGORITHM);
 
         $response = array_merge($response_data, ['token' => $jwt, 'payment_request' => $invoice['payment_request']]);
