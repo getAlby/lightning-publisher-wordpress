@@ -72,7 +72,7 @@ To build the plugin yourself: clone the repository and install the dependency us
 ```bash
 git clone https://github.com/getAlby/lightning-publisher-wordpress.git
 cd lightning-publisher-wordpress
-composer install # (maybe you need to add `--ignore-platform-reqs`)
+composer install # (maybe you need to add `--ignore-platform-reqs` if it asks you to update PHP)
 ```
 To build a .zip file of the WordPress plugin run:
 ```bash
