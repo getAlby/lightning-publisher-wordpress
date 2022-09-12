@@ -4,7 +4,7 @@ Tags: bitcoin, lightning, payment, donation, paywall, rss, micropayments
 Requires at least: 5.6.0
 Tested up to: 6.0.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3
 Donate link: https://getalby.com
 Contributors: getalby
@@ -91,6 +91,10 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 [Release notes on GitHub](https://github.com/getAlby/lightning-publisher-wordpress/releases)
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+fix issue with empty [lnpaywall] short code not being recognised
+remove ECAdapter dependency which has some issues on some hosting setups
 
 = 1.1.1 =
 maintenance update to fix version numbers
