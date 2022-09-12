@@ -225,7 +225,7 @@ class BLN_Publisher_Paywall
      */
     protected function content_has_shortcode()
     {
-        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
+        if (preg_match('/\[lnpaywall(.*)\]/i', $this->content, $m)) {
             return true;
         } else {
             return false;
@@ -240,7 +240,7 @@ class BLN_Publisher_Paywall
      */
     protected function extract_options_from_shortcode()
     {
-        if (preg_match('/\[lnpaywall(.+)\]/i', $this->content, $m)) {
+        if (preg_match('/\[lnpaywall(.*)\]/i', $this->content, $m)) {
             $atts = shortcode_parse_atts($m[1]);
             if ($atts == "") {
                 return [];
@@ -292,6 +292,6 @@ class BLN_Publisher_Paywall
      */
     protected function split_public_protected()
     {
-        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[lnpaywall.+\](<\/p>)?/', $this->content, 2), 2, null);
+        list($this->teaser, $this->protected_content) = array_pad(preg_split('/(<p>)?\[lnpaywall.*\](<\/p>)?/', $this->content, 2), 2, null);
     }
 }
