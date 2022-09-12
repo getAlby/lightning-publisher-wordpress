@@ -61,7 +61,7 @@ use Jorijn\Bitcoin\Bolt11\Exception\UnrecoverableSignatureException;
  *
  * This class is a PHP port from pre-existing BOLT11 libraries.
  */
-class Bolt11PaymentRequestDecoderWithoutSatoshis
+class Bolt11PaymentRequestDecoderWithoutSatoshisAndSignature
 {
     public const DIVISORS = [
         'm' => '1000.0000000000',
@@ -192,7 +192,7 @@ class Bolt11PaymentRequestDecoderWithoutSatoshis
         );
 
         $payReqHash = Hash::sha256($toSign);
-        $sigPubkey = $this->extractVerifyPublicKey($recoveryID, $signatureBuffer, $payReqHash, $tags);
+        // $sigPubkey = $this->extractVerifyPublicKey($recoveryID, $signatureBuffer, $payReqHash, $tags);
 
         $finalResult = [
             'prefix' => $prefix,
@@ -201,8 +201,8 @@ class Bolt11PaymentRequestDecoderWithoutSatoshis
             'milli_satoshis' => $milliSatoshis,
             'timestamp' => $timestamp,
             'timestamp_string' => $timestampString,
-            'payee_node_key' => $sigPubkey->getHex(),
-            'signature' => $signatureBuffer->getHex(),
+            'payee_node_key' => null, //$sigPubkey->getHex(),
+            'signature' => null, //$signatureBuffer->getHex(),
             'recovery_flag' => $recoveryID,
             'tags' => $tags,
             '_payment_request_hash' => $payReqHash->getHex(),

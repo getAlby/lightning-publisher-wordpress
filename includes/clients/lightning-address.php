@@ -15,8 +15,7 @@ class LightningAddress
 
     public function __construct()
     {
-        $this->decoder = new Bolt11PaymentRequestDecoderWithoutSatoshis();
-        $this->denormalizer = new \Jorijn\Bitcoin\Bolt11\Normalizer\PaymentRequestDenormalizer();
+        $this->decoder = new Bolt11PaymentRequestDecoderWithoutSatoshisAndSignature();
     }
 
     public function setLnurl($lnurl)
@@ -51,8 +50,10 @@ class LightningAddress
         $invoice = $this->request('GET', $callbackUrl);
         $invoice['payment_request'] = $invoice['pr'];
 
-        $pr = $this->denormalizer->denormalize($this->decoder->decode($invoice['pr']));
-        $paymentHash = $pr->findTagByName(\Jorijn\Bitcoin\Bolt11\Model\Tag::PAYMENT_HASH)->getData();
+        $pr = $this->decoder->decode($invoice['pr']);
+        $tags = $pr['tags'];
+        $key = array_search('payment_hash', array_column($tags, 'tag_name'));
+        $paymentHash = $tags[$key]['data']; //$pr->findTagByName(\Jorijn\Bitcoin\Bolt11\Model\Tag::PAYMENT_HASH)->getData();
 
         $invoice['r_hash'] = $paymentHash;
 
