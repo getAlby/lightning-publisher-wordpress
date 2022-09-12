@@ -31,9 +31,9 @@ use BitWasp\Bitcoin\Address\PayToPubKeyHashAddress;
 use BitWasp\Bitcoin\Address\ScriptHashAddress;
 use BitWasp\Bitcoin\Address\SegwitAddress;
 use BitWasp\Bitcoin\Bitcoin;
-use BitWasp\Bitcoin\Crypto\EcAdapter\Adapter\EcAdapterInterface;
-use BitWasp\Bitcoin\Crypto\EcAdapter\Impl\PhpEcc\Serializer\Signature\CompactSignatureSerializer;
-use BitWasp\Bitcoin\Crypto\EcAdapter\Key\PublicKeyInterface;
+//use BitWasp\Bitcoin\Crypto\EcAdapter\Adapter\EcAdapterInterface;
+//use BitWasp\Bitcoin\Crypto\EcAdapter\Impl\PhpEcc\Serializer\Signature\CompactSignatureSerializer;
+//use BitWasp\Bitcoin\Crypto\EcAdapter\Key\PublicKeyInterface;
 use BitWasp\Bitcoin\Crypto\Hash;
 use BitWasp\Bitcoin\Network\NetworkInterface;
 use BitWasp\Bitcoin\Network\Networks\Bitcoin as BitcoinMainnet;
@@ -95,9 +95,9 @@ class Bolt11PaymentRequestDecoderWithoutSatoshisAndSignature
     /** @var EcAdapterInterface */
     protected $ecAdapter;
 
-    public function __construct(EcAdapterInterface $ecAdapter = null)
+    public function __construct($ecAdapter = null)
     {
-        $this->ecAdapter = $ecAdapter ?? Bitcoin::getEcAdapter();
+        $this->ecAdapter =  null; //$ecAdapter ?? Bitcoin::getEcAdapter();
         $this->tagNames = array_flip(self::TAG_CODES);
         $this->initializeTagParsers();
     }
@@ -393,6 +393,7 @@ class Bolt11PaymentRequestDecoderWithoutSatoshisAndSignature
         return null;
     }
 
+    /*
     protected function extractVerifyPublicKey(
         int $recoveryID,
         BufferInterface $signatureBuffer,
@@ -420,6 +421,7 @@ class Bolt11PaymentRequestDecoderWithoutSatoshisAndSignature
 
         return $sigPubkey;
     }
+    */
 
     protected function wordsToHex(array $words): string
     {
