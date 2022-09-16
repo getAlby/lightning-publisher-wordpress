@@ -197,7 +197,7 @@ class BLN_Publisher_Paywall
             $currency_formatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, $this->options['currency']);
             return $currency_formatter->format(intval($this->options['amount']) / 100.0); // we have cents, but the formatter assumes "dollars" - we only support usd,eur,gbp (all have 2 digits for cents)
         } else {
-            return number_format_i18n($this->options['amount']) . "sats";
+            return number_format_i18n($this->options['amount']) . " sats";
         }
     }
 
