@@ -349,6 +349,8 @@ class BLN_Publisher
         // Add the lightning meta tag to the head of the page
         $this->loader->add_action('wp_head', $this->plugin_public, 'hook_meta_tags');
 
+        $this->loader->add_filter('script_loader_tag', $this->plugin_public, 'add_module_script_type_attribute' , 10, 3);
+
         // For RSS Feed
         if (!empty($this->paywall_options['lnurl_rss'])) {
             // Add URL as RSS Item
@@ -374,7 +376,7 @@ class BLN_Publisher
     {
         // Register shortcode for donation block
         $this->loader->add_shortcode('ln_v4v', $this->plugin_public, 'render_webln_v4v_donation_button');
-        //$this->loader->add_shortcode('ln_simple_boost', $this->plugin_public, 'render_webln_v4v_simple_boost');
+        $this->loader->add_shortcode('ln_simple_boost', $this->plugin_public, 'render_webln_v4v_simple_boost');
     }
 
     /**
@@ -549,13 +551,13 @@ class BLN_Publisher
 
     public function get_current_exchange_rate($currency)
     {
-        $transient_key = 'bitstamp_current_rate_' . strtolower($currency);
-        $bitstamp_url = 'https://www.bitstamp.net/api/v2/ticker/btc' . strtolower($currency);
+        $transient_key = 'alby_current_rate_' . strtolower($currency);
+        $alby_rate_url = 'https://getalby.com/api/rates/' . strtolower($currency);
 
         // Check for transient, if none, update the rate
         if ( false === ($data = get_transient($transient_key)) ) {
             // Get remote HTML file
-            $response = wp_remote_get($bitstamp_url);
+            $response = wp_remote_get($alby_rate_url);
             // Check for error
             if ( is_wp_error($response) ) {
                 return;
@@ -571,7 +573,7 @@ class BLN_Publisher
             set_transient($transient_key, $data, 10 * MINUTE_IN_SECONDS );
         }
         $data = json_decode($data);
-        return $data->{'last'};
+        return $data->{'rate'};
     }
 
     public function convert_to_sats($amount_in_cents, $currency, $rate = null)
