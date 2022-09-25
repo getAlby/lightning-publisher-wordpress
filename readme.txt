@@ -4,7 +4,7 @@ Tags: bitcoin, lightning, payment, donation, paywall, rss, micropayments
 Requires at least: 5.6.0
 Tested up to: 6.0.1
 Requires PHP: 7.4
-Stable tag: 1.1.2
+Stable tag: 1.2.0
 License: GPLv3
 Donate link: https://getalby.com
 Contributors: getalby
@@ -92,12 +92,16 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 
 == Upgrade Notice ==
 
+= 1.2.0 =
+Include shortcodes for Value 4 Value and donation buttons
+Use Alby API for currency rates
+
 = 1.1.2 =
-fix issue with empty [lnpaywall] short code not being recognised
-remove ECAdapter dependency which has some issues on some hosting setups
+Fix issue with empty [lnpaywall] short code not being recognised
+Remove ECAdapter dependency which has some issues on some hosting setups
 
 = 1.1.1 =
-maintenance update to fix version numbers
+Maintenance update to fix version numbers
 
 = 1.1.0 =
 Add WebLN donation widget
