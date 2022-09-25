@@ -6,7 +6,7 @@ defined('WPINC') || die; ?>
 <div class="wrap lnp">
     <h1><?php echo esc_html($this->get_page_title()); ?></h1>
 
-    <h3>Getting Started</h3>
+    <h2>Getting Started</h2>
     <p>How to get started receiving lightning payments with your WordPress page</p>
 
     <ol>
@@ -22,26 +22,26 @@ defined('WPINC') || die; ?>
         <li>
             <strong>Enable Value 4 Value</strong>:
             Go to <i>General Settings</i> to enable the Value 4 Value options for your site.<br>
-            This allows you to add the Lightning metatag and add the podcast:value tag to your RSS feed (mainly for the podcasters). Value 4 Value payments enable visitors to send microtransactions as they use your site.
+            This allows you to add the Lightning metatag and add the podcast:value tag to your RSS feed (mainly for the podcasters). Value 4 Value payments enable visitors to send micro-transactions as they use your site.
         </li>
         <li>
             <strong>Done</strong>:
-            Add the paywall or donation blocks to your posts using the Gutenberg Block editor or use the <i>[lnpaywall]</i> shortcode.<br>
-            In the Gutenberg block search for the Block "Lightning" (-"Lightning Paywall", "Twentyuno Lightning Payment Widget", "Lightning Donation"-)
+            Add the paywall or donation blocks to your posts using the Gutenberg Block editor or use the <i>[lnpaywall]</i>, <i>[ln_v4v]</i> shortcodes.<br>
+            In the Gutenberg block search for the Block "Lightning" (-"Lightning Paywall", "Twentyuno Lightning Payment Widget", "WebLN Donate Button"-)
         </li>
     </ol>
 
     <hr>
 
-    <h3>Getting Help</h3>
+    <h2>Getting Help</h2>
     <p>If you need help please reach out to support@getalby.com</p>
     <p>For more details please visit the <a href="https://github.com/getAlby/lightning-publisher-wordpress">GitHub repository</a>.</p>
 
     <hr>
 
-    <h3>Shortcodes</h3>
+    <h2>Shortcodes</h2>
 
-    <h4>Value 4 Value</h4>
+    <h3>Value 4 Value</h3>
     <p>
         Use the [ln_v4v] shortcode to add a Value 4 Value / donation button to your post. This is a simple button to allow your visitors to send you sats, it is a voluntary payment from your visitors. The Lightning Network and <a href="https://getalby.com">Alby</a> make this as easy as clicking a single button.
     </p>
@@ -54,7 +54,16 @@ defined('WPINC') || die; ?>
     <p><code>[ln_v4v success_message="yay, thanks"]</code></p>
     <p><code>[ln_v4v amount="210"]</code></p>
 
-    <h4>Paywall</h4>
+    <h4>simple-boost</h4>
+    <p>
+        LN Publisher includes the <a href="https://getalby.github.io/simple-boost/">simple-boost</a> widget which can be added using a shortcode: [ln_simple_boost]
+    </p>
+    <p>Examples:</p>
+    <p><code>[ln_simple_boost]Support our work with sats[/ln_simple_boost]</code></p>
+    <p><code>[ln_simple_boost amount="20" currency="eur"]Support us with 0.2EUR[/ln_simple_boost]</code></p>
+    <p><code>[ln_simple_boost amount="210"]</code></p>
+
+    <h3>Paywall</h3>
     <p>
         Use the [lnpaywall] shortcode to add and configure a paywall to your post. Any content after the [lnpaywall] shortcode will be behind the paywall and only accessible to the user after a payment.
     </p>
@@ -68,7 +77,7 @@ defined('WPINC') || die; ?>
 
     <hr>
 
-    <h3>Paywall Settings</h3>
+    <h2>Paywall Settings</h2>
     <p>
         The advanced Paywall Settings allow you to activate the paywall with certain options:
     </p>
@@ -87,7 +96,7 @@ defined('WPINC') || die; ?>
         </li>
     </ul>
 
-    <h3>Wallet Settings</h3>
+    <h2>Wallet Settings</h2>
     <p>
       You have the option to receive your payments in the following wallets:
     </p>
@@ -100,7 +109,7 @@ defined('WPINC') || die; ?>
         <li>Lightning Address: A simple way for anyone to send you bitcoin instantly on the Lightning Network.It looks like a normal email address such as you@payaddress.com. But it only works if the website visitor uses a WebLN enabled wallet to pay. More information: https://lightningaddress.com/</li>
     </ul>
 
-    <h3>General Settings</h3>
+    <h2>General Settings</h2>
     <ul style="list-style:disc">
         <li>Value4Value Lightning meta tag: The meta tag gives websites a way to receive direct payments from their visitors. It allows websites to describe how and where they would like to receive payments. By enabling this feature you add the payment information directly into the code of the website. Wallets that can read this meta tag can send you payments without any additional payment widgets on your website. More information here: https://github.com/BitcoinAndLightningLayerSpecs/rfc/issues/1</li>
         <li>Enable Value4Value tag: Enabling this feature adds the podcast:value tag to your RSS feed. RSS feed reader apps (e.g. podcast apps) can read the payment information and allow the user to send you payments, if the app is bitcoin enabled. More information here: https://github.com/Podcastindex-org/podcast-namespace/blob/main/podcasting2.0.md</li>

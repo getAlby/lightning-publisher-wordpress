@@ -80,6 +80,20 @@ class BLN_Publisher_Public
         );
     }
 
+   /**
+    * Script loader filter to add type="module" where required
+    *
+    * @since 1.0.0
+    */
+    public function add_module_script_type_attribute($tag, $handle, $src)
+    {
+        // if it is a module add type module to the tag
+        if (str_contains($handle, 'module')) {
+            $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+        }
+        return $tag;
+    }
+
     /**
      * filter ln shortcodes and inject payment request HTML
      */
@@ -131,7 +145,7 @@ class BLN_Publisher_Public
         <?php
     }
 
-    public function render_webln_v4v_donation_button($attributes, $content, )
+    public function render_webln_v4v_donation_button($attributes, $content)
     {
         $attributes = shortcode_atts( array(
             'amount' => '1000',
@@ -146,7 +160,28 @@ class BLN_Publisher_Public
         $success_message = !empty($attributes['success_message']) ? esc_attr($attributes["success_message"]) : '';
 
         return '<div class="wp-lnp-webln-button-wrapper">
-            <button class="wp-lnp-webln-button" data-amount="' . $amount . '" data-currency="' . $currency . '" data-success="' . $success_message . '">'. $content .'</button>
+            <button class="wp-lnp-webln-button" data-amount="' . $amount . '" data-currency="' . $currency . '" data-success="' . $success_message . '">'. wp_kses_post($content) .'</button>
             </div>';
+    }
+
+    public function render_webln_v4v_simple_boost($attributes, $content)
+    {
+        wp_enqueue_script('module/simple-boost.bundled.js', plugin_dir_url(__FILE__) . 'js/module/simple-boost.bundled.js', $this->plugin->get_version(), true);
+
+        $lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
+        $attributes = shortcode_atts( array(
+            'amount' => '1000',
+            'currency' => 'btc',
+            'class' => 'gumroad',
+        ), $attributes, 'ln_simple_boost' );
+        $amount = esc_attr(intval($attributes['amount'])/100);
+        $currency = strtolower($attributes['currency']) == 'btc' ? 'sats' : esc_attr($attributes['currency']);
+        $klass = esc_attr($attributes['class']);
+        return '<simple-boost
+          amount="'. $amount .'"
+          currency="' . $currency . '"
+          class="' . $klass . '"
+          address="' . esc_attr($lnurl) .'"
+        >' . wp_kses_post($content) . '</simple-boost>';
     }
 }
