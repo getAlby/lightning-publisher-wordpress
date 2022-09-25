@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/block.json",
   "apiVersion": 2,
   "name": "alby/webln-button",
-  "title": "WebLN Donate Button",
+  "title": "Lightning WebLN Donate Button",
   "icon": "money-alt",
   "category": "design",
   "attributes": {
