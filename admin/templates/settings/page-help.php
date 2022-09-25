@@ -40,14 +40,29 @@ defined('WPINC') || die; ?>
     <hr>
 
     <h3>Shortcodes</h3>
+
+    <h4>Value 4 Value</h4>
     <p>
-        Use the [lnpaywall] shortcode to add and configrue a paywall to your post. Any content after the [lnpaywall] shortcode will be behind the paywall and only accessible to the user after a payment.
+        Use the [ln_v4v] shortcode to add a Value 4 Value / donation button to your post. This is a simple button to allow your visitors to send you sats, it is a voluntary payment from your visitors. The Lightning Network and <a href="https://getalby.com">Alby</a> make this as easy as clicking a single button.
+    </p>
+    <p>
+        Configure the button with the following options: <code>amount</code>, <code>currency</code>, <code>success_message</code>
+    </p>
+    <p>Examples:</p>
+    <p><code>[ln_v4v]Support our work with sats[/ln_v4v]</code></p>
+    <p><code>[ln_v4v amount="20" currency="eur"]Support us with 0.2EUR[/ln_v4v]</code></p>
+    <p><code>[ln_v4v success_message="yay, thanks"]</code></p>
+    <p><code>[ln_v4v amount="210"]</code></p>
+
+    <h4>Paywall</h4>
+    <p>
+        Use the [lnpaywall] shortcode to add and configure a paywall to your post. Any content after the [lnpaywall] shortcode will be behind the paywall and only accessible to the user after a payment.
     </p>
     <p>
         Configure the paywall defaults in the <i>Paywall Settings</i> or overwrite the defaults with the following options: <code>amount</code>, <code>currency</code>, <code>button_text</code>, <code>total</code>, <code>timein</code>, <code>timeout</code>
     </p>
     <p>Examples:</p>
-    <p><code>[lnpaywall amount="100"]</code> (100 sats)<p>
+    <p><code>[lnpaywall amount="100"]</code> (100 sats)</p>
     <p><code>[lnpaywall amount="100" currency="eur"]</code> (100 EUR cents (1.00 EUR))</p>
     <p><code>[lnpaywall button_text="Support our work"]</code> (100 EUR cents (1.00 EUR))</p>
 

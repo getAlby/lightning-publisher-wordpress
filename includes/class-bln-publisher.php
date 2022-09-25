@@ -373,7 +373,8 @@ class BLN_Publisher
     private function define_shortcodes()
     {
         // Register shortcode for donation block
-        $this->loader->add_shortcode('alby_donation_block', $this->plugin_public, 'sc_alby_donation_block');
+        $this->loader->add_shortcode('ln_v4v', $this->plugin_public, 'render_webln_v4v_donation_button');
+        //$this->loader->add_shortcode('ln_simple_boost', $this->plugin_public, 'render_webln_v4v_simple_boost');
     }
 
     /**

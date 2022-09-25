@@ -130,4 +130,23 @@ class BLN_Publisher_Public
         </podcast:value>
         <?php
     }
+
+    public function render_webln_v4v_donation_button($attributes, $content, )
+    {
+        $attributes = shortcode_atts( array(
+            'amount' => '1000',
+            'currency' => 'btc',
+            'success_message' => 'Thanks!',
+        ), $attributes, 'ln_v4v' );
+        if (empty($content)) {
+            $content = 'Like with sats';
+        }
+        $amount = !empty($attributes['amount']) ? esc_attr($attributes["amount"]) : '';
+        $currency = !empty($attributes['currency']) ? esc_attr($attributes["currency"]) : '';
+        $success_message = !empty($attributes['success_message']) ? esc_attr($attributes["success_message"]) : '';
+
+        return '<div class="wp-lnp-webln-button-wrapper">
+            <button class="wp-lnp-webln-button" data-amount="' . $amount . '" data-currency="' . $currency . '" data-success="' . $success_message . '">'. $content .'</button>
+            </div>';
+    }
 }
