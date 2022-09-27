@@ -62,7 +62,7 @@ class LNP_DonationsController extends \WP_REST_Controller
         // Don't allow less than 100 SATS
         if ($amount < 100 ) {
             ob_end_clean();
-            return new \WP_Error(__('Mimimum domation amount is 100 SATS', 'lnp-alby'));
+            return new \WP_Error(__('Mimimum donation amount is 100 SATS', 'lnp-alby'));
         }
 
         // Don't allow less than 100 SATS
