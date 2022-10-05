@@ -100,6 +100,16 @@ class LNP_GeneralPage extends LNP_SettingsPage
                 'label' => __('Custom Value', 'lnp-alby'),
             ),
         );
+        $fields[] = array(
+            'tab'     => 'value4value',
+            'field'   => array(
+                'type'  => 'checkbox',
+                'name'  => 'disable_add_v4v_rss_ns_tag',
+                'value' => 'on',
+                'label' => __('Disable podcast namespace injection', 'lnp-alby'),
+                'description' => __('Do not auto-inject the podcast namespace. Some other plugins (like Seriously Simple Podcasting) might do this already which then might causes errors.', 'lnp-alby'),
+            ),
+        );
 
         $fields[] = array(
             'tab'     => 'general',

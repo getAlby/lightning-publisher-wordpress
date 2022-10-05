@@ -359,7 +359,9 @@ class BLN_Publisher
 
         if (!empty($this->general_options['add_v4v_rss_tag'])) {
             $this->loader->add_action('rss2_head', $this->plugin_public, 'add_v4v_rss_tag');
-            $this->loader->add_action('rss2_ns', $this->plugin_public, 'add_v4v_rss_ns_tag');
+            if (empty($this->general_options['disable_add_v4v_rss_ns_tag']) ) {
+                $this->loader->add_action('rss2_ns', $this->plugin_public, 'add_v4v_rss_ns_tag');
+            }
         }
 
         // Apply Paywall to the content
