@@ -16,3 +16,7 @@ if (! defined('WP_UNINSTALL_PLUGIN') ) {
 // Drop a custom database table
 global $wpdb;
 $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}lightning_publisher_payments");
+
+delete_option( 'lnp_connection' );
+delete_option( 'lnp_general' );
+delete_option( 'lnp_paywall' );
