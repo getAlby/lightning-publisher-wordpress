@@ -90,6 +90,8 @@ This for example allows you to make the content available for all users/subscrib
 
 ##### Example
 
+you can add such functions anywhere in your code. e.g. in `functions.php`
+
 ```php
 
 // your function receives two arguments:
