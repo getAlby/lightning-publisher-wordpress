@@ -132,8 +132,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 .then(
                     function (invoice) {
                         if (!invoice || !invoice.payment_request) {
-                            console.log("Failed to generate lightning invoice", invoice);
-                            return;
+                            console.error("Failed to generate lightning invoice", invoice);
+                            throw new Error("Failed to generate lightning invoice " + JSON.stringify(invoice));
                         }
                         return pay(invoice, options);
                     }
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                             .catch(
                                 function (e) {
                                     console.error(e);
-                                    alert("sorry, something went wrong.");
+                                    alert("Sorry, something went wrong.");
                                 }
                             );
                         }
