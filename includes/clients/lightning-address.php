@@ -25,7 +25,9 @@ class LightningAddress
 
     public function getInfo()
     {
-        return ["alias" => $this->address, "identity_pubkey" => "LNURL: " . $this->lnurl];
+        $lnurlResponse = $this->request('GET', $this->lnurl);
+        $callbackUrl = $lnurlResponse['callback'];
+        return ["alias" => $this->address, "identity_pubkey" => "LNURL invoice callback URL: " . $callbackUrl ];
     }
 
     public function setAddress($address)
@@ -111,7 +113,8 @@ class LightningAddress
     private function request($method, $url, $body = null)
     {
         $headers = [
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
         ];
 
         $request = new GuzzleHttp\Psr7\Request($method, $url, $headers, $body);
