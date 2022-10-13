@@ -263,12 +263,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "018dfc4e1da92ad8a1b90adc4893f476a3b41cb8"
+                "reference": "f7886d510050fda6d976afe3aba77e8d082f42d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/018dfc4e1da92ad8a1b90adc4893f476a3b41cb8",
-                "reference": "018dfc4e1da92ad8a1b90adc4893f476a3b41cb8",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/f7886d510050fda6d976afe3aba77e8d082f42d0",
+                "reference": "f7886d510050fda6d976afe3aba77e8d082f42d0",
                 "shasum": ""
             },
             "require": {
@@ -316,9 +316,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.3.0"
+                "source": "https://github.com/firebase/php-jwt/tree/main"
             },
-            "time": "2022-07-15T16:48:45+00:00"
+            "time": "2022-10-05T19:51:08+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -326,12 +326,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "4e28ee5d7ee044ebd9be0ab8852997e2bd034cce"
+                "reference": "8459341c16f96b9610dcdfe22bd3060d60c0da04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4e28ee5d7ee044ebd9be0ab8852997e2bd034cce",
-                "reference": "4e28ee5d7ee044ebd9be0ab8852997e2bd034cce",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8459341c16f96b9610dcdfe22bd3060d60c0da04",
+                "reference": "8459341c16f96b9610dcdfe22bd3060d60c0da04",
                 "shasum": ""
             },
             "require": {
@@ -346,10 +346,10 @@
                 "psr/http-client-implementation": "1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4.1",
+                "bamarni/composer-bin-plugin": "^1.8.1",
                 "ext-curl": "*",
                 "php-http/client-integration-tests": "^3.0",
-                "phpunit/phpunit": "^8.5.5 || ^9.3.5",
+                "phpunit/phpunit": "^8.5.29 || ^9.5.23",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
             },
             "suggest": {
@@ -360,8 +360,12 @@
             "default-branch": true,
             "type": "library",
             "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": false
+                },
                 "branch-alias": {
-                    "dev-master": "7.4-dev"
+                    "dev-master": "7.5-dev"
                 }
             },
             "autoload": {
@@ -443,7 +447,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-31T09:40:09+00:00"
+            "time": "2022-08-29T11:03:19+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -451,12 +455,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "a872440174bcdfd3392831de339656ac56122e26"
+                "reference": "b94b2807d85443f9719887892882d0329d1e2598"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/a872440174bcdfd3392831de339656ac56122e26",
-                "reference": "a872440174bcdfd3392831de339656ac56122e26",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/b94b2807d85443f9719887892882d0329d1e2598",
+                "reference": "b94b2807d85443f9719887892882d0329d1e2598",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +516,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/master"
+                "source": "https://github.com/guzzle/promises/tree/1.5.2"
             },
             "funding": [
                 {
@@ -528,7 +532,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-31T08:57:45+00:00"
+            "time": "2022-08-28T14:55:35+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -536,12 +540,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "8f0a09ce19adcf28f25ff9d90e7329488501b363"
+                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/8f0a09ce19adcf28f25ff9d90e7329488501b363",
-                "reference": "8f0a09ce19adcf28f25ff9d90e7329488501b363",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/69568e4293f4fa993f3b0e51c9723e1e17c41379",
+                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379",
                 "shasum": ""
             },
             "require": {
@@ -555,9 +559,9 @@
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4.1",
+                "bamarni/composer-bin-plugin": "^1.8.1",
                 "http-interop/http-factory-tests": "^0.9",
-                "phpunit/phpunit": "^8.5.8 || ^9.3.10"
+                "phpunit/phpunit": "^8.5.29 || ^9.5.23"
             },
             "suggest": {
                 "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
@@ -565,6 +569,10 @@
             "default-branch": true,
             "type": "library",
             "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": false
+                },
                 "branch-alias": {
                     "dev-master": "2.4-dev"
                 }
@@ -628,7 +636,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/master"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.1"
             },
             "funding": [
                 {
@@ -644,7 +652,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-31T08:48:33+00:00"
+            "time": "2022-08-28T14:45:39+00:00"
         },
         {
             "name": "jorijn/bitcoin-bolt11",
@@ -652,23 +660,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jorijn/bitcoin-bolt11.git",
-                "reference": "65b0ff56d6b6ca2c05a3d4597c9468f6bb2c6f55"
+                "reference": "f339bfb531159583ea966f924c97de2f85402002"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jorijn/bitcoin-bolt11/zipball/65b0ff56d6b6ca2c05a3d4597c9468f6bb2c6f55",
-                "reference": "65b0ff56d6b6ca2c05a3d4597c9468f6bb2c6f55",
+                "url": "https://api.github.com/repos/Jorijn/bitcoin-bolt11/zipball/f339bfb531159583ea966f924c97de2f85402002",
+                "reference": "f339bfb531159583ea966f924c97de2f85402002",
                 "shasum": ""
             },
             "require": {
                 "bitwasp/bech32": "^0.0.1",
                 "ext-bcmath": "*",
                 "ext-gmp": "*",
-                "php": "^7.3|^8.0",
+                "php": "^7.4|^8.0",
                 "protonlabs/bitcoin": "1.0.x-dev"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.17",
+                "friendsofphp/php-cs-fixer": "^3.10",
                 "phpunit/phpunit": "^9"
             },
             "default-branch": true,
@@ -698,9 +706,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Jorijn/bitcoin-bolt11/issues",
-                "source": "https://github.com/Jorijn/bitcoin-bolt11/tree/v0.2.0"
+                "source": "https://github.com/Jorijn/bitcoin-bolt11/tree/v1.0.0"
             },
-            "time": "2021-12-07T11:15:47+00:00"
+            "time": "2022-08-20T05:50:00+00:00"
         },
         {
             "name": "lastguest/murmurhash",
@@ -972,12 +980,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lndhub-php.git",
-                "reference": "17f6c4880b5fa94625c86bfa627d6a678960039e"
+                "reference": "ef763abd58218ce4199ecbf86c6a31c8aa0d2630"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/17f6c4880b5fa94625c86bfa627d6a678960039e",
-                "reference": "17f6c4880b5fa94625c86bfa627d6a678960039e",
+                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/ef763abd58218ce4199ecbf86c6a31c8aa0d2630",
+                "reference": "ef763abd58218ce4199ecbf86c6a31c8aa0d2630",
                 "shasum": ""
             },
             "require": {
@@ -1012,7 +1020,7 @@
                 "source": "https://github.com/bumi/lndhub-php/tree/main",
                 "issues": "https://github.com/bumi/lndhub-php/issues"
             },
-            "time": "2022-08-15T07:35:51+00:00"
+            "time": "2022-10-13T10:27:50+00:00"
         },
         {
             "name": "pleonasm/merkle-tree",
@@ -1066,12 +1074,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ProtonMail/bitcoin-php.git",
-                "reference": "eec844967e5a0d3b4c108d8a6ad0ad9594f9bb50"
+                "reference": "9768f4f1ecb37b54218224691ab0e8bdf8214b14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ProtonMail/bitcoin-php/zipball/eec844967e5a0d3b4c108d8a6ad0ad9594f9bb50",
-                "reference": "eec844967e5a0d3b4c108d8a6ad0ad9594f9bb50",
+                "url": "https://api.github.com/repos/ProtonMail/bitcoin-php/zipball/9768f4f1ecb37b54218224691ab0e8bdf8214b14",
+                "reference": "9768f4f1ecb37b54218224691ab0e8bdf8214b14",
                 "shasum": ""
             },
             "require": {
@@ -1088,7 +1096,7 @@
                 "bitwasp/secp256k1-php": "^v0.2.0",
                 "ext-json": "*",
                 "nbobtc/bitcoind-php": "v2.0.2",
-                "phpunit/phpunit": "^5.4.0",
+                "phpunit/phpunit": "^6.0.0",
                 "squizlabs/php_codesniffer": "^2.0.0"
             },
             "suggest": {
@@ -1119,9 +1127,9 @@
             "description": "PHP Bitcoin library with functions for transactions, signatures, serialization, Random/Deterministic ECDSA keys, blocks, RPC bindings",
             "homepage": "https://github.com/bit-wasp/bitcoin-php",
             "support": {
-                "source": "https://github.com/ProtonMail/bitcoin-php/tree/1.0"
+                "source": "https://github.com/ProtonMail/bitcoin-php/tree/v1.0.6"
             },
-            "time": "2021-09-20T17:01:50+00:00"
+            "time": "2022-10-12T13:36:43+00:00"
         },
         {
             "name": "psr/http-client",
