@@ -79,24 +79,5 @@ defined('WPINC') || die; ?>
             newWallet.addEventListener("click", createAlbyAccount);
         }
 
-
-        const connectLNDButton = document.getElementById('load_from_lndconnect');
-
-        if ( connectLNDButton )
-        {
-            connectLNDButton.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                var lndConnectUrl = prompt(<?php _e('"Please enter your lndconnect string (e.g. run: lndconnect --url --port=8080)"', 'lnp-alby'); ?>);
-
-                if (!lndConnectUrl) {
-                    return;
-                }
-                var url = new URL(lndConnectUrl);
-                document.getElementById('lnp_lnd_address').value = 'https:' + url.pathname;
-                document.getElementById('lnp_lnd_macaroon').value = url.searchParams.get('macaroon');
-                document.getElementById('lnp_lnd_cert').value = url.searchParams.get('cert');
-            });
-        }
     });
 </script>

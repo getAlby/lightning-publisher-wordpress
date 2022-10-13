@@ -82,7 +82,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
                 'type'        => 'url',
                 'name'        => 'lnd_address',
                 'label'       => __('REST Address (with port)', 'lnp-alby'),
-                'description' => __('e.g. https://127.0.0.1:8080 - or <a href="#" id="load_from_lndconnect">click here to load details from a lndconnect connection</a>', 'lnp-alby'),
+                'description' => __('e.g. https://127.0.0.1:8080', 'lnp-alby'),
             ),
         );
 
