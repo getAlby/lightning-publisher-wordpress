@@ -92,6 +92,9 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 
 == Upgrade Notice ==
 
+= 1.2.2 =
+Update dependencies with some performance improvements
+
 = 1.2.1 =
 Fully delete options on plugin uninstall
 Check Lightning Addresses on wallet configuration
