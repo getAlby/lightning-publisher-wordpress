@@ -1,6 +1,6 @@
 #!/bin/sh
 composer install --no-dev
-echo "Please provide the path the dist folder"
+echo "Please provide the path the dist folder (the trunk folder of the SVN repo)"
 read dist
 
 echo "Copying plugin to $dist"
