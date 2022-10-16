@@ -179,7 +179,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             'field'   => array(
                 'name'        => 'btcpay_apikey',
                 'label'       => __('API Key', 'lnp-alby'),
-                'description' => __('BTCPay Api Key. (requires permission to "Create lightning invoice" and "Get invoice"', 'lnp-alby'),
+                'description' => __('BTCPay Api Key. - requires permission to "Create lightning invoice" (btcpay.store.cancreatelightninginvoice)', 'lnp-alby'),
             ),
         );
 
