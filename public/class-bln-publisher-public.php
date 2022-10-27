@@ -88,7 +88,8 @@ class BLN_Publisher_Public
     public function add_module_script_type_attribute($tag, $handle, $src)
     {
         // if it is a module add type module to the tag
-        if (str_contains($handle, 'module')) {
+        // we need this for the simple-boost button
+        if (str_contains($handle, 'bln-js-modules')) {
             $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
         }
         return $tag;
@@ -166,7 +167,7 @@ class BLN_Publisher_Public
 
     public function render_webln_v4v_simple_boost($attributes, $content)
     {
-        wp_enqueue_script('module/simple-boost.bundled.js', plugin_dir_url(__FILE__) . 'js/module/simple-boost.bundled.js', $this->plugin->get_version(), true);
+        wp_enqueue_script('bln-js-modules/simple-boost.bundled.js', plugin_dir_url(__FILE__) . 'js/bln-js-modules/simple-boost.bundled.js', $this->plugin->get_version(), true);
 
         $lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
         $attributes = shortcode_atts( array(
