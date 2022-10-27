@@ -175,7 +175,7 @@ class BLN_Publisher_Public
             'currency' => 'btc',
             'class' => 'gumroad',
         ), $attributes, 'ln_simple_boost' );
-        $amount = esc_attr(intval($attributes['amount'])/100);
+        $amount = esc_attr($attributes['currency'] == 'btc' ? intval($attributes['amount']) : intval($attributes['amount'])/100);
         $currency = strtolower($attributes['currency']) == 'btc' ? 'sats' : esc_attr($attributes['currency']);
         $klass = esc_attr($attributes['class']);
         return '<simple-boost
