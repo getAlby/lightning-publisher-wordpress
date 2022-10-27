@@ -102,7 +102,16 @@ you can add such functions anywhere in your code. e.g. in `functions.php`
 function show_full_content_for_post($show_full_content, $post_id) {
   // Add your logic to check if the current user can see the post with ID $post_id
 
-  return true; // return true to show the full content (disable the paywall)
+  // return true; // return true to show the full content (disable the paywall)
+
+  // for example:
+  // if the user has a subscription always show the full content.
+  // otherwise let the plugin decide (e.g. show the full content if the user already had paid)
+  if (user_has_a_subscription()) {
+    return true;
+  } else {
+    return $show_full_content
+  }
 }
 
 // Check out the `add_filter` documentation for more information: https://developer.wordpress.org/reference/functions/add_filter/
