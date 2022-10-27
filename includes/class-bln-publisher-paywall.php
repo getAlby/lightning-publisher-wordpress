@@ -241,7 +241,15 @@ class BLN_Publisher_Paywall
     protected function extract_options_from_shortcode()
     {
         if (preg_match('/\[lnpaywall(.*)\]/i', $this->content, $m)) {
-            $atts = shortcode_parse_atts($m[1]);
+            $atts_string = $m[1];
+            // wptexturize might replace the quotes in the shortcode we try to make this undone
+            // maybe related: https://github.com/WordPress/gutenberg/issues/37754 + https://github.com/elementor/elementor/issues/9340
+            $atts_string = str_replace("“", '"', $atts_string);
+            $atts_string = str_replace("”", '"', $atts_string);
+            $atts_string = str_replace("‘", '"', $atts_string);
+            $atts_string = str_replace("’", '"', $atts_string);
+
+            $atts = shortcode_parse_atts($atts_string);
             if ($atts == "") {
                 return [];
             } else {
