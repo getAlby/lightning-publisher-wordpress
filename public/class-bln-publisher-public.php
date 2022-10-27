@@ -104,6 +104,11 @@ class BLN_Publisher_Public
         return $paywall->get_content();
     }
 
+    public function shortcodes_to_exempt_from_wptexturize()
+    {
+      return array("lnpaywall", "ln_v4v", "ln_simple_boost");
+    }
+
     public function add_lnurl_to_rss_item_filter()
     {
         global $post;

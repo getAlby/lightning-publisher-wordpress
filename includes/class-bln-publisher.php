@@ -365,7 +365,8 @@ class BLN_Publisher
         }
 
         // Apply Paywall to the content
-        $this->loader->add_filter('the_content', $this->plugin_public, 'ln_paywall_filter', 9); // 9 is the priority. this needs to run before wptexturize which changes for example the quotes. (10 is the default)
+        $this->loader->add_filter('no_texturize_shortcodes', $this->plugin_public, 'shortcodes_to_exempt_from_wptexturize', 9); // try to avoid wptexturize from texturizing the short codes
+        $this->loader->add_filter('the_content', $this->plugin_public, 'ln_paywall_filter', 999999999); // then number is the priority. Elementor uses a high number and does loads of things in the `the_content` filter so we need to run afterwards
     }
 
     /**
