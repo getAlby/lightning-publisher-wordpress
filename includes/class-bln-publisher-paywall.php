@@ -244,10 +244,13 @@ class BLN_Publisher_Paywall
             $atts_string = $m[1];
             // wptexturize might replace the quotes in the shortcode we try to make this undone
             // maybe related: https://github.com/WordPress/gutenberg/issues/37754 + https://github.com/elementor/elementor/issues/9340
-            // replaceing potential quotes that I found with normal quotes (`"`) that can be parsed by `shortcode_parse_atts`
-            $invalid_quotes = array("＂", "〃", "ˮ", "ʺ", "“", "”", "˝", "‟", "″", "‘", "’");
+            // replacing potential quotes that I found with normal quotes (`"`) that can be parsed by `shortcode_parse_atts`
+            // NOTE: this means none of those character can be used in the paywall attributes (button text, description, etc.)
+            $invalid_quotes = array("＂", "ˮ", "ʺ", "“", "”", "˝", "‟", "″", "‘", "’", "`", "´");
             foreach($invalid_quotes as $invalid_char) {
-                $atts_string = str_replace($invalid_char, '"', $atts_string);
+                // trying to match only the relevant quotes (not the ones that might be used in the text
+                $atts_string = str_replace("=". $invalid_char, '="', $atts_string); // replace the quotes at the beginning (after an = sign
+                $atts_string = preg_replace('/' . $invalid_char . '(\s|\z)/', '" ', $atts_string); // replace the quotes at the end of an attribute (either followed by a whitespace or the end of the string)
             }
 
             $atts = shortcode_parse_atts($atts_string);
