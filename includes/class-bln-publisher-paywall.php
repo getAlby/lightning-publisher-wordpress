@@ -246,6 +246,8 @@ class BLN_Publisher_Paywall
             // maybe related: https://github.com/WordPress/gutenberg/issues/37754 + https://github.com/elementor/elementor/issues/9340
             // replacing potential quotes that I found with normal quotes (`"`) that can be parsed by `shortcode_parse_atts`
             // NOTE: this means none of those character can be used in the paywall attributes (button text, description, etc.)
+
+            $atts_string = html_entity_decode($atts_string); // some filter might turn the shortcode into html entities
             $invalid_quotes = array("＂", "ˮ", "ʺ", "“", "”", "˝", "‟", "″", "‘", "’", "`", "´");
             foreach($invalid_quotes as $invalid_char) {
                 // trying to match only the relevant quotes (not the ones that might be used in the text
