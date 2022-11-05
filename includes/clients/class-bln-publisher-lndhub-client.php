@@ -16,7 +16,11 @@ class BLN_Publisher_LNDHub_Client extends Abstract_BLN_Publisher_Client
     public function __construct($options)
     {
         parent::__construct($options);
-        $this->client = new LNDHub\Client($this->options['lndhub_url'], $this->options['lndhub_login'], $this->options['lndhub_password']);
-        $this->client->init();
+        try {
+            $this->client = new LNDHub\Client($this->options['lndhub_url'], $this->options['lndhub_login'], $this->options['lndhub_password']);
+            $this->client->init();
+        } catch (\Exception $e) {
+            echo "Failed to connect to Wallet: " . $e->getMessage();
+        }
     }
 }

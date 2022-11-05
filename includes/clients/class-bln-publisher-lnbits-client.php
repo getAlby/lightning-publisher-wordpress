@@ -16,6 +16,10 @@ class BLN_Publisher_LNBits_Client extends Abstract_BLN_Publisher_Client
     public function __construct($options)
     {
         parent::__construct($options);
-        $this->client = new LNbits\Client($this->options['lnbits_apikey'], $this->options['lnbits_host']);
+        try {
+            $this->client = new LNbits\Client($this->options['lnbits_apikey'], $this->options['lnbits_host']);
+        } catch (\Exception $e) {
+            echo "Failed to connect to Wallet: " . $e->getMessage();
+        }
     }
 }
