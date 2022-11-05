@@ -263,12 +263,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "f7886d510050fda6d976afe3aba77e8d082f42d0"
+                "reference": "bad1b040d0c736bbf86814c6b5ae614f517cf7bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/f7886d510050fda6d976afe3aba77e8d082f42d0",
-                "reference": "f7886d510050fda6d976afe3aba77e8d082f42d0",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/bad1b040d0c736bbf86814c6b5ae614f517cf7bd",
+                "reference": "bad1b040d0c736bbf86814c6b5ae614f517cf7bd",
                 "shasum": ""
             },
             "require": {
@@ -318,7 +318,7 @@
                 "issues": "https://github.com/firebase/php-jwt/issues",
                 "source": "https://github.com/firebase/php-jwt/tree/main"
             },
-            "time": "2022-10-05T19:51:08+00:00"
+            "time": "2022-11-01T21:24:10+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -540,12 +540,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379"
+                "reference": "67c26b443f348a51926030c83481b85718457d3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/69568e4293f4fa993f3b0e51c9723e1e17c41379",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/67c26b443f348a51926030c83481b85718457d3d",
+                "reference": "67c26b443f348a51926030c83481b85718457d3d",
                 "shasum": ""
             },
             "require": {
@@ -636,7 +636,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.4.1"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.3"
             },
             "funding": [
                 {
@@ -652,7 +652,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-28T14:45:39+00:00"
+            "time": "2022-10-26T14:07:24+00:00"
         },
         {
             "name": "jorijn/bitcoin-bolt11",
@@ -843,12 +843,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/btcpay-php.git",
-                "reference": "d0f3dc9db42dffbfe63f91727ccf7b5a4d94b9b3"
+                "reference": "991ac24b228f3647a67d136e3814d9cda0c3d0a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/d0f3dc9db42dffbfe63f91727ccf7b5a4d94b9b3",
-                "reference": "d0f3dc9db42dffbfe63f91727ccf7b5a4d94b9b3",
+                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/991ac24b228f3647a67d136e3814d9cda0c3d0a3",
+                "reference": "991ac24b228f3647a67d136e3814d9cda0c3d0a3",
                 "shasum": ""
             },
             "require": {
@@ -882,7 +882,7 @@
             "support": {
                 "source": "https://github.com/bumi/btcpay-php/tree/main"
             },
-            "time": "2022-08-17T01:18:05+00:00"
+            "time": "2022-11-05T10:30:47+00:00"
         },
         {
             "name": "octan/lnbits",
@@ -890,12 +890,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "05194869ccdb239e8b98262cb9daa8978de1c3ac"
+                "reference": "7e1f8ea981bc74fb58e62cf8c27dbb3c44372fbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/05194869ccdb239e8b98262cb9daa8978de1c3ac",
-                "reference": "05194869ccdb239e8b98262cb9daa8978de1c3ac",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/7e1f8ea981bc74fb58e62cf8c27dbb3c44372fbf",
+                "reference": "7e1f8ea981bc74fb58e62cf8c27dbb3c44372fbf",
                 "shasum": ""
             },
             "require": {
@@ -927,7 +927,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2022-08-16T22:38:09+00:00"
+            "time": "2022-11-05T10:26:06+00:00"
         },
         {
             "name": "octan/lnd-rest",
@@ -935,12 +935,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnd-php-rest.git",
-                "reference": "dfffc734e3b926bea05f8026d9baf74e99d3f1fa"
+                "reference": "da49a5a24f5da8c357b4b6f03884e5a96b748fbb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnd-php-rest/zipball/dfffc734e3b926bea05f8026d9baf74e99d3f1fa",
-                "reference": "dfffc734e3b926bea05f8026d9baf74e99d3f1fa",
+                "url": "https://api.github.com/repos/bumi/lnd-php-rest/zipball/da49a5a24f5da8c357b4b6f03884e5a96b748fbb",
+                "reference": "da49a5a24f5da8c357b4b6f03884e5a96b748fbb",
                 "shasum": ""
             },
             "require": {
@@ -972,7 +972,7 @@
                 "source": "https://github.com/bumi/lnd-php-rest/tree/master",
                 "issues": "https://github.com/bumi/lnd-php-rest/issues"
             },
-            "time": "2022-06-22T18:08:46+00:00"
+            "time": "2022-11-05T10:29:20+00:00"
         },
         {
             "name": "octan/lndhub",
