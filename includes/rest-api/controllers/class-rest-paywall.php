@@ -156,6 +156,7 @@ class LNP_PaywallController extends \WP_REST_Controller
             // this adds the "shortcode" to the content if the Gutenberg block is used
             // the shortcode is then parsed in BLN_Publisher_Paywall with a regex
             $content = do_blocks($post->post_content);
+            $content = do_shortcode($content);
             $paywall = new BLN_Publisher_Paywall($plugin, ['content' => $content, 'post_id' => $post_id]);
             $protected = $paywall->get_protected_content();
 
