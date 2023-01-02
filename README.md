@@ -53,7 +53,7 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 ## Requirements
 
 * WordPress 5.6 or higher
-* PHP 7.4 or higher
+* PHP 7.4 or higher (with [internationalization functions](https://www.php.net/manual/en/book.intl.php)
 
 ## Demo
 
