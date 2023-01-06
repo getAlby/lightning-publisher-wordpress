@@ -192,10 +192,14 @@ class BLN_Publisher_Paywall
     public function get_formatted_amount()
     {
         if ($this->options['currency'] != 'btc') {
-            $locale = get_locale();
-            $currency_formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-            $currency_formatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, $this->options['currency']);
-            return $currency_formatter->format(intval($this->options['amount']) / 100.0); // we have cents, but the formatter assumes "dollars" - we only support usd,eur,gbp (all have 2 digits for cents)
+            // NumberFormatter relies on some i18n package that not all hosters have available
+            // $locale = get_locale();
+            // $currency_formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+            // $currency_formatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, $this->options['currency']);
+            // return $currency_formatter->format(intval($this->options['amount']) / 100.0); // we have cents, but the formatter assumes "dollars" - we only support usd,eur,gbp (all have 2 digits for cents)
+
+            // amount is in cents - we want to show USD/EUR/GBP values
+            return number_format_i18n(intval($this->options['amount']) / 100.0, 2) . " " . strtoupper($this->options['currency']);
         } else {
             return number_format_i18n(floatval($this->options['amount']), 0) . " sats";
         }
