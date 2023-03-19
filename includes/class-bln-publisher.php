@@ -331,6 +331,8 @@ class BLN_Publisher
         $this->loader->add_action('admin_menu', $this->plugin_admin, 'lightning_menu');
         // Register the donation block
         $this->loader->add_action('init', $this->plugin_admin, 'init_gutenberg_blocks');
+        // Register custom field in user profile for custom address
+        $this->loader->add_filter('user_contactmethods', $this->plugin_admin, 'add_user_lnp_address');
     }
 
     /**

@@ -175,5 +175,18 @@ class BLN_Publisher_Admin
             </div>';
     }
 
+    /**
+     * Add a Bitcoin Lightning address field to the WordPress user profile
+     * 
+     * @param  [type] $user_contactmethods [description]
+     * @return [type]                      [description]
+     *
+     * @link https://developer.wordpress.org/reference/hooks/user_contactmethods/
+     */
+    function add_user_lnp_address( $methods )
+    {
+        $methods['_lnurl_meta_tag_lnurlp'] = __('Ligtning Address', 'lnp-alby');
 
+        return $methods;
+    }
 }
