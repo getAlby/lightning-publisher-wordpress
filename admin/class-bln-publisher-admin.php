@@ -176,10 +176,10 @@ class BLN_Publisher_Admin
     }
 
     /**
-     * Add a Bitcoin Lightning address field to the WordPress user profile
+     * Add a Bitcoin Lightning address field to WordPress user profile page
      * 
-     * @param  [type] $user_contactmethods [description]
-     * @return [type]                      [description]
+     * @param  array $methods
+     * @return array
      *
      * @link https://developer.wordpress.org/reference/hooks/user_contactmethods/
      */
