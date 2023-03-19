@@ -133,6 +133,18 @@ class BLN_Publisher_Public
             ? get_rest_url(null, '/lnp-alby/v1/lnurlp') // Default
             : $options['lnurl_meta_tag_lnurlp']; // Custom option
 
+
+        // In case of WP_Post use authors lightning address
+        if ( is_singular( 'post' ) )
+        {
+            global $post;
+            $address = get_user_meta( $post->post_author, '_lnurl_meta_tag_lnurlp', true );
+
+            if ( $address )
+            {
+                $lnurl = $address;
+            }
+        }
         
         /**
          * Filter to enable programmatic update 
@@ -148,7 +160,6 @@ class BLN_Publisher_Public
          *     return $lnurl;
          * });
          */
-        
         $lnurl = apply_filters( 'lnurl_meta_tag_lnurlp', $lnurl );
 
         // Strip protocol
