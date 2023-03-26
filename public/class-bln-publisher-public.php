@@ -135,10 +135,10 @@ class BLN_Publisher_Public
 
 
         // In case of WP_Post use authors lightning address
-        if ( is_singular( 'post' ) )
+        if ( is_singular( array('post') ) )
         {
             global $post;
-            $address = get_user_meta( $post->post_author, '_lnurl_meta_tag_lnurlp', true );
+            $address = get_user_meta( $post->post_author, '_lnp_ln_address', true );
 
             if ( $address )
             {

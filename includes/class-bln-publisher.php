@@ -290,21 +290,44 @@ class BLN_Publisher
         $this->lightningClient = null;
         $this->lightningClientType = null;
 
-        if (!$this->lightningClient) {
-            try {
-                if (!empty($this->connection_options['lnd_address'])) {
+        if (!$this->lightningClient)
+        {
+            // Default to post author LNaddress
+            // if specified in user profile
+            if ( is_singular( array('post') ) )
+            {
+                global $post;
+                $address = get_user_meta( $post->post_author, '_lnp_ln_address', true );
+
+                if ( $address )
+                {
+                    $this->connection_options['lnaddress_address'] = $address;
+                }
+            }
+
+            try
+            {
+                if (!empty($this->connection_options['lnd_address']))
+                {
                     $this->lightningClientType = 'lnd';
                     $this->lightningClient = new BLN_Publisher_LND_Client($this->connection_options);
-                } elseif (!empty($this->connection_options['lnbits_apikey'])) {
+                }
+                elseif (!empty($this->connection_options['lnbits_apikey'])) {
                     $this->lightningClientType = 'lnbits';
                     $this->lightningClient = new BLN_Publisher_LNBits_Client($this->connection_options);
-                } elseif (!empty($this->connection_options['lnaddress_address']) || !empty($this->connection_options['lnaddress_lnurl'])) {
+                }
+                elseif (!empty($this->connection_options['lnaddress_address']) || !empty($this->connection_options['lnaddress_lnurl']))
+                {
                     $this->lightningClientType = 'lnaddress';
                     $this->lightningClient = new BLN_Publisher_LNAddress_Client($this->connection_options);
-                } elseif (!empty($this->connection_options['btcpay_host'])) {
+                }
+                elseif (!empty($this->connection_options['btcpay_host']))
+                {
                     $this->lightningClientType = 'btcpay';
                     $this->lightningClient = new BLN_Publisher_BTCPay_Client($this->connection_options);
-                } elseif (!empty($this->connection_options['lndhub_url']) && !empty($this->connection_options['lndhub_login']) && !empty($this->connection_options['lndhub_password'])) {
+                }
+                elseif (!empty($this->connection_options['lndhub_url']) && !empty($this->connection_options['lndhub_login']) && !empty($this->connection_options['lndhub_password']))
+                {
                     $this->lightningClientType = 'lndhub';
                     $this->lightningClient = new BLN_Publisher_LNDHub_Client($this->connection_options);
                 }

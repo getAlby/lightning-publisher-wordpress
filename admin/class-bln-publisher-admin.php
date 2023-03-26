@@ -185,7 +185,7 @@ class BLN_Publisher_Admin
      */
     function add_user_lnp_address( $methods )
     {
-        $methods['_lnurl_meta_tag_lnurlp'] = __('Ligtning Address', 'lnp-alby');
+        $methods['_lnp_ln_address'] = __('Ligtning Address', 'lnp-alby');
 
         return $methods;
     }
