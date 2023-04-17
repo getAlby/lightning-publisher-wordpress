@@ -302,6 +302,11 @@ class BLN_Publisher
                 if ( $address )
                 {
                     $this->connection_options['lnaddress_address'] = $address;
+                    
+                    $this->lightningClientType = 'lnaddress';
+                    $this->lightningClient     = new BLN_Publisher_LNAddress_Client($this->connection_options);
+                    
+                    return; 
                 }
             }
 
