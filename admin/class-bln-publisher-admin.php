@@ -191,8 +191,6 @@ class BLN_Publisher_Admin
 
         $new_actions = array();
 
-        error_log( print_r($plugin_file, true) );
-
         if ( 'lightning-publisher-wordpress/bln-publisher.php' === $plugin_file )
         {
             $new_actions['cl_settings'] = sprintf(
