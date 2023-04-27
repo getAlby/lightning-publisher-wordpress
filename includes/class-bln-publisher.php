@@ -361,6 +361,7 @@ class BLN_Publisher
         $this->loader->add_action('init', $this->plugin_admin, 'init_gutenberg_blocks');
         // Register custom field in user profile for custom address
         $this->loader->add_filter('user_contactmethods', $this->plugin_admin, 'add_user_lnp_address');
+        $this->loader->add_filter('plugin_action_links', $this->plugin_admin, 'add_plugin_link', 10, 2);
     }
 
     /**

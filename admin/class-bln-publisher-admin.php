@@ -186,7 +186,32 @@ class BLN_Publisher_Admin
     function add_user_lnp_address( $methods )
     {
         $methods['_lnp_ln_address'] = __('Ligtning Address', 'lnp-alby');
-
         return $methods;
     }
+    
+    /**
+     * Add settings link to plugin actions
+     *
+     * @param  array  $plugin_actions
+     * @param  string $plugin_file
+     * @since  1.0
+     * @return array
+     *
+     * WordPress Docs:
+     * @link https://developer.wordpress.org/reference/hooks/plugin_action_links/
+     */
+    function add_plugin_link( $plugin_actions, $plugin_file ) {
+
+        $new_actions = array();
+
+        if ( 'lightning-publisher-wordpress/bln-publisher.php' === $plugin_file )
+        {
+            $new_actions['cl_settings'] = sprintf(
+                __( '<a href="%s">Settings</a>', 'lnp-alby' ),
+                esc_url( admin_url( 'admin.php?page=lnp_settings' ) )
+            );
+        }
+
+        return array_merge( $new_actions, $plugin_actions );
+    }    
 }
