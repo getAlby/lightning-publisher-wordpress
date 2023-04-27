@@ -132,7 +132,9 @@ class LightningAddress
         if ($this->client) {
             return $this->client;
         }
-        $this->client = new GuzzleHttp\Client();
+        $this->client = new GuzzleHttp\Client(
+            ['timeout' => 10]
+        );
         return $this->client;
     }
 

@@ -53,7 +53,7 @@
                     ),
                     el(
                         TextControl, {
-                            label: __("Amount (in smallest unit (e.g. cents))", "alby"),
+                            label: __("Amount (in the smallest unit (sats/cents e.g. for $4.90 it is 490))", "alby"),
                             onChange: (v) => {
                                 if (v !== "") {
                                     v = parseInt(v);
