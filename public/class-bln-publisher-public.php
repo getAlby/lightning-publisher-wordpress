@@ -119,18 +119,57 @@ class BLN_Publisher_Public
 
     public function hook_meta_tags()
     {
-        if (
-            (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag']) && $this->plugin->getGeneralOptions()['lnurl_meta_tag']) ||
-            (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp']) && $this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'])
-        ) {
-            if (!empty($this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'])) {
-                $lnurl = $this->plugin->getGeneralOptions()['lnurl_meta_tag_lnurlp'];
-            } else {
-                $lnurl = get_rest_url(null, '/lnp-alby/v1/lnurlp');
-            }
-            $lnurl_without_protocol = preg_replace('/^https?:\/\//', '', $lnurl);
-            echo '<meta name="lightning" content="lnurlp:' . esc_attr($lnurl_without_protocol) . '" />';
+        // All options
+        $options = $this->plugin->getGeneralOptions();
+
+        // In case options not saved or disabled
+        if ( empty($options['lnurl_meta_tag']) )
+        {
+            return;
         }
+        
+        // LN Address
+        $lnurl = ( empty($options['lnurl_meta_tag_lnurlp']) )
+            ? get_rest_url(null, '/lnp-alby/v1/lnurlp') // Default
+            : $options['lnurl_meta_tag_lnurlp']; // Custom option
+
+
+        // In case of WP_Post use authors lightning address
+        if ( is_singular( array('post') ) )
+        {
+            global $post;
+            $address = get_user_meta( $post->post_author, '_lnp_ln_address', true );
+
+            if ( $address )
+            {
+                $lnurl = $address;
+            }
+        }
+        
+        /**
+         * Filter to enable programmatic update 
+         * Usage: 
+         *
+         * add_filter( 'lnurl_meta_tag_lnurlp', function( $lnurl ) {
+         *
+         *     if ( is_page('about-us') )
+         *     {
+         *         $lnurl = 'me@you.io';
+         *     }
+         * 
+         *     return $lnurl;
+         * });
+         */
+        $lnurl = apply_filters( 'lnurl_meta_tag_lnurlp', $lnurl );
+
+        // Strip protocol
+        $lnurl_without_protocol = preg_replace('/^https?:\/\//', '', $lnurl);
+
+        // Echo value
+        printf(
+            '<meta name="lightning" content="lnurlp:%s" />',
+            esc_attr($lnurl_without_protocol)
+        );
     }
 
     public function add_v4v_rss_ns_tag()

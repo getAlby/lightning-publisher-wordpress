@@ -175,7 +175,20 @@ class BLN_Publisher_Admin
             </div>';
     }
 
-
+    /**
+     * Add a Bitcoin Lightning address field to WordPress user profile page
+     * 
+     * @param  array $methods
+     * @return array
+     *
+     * @link https://developer.wordpress.org/reference/hooks/user_contactmethods/
+     */
+    function add_user_lnp_address( $methods )
+    {
+        $methods['_lnp_ln_address'] = __('Ligtning Address', 'lnp-alby');
+        return $methods;
+    }
+    
     /**
      * Add settings link to plugin actions
      *
