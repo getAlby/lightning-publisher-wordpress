@@ -20,9 +20,8 @@ if (!empty($plugin->options['description']))
 }
 
 printf(
-    '%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>',
+    '%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper">%s%s</div>',
     $plugin->teaser,
-    $plugin->post_id,
     $description,
     $button
 );

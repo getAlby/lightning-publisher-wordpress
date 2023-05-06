@@ -135,6 +135,14 @@ function wp_bln_has_paid_for_post($show_full_content, $post_id) {
 **Warning**: Do not edit these files within the core plugin itself as they are overwritten during the upgrade process and any customizations will be lost.
 Use variable `$plugin` to access plugin options inside of the template file.
 
+Required markup for custom button:
+
+```HTML
+<div class="wp-lnp-wrapper">
+    <button class="wp-lnp-btn">Custom labeled button</button>
+</div>
+```
+
 ##### Option 1
 
 Copy file `wp-content/plugins/lightning-publisher-wordpress/public/templates/paywall-button-unpaid.php` to `wp-content/themes/yourtheme/lightning-publisher-wordpress/paywall-button-unpaid.php`
