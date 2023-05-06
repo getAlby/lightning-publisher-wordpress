@@ -3,8 +3,6 @@
 // If this file is called directly, abort.
 defined('WPINC') || die; 
 
-
-
 $button = sprintf(
     '<button class="wp-lnp-btn">%s</button>',
     $plugin->format_label($plugin->options['button_text'])

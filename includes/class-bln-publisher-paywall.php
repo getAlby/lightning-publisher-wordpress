@@ -304,10 +304,7 @@ class BLN_Publisher_Paywall
          * @param $template string  Absolute path to template file
          * @param $this     object  Plugin instance
          */
-        $template = apply_filters( 'bln_paywall_unpaid_button_template', $template, $this );
-
-        error_log( print_r( $template, true ) );
-        //error_log( print_r( file_exists($template_override), true ) );
+        $template = apply_filters( 'bln_paywall_unpaid_button_template', $template );
 
         ob_start();
             
