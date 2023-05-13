@@ -110,6 +110,8 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 package-lock.json
+yarn.lock
+composer.lock
 
 # dotenv environment variables file
 .env
