@@ -264,21 +264,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "3b454f90f147db65a615041dec6661f427d6cb00"
+                "reference": "6c8f5e7c7ca5a584c23878bc180b6927191422fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/3b454f90f147db65a615041dec6661f427d6cb00",
-                "reference": "3b454f90f147db65a615041dec6661f427d6cb00",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/6c8f5e7c7ca5a584c23878bc180b6927191422fb",
+                "reference": "6c8f5e7c7ca5a584c23878bc180b6927191422fb",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1||^8.0"
+                "php": "^7.4||^8.0"
             },
             "require-dev": {
                 "guzzlehttp/guzzle": "^6.5||^7.4",
-                "phpspec/prophecy-phpunit": "^1.1",
-                "phpunit/phpunit": "^7.5||^9.5",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.5",
                 "psr/cache": "^1.0||^2.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0"
@@ -320,26 +320,26 @@
                 "issues": "https://github.com/firebase/php-jwt/issues",
                 "source": "https://github.com/firebase/php-jwt/tree/main"
             },
-            "time": "2023-02-13T12:51:14+00:00"
+            "time": "2023-05-12T18:16:34+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "dev-master",
+            "version": "7.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "8459341c16f96b9610dcdfe22bd3060d60c0da04"
+                "reference": "255d7157b463ee2d9b3cbf891eda2691baa43076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8459341c16f96b9610dcdfe22bd3060d60c0da04",
-                "reference": "8459341c16f96b9610dcdfe22bd3060d60c0da04",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/255d7157b463ee2d9b3cbf891eda2691baa43076",
+                "reference": "255d7157b463ee2d9b3cbf891eda2691baa43076",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/promises": "^1.5",
-                "guzzlehttp/psr7": "^1.9 || ^2.4",
+                "guzzlehttp/psr7": "^1.9.1 || ^2.4.5",
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-client": "^1.0",
                 "symfony/deprecation-contracts": "^2.2 || ^3.0"
@@ -365,9 +365,6 @@
                 "bamarni-bin": {
                     "bin-links": true,
                     "forward-command": false
-                },
-                "branch-alias": {
-                    "dev-master": "7.5-dev"
                 }
             },
             "autoload": {
@@ -433,7 +430,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/master"
+                "source": "https://github.com/guzzle/guzzle/tree/7.5"
             },
             "funding": [
                 {
@@ -449,7 +446,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-29T11:03:19+00:00"
+            "time": "2023-04-18T08:37:42+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -538,22 +535,22 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "dev-master",
+            "version": "2.6.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "58d0734481de3fbc62f3d13da4d991e051521282"
+                "reference": "b635f279edd83fc275f822a1188157ffea568ff6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/58d0734481de3fbc62f3d13da4d991e051521282",
-                "reference": "58d0734481de3fbc62f3d13da4d991e051521282",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/b635f279edd83fc275f822a1188157ffea568ff6",
+                "reference": "b635f279edd83fc275f822a1188157ffea568ff6",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0",
+                "psr/http-message": "^1.1 || ^2.0",
                 "ralouphie/getallheaders": "^3.0"
             },
             "provide": {
@@ -568,15 +565,11 @@
             "suggest": {
                 "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "bamarni-bin": {
                     "bin-links": true,
                     "forward-command": false
-                },
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -638,7 +631,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/master"
+                "source": "https://github.com/guzzle/psr7/tree/2.5.0"
             },
             "funding": [
                 {
@@ -654,7 +647,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-15T13:59:53+00:00"
+            "time": "2023-04-17T16:11:26+00:00"
         },
         {
             "name": "jorijn/bitcoin-bolt11",
@@ -845,12 +838,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/btcpay-php.git",
-                "reference": "991ac24b228f3647a67d136e3814d9cda0c3d0a3"
+                "reference": "5be4ba849310cbcbeda2547bb49640efaffe5464"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/991ac24b228f3647a67d136e3814d9cda0c3d0a3",
-                "reference": "991ac24b228f3647a67d136e3814d9cda0c3d0a3",
+                "url": "https://api.github.com/repos/bumi/btcpay-php/zipball/5be4ba849310cbcbeda2547bb49640efaffe5464",
+                "reference": "5be4ba849310cbcbeda2547bb49640efaffe5464",
                 "shasum": ""
             },
             "require": {
@@ -884,7 +877,7 @@
             "support": {
                 "source": "https://github.com/bumi/btcpay-php/tree/main"
             },
-            "time": "2022-11-05T10:30:47+00:00"
+            "time": "2023-04-03T10:26:42+00:00"
         },
         {
             "name": "octan/lnbits",
@@ -892,12 +885,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnbits-php.git",
-                "reference": "7e1f8ea981bc74fb58e62cf8c27dbb3c44372fbf"
+                "reference": "349752dff9cd5393c8291bfe11dda5f03228902f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/7e1f8ea981bc74fb58e62cf8c27dbb3c44372fbf",
-                "reference": "7e1f8ea981bc74fb58e62cf8c27dbb3c44372fbf",
+                "url": "https://api.github.com/repos/bumi/lnbits-php/zipball/349752dff9cd5393c8291bfe11dda5f03228902f",
+                "reference": "349752dff9cd5393c8291bfe11dda5f03228902f",
                 "shasum": ""
             },
             "require": {
@@ -929,7 +922,7 @@
                 "source": "https://github.com/bumi/lnbits-php/tree/master",
                 "issues": "https://github.com/bumi/lnbits-php/issues"
             },
-            "time": "2022-11-05T10:26:06+00:00"
+            "time": "2023-04-03T10:20:11+00:00"
         },
         {
             "name": "octan/lnd-rest",
@@ -937,12 +930,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lnd-php-rest.git",
-                "reference": "da49a5a24f5da8c357b4b6f03884e5a96b748fbb"
+                "reference": "fe4713325a45bd06b2095e04456d2ef0126d84fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lnd-php-rest/zipball/da49a5a24f5da8c357b4b6f03884e5a96b748fbb",
-                "reference": "da49a5a24f5da8c357b4b6f03884e5a96b748fbb",
+                "url": "https://api.github.com/repos/bumi/lnd-php-rest/zipball/fe4713325a45bd06b2095e04456d2ef0126d84fa",
+                "reference": "fe4713325a45bd06b2095e04456d2ef0126d84fa",
                 "shasum": ""
             },
             "require": {
@@ -974,7 +967,7 @@
                 "source": "https://github.com/bumi/lnd-php-rest/tree/master",
                 "issues": "https://github.com/bumi/lnd-php-rest/issues"
             },
-            "time": "2022-11-05T10:29:20+00:00"
+            "time": "2023-04-03T10:27:20+00:00"
         },
         {
             "name": "octan/lndhub",
@@ -982,12 +975,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bumi/lndhub-php.git",
-                "reference": "ef763abd58218ce4199ecbf86c6a31c8aa0d2630"
+                "reference": "a7033a13f36532c8ac02371d634b67bf0cd09a1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/ef763abd58218ce4199ecbf86c6a31c8aa0d2630",
-                "reference": "ef763abd58218ce4199ecbf86c6a31c8aa0d2630",
+                "url": "https://api.github.com/repos/bumi/lndhub-php/zipball/a7033a13f36532c8ac02371d634b67bf0cd09a1d",
+                "reference": "a7033a13f36532c8ac02371d634b67bf0cd09a1d",
                 "shasum": ""
             },
             "require": {
@@ -1022,7 +1015,7 @@
                 "source": "https://github.com/bumi/lndhub-php/tree/main",
                 "issues": "https://github.com/bumi/lndhub-php/issues"
             },
-            "time": "2022-10-13T10:27:50+00:00"
+            "time": "2023-04-03T10:20:57+00:00"
         },
         {
             "name": "pleonasm/merkle-tree",
@@ -1139,17 +1132,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-client.git",
-                "reference": "22b2ef5687f43679481615605d7a15c557ce85b1"
+                "reference": "0955afe48220520692d2d09f7ab7e0f93ffd6a31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/22b2ef5687f43679481615605d7a15c557ce85b1",
-                "reference": "22b2ef5687f43679481615605d7a15c557ce85b1",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/0955afe48220520692d2d09f7ab7e0f93ffd6a31",
+                "reference": "0955afe48220520692d2d09f7ab7e0f93ffd6a31",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0 || ^8.0",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^1.0 || ^2.0"
             },
             "default-branch": true,
             "type": "library",
@@ -1182,9 +1175,9 @@
                 "psr-18"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-client/tree/master"
+                "source": "https://github.com/php-fig/http-client/tree/1.0.2"
             },
-            "time": "2020-09-19T09:12:31+00:00"
+            "time": "2023-04-10T20:12:12+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -1192,17 +1185,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "5a4f141ac2e5bc35e615134f127e1833158d2944"
+                "reference": "e616d01114759c4c489f93b099585439f795fe35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/5a4f141ac2e5bc35e615134f127e1833158d2944",
-                "reference": "5a4f141ac2e5bc35e615134f127e1833158d2944",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/e616d01114759c4c489f93b099585439f795fe35",
+                "reference": "e616d01114759c4c489f93b099585439f795fe35",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^1.0 || ^2.0"
             },
             "default-branch": true,
             "type": "library",
@@ -1238,9 +1231,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-factory/tree/master"
+                "source": "https://github.com/php-fig/http-factory/tree/1.0.2"
             },
-            "time": "2022-07-14T07:21:53+00:00"
+            "time": "2023-04-10T20:10:41+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1248,22 +1241,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4"
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
-                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^7.2 || ^8.0"
             },
             "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -1278,7 +1271,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for HTTP messages",
@@ -1292,9 +1285,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
+                "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
-            "time": "2019-08-29T13:16:46+00:00"
+            "time": "2023-04-04T09:54:51+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -1346,12 +1339,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c"
+                "reference": "c30dd04b9a303689a26d7986f7cffce04203a107"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
-                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/c30dd04b9a303689a26d7986f7cffce04203a107",
+                "reference": "c30dd04b9a303689a26d7986f7cffce04203a107",
                 "shasum": ""
             },
             "require": {
@@ -1405,7 +1398,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:55:41+00:00"
+            "time": "2023-01-01T08:36:10+00:00"
         },
         {
             "name": "tkijewski/php-lnurl",
