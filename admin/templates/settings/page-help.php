@@ -27,7 +27,7 @@ defined('WPINC') || die; ?>
         <li>
             <strong>Done</strong>:
             Add the paywall or donation blocks to your posts using the Gutenberg Block editor or use the <i>[lnpaywall]</i>, <i>[ln_v4v]</i> shortcodes.<br>
-            In the Gutenberg block search for the Block "Lightning" (-"Lightning Paywall", "Twentyuno Lightning Payment Widget", "WebLN Donate Button"-)
+            In the Gutenberg block search for the Block "Lightning" (-"Lightning Paywall", "WebLN Donate Button"-)
         </li>
     </ol>
 

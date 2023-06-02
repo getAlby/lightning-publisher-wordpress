@@ -95,18 +95,6 @@ class BLN_Publisher_Admin
             )
         );
 
-        register_block_type(
-            dirname(__DIR__, 1) . '/blocks/twentyuno/block.json',
-            array(
-                'render_callback' => [$this, 'render_twentyuno_widget_block'],
-            )
-        );
-
-        wp_enqueue_script("twentyuno-widget-script.js",  sprintf(
-            '%s/public/js/twentyuno.js',
-            untrailingslashit(BLN_PUBLISHER_ROOT_URI)
-        ));
-
         //register_block_type(dirname(__DIR__, 1) . '/blocks/donate/block.json');
         register_block_type(
             dirname(__DIR__, 1) . '/blocks/webln-button/block.json',
@@ -135,23 +123,6 @@ class BLN_Publisher_Admin
         */
     }
 
-    function render_twentyuno_widget_block( $attrs)
-    {
-        $name = !empty($attrs['name']) ? strip_tags($attrs["name"]) : '';
-        $color = !empty($attrs['color']) ? strip_tags($attrs["color"]) : '';
-        $image = !empty($attrs['image']) ? strip_tags($attrs["image"]) : '';
-        $lnurl = lnurl\encodeUrl(get_rest_url(null, '/lnp-alby/v1/lnurlp'));
-
-        return '<div class="wp-lnp-twentyuno-widget">
-            <lightning-widget
-                name="'. $name . '"
-                accent="'. $color . '"
-                to="'. $lnurl .'"
-                image="'. $image . '"
-            />
-          </div>';
-    }
-
     function render_paywall_shortcode( $attributes, $content )
     {
         $sanitized_attributes = array_map(
@@ -177,7 +148,7 @@ class BLN_Publisher_Admin
 
     /**
      * Add a Bitcoin Lightning address field to WordPress user profile page
-     * 
+     *
      * @param  array $methods
      * @return array
      *
@@ -188,7 +159,7 @@ class BLN_Publisher_Admin
         $methods['_lnp_ln_address'] = __('Ligtning Address', 'lnp-alby');
         return $methods;
     }
-    
+
     /**
      * Add settings link to plugin actions
      *
@@ -213,5 +184,5 @@ class BLN_Publisher_Admin
         }
 
         return array_merge( $new_actions, $plugin_actions );
-    }    
+    }
 }
