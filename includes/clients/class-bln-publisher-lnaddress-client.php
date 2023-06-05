@@ -15,6 +15,7 @@ class BLN_Publisher_LNAddress_Client extends Abstract_BLN_Publisher_Client
     public function __construct($options)
     {
         parent::__construct($options);
+        
         try {
             $this->client = new LightningAddress();
             if (!empty($this->options['lnaddress_address'])) {
