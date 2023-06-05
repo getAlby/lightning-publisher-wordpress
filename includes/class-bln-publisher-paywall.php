@@ -282,13 +282,41 @@ class BLN_Publisher_Paywall
      */
     protected function format_unpaid()
     {
-
-        $button = sprintf('<button class="wp-lnp-btn">%s</button>', $this->format_label($this->options['button_text']));
-        $description = '';
-        if (!empty($this->options['description'])) {
-            $description = sprintf('<p class="wp-lnp-description">%s</p>', $this->format_label($this->options['description']));
+        $template_default  = BLN_PUBLISHER_ROOT_PATH . '/public/templates/paywall-button-unpaid.php';
+        $template_override = get_stylesheet_directory() . '/lightning-publisher-wordpress/paywall-button-unpaid.php';
+        
+        // Use template from theme folder
+        if ( file_exists($template_override) )
+        {
+            $template = $template_override;
         }
-        return sprintf('%s<div id="wp-lnp-wrapper" class="wp-lnp-wrapper" data-lnp-postid="%d">%s%s</div>', $this->teaser, $this->post_id, $description, $button);
+        // Use default template from plugin folder
+        else
+        {
+            $template = $template_default;
+        }
+
+        
+
+        /**
+         * Allow template override with the hook
+         *
+         * @param $template string  Absolute path to template file
+         * @param $this     object  Plugin instance
+         */
+        $template = apply_filters( 'bln_paywall_unpaid_button_template', $template );
+
+        ob_start();
+            
+            // Class instance with all plugin data
+            $plugin = $this;
+
+            // Load template file
+            include_once $template;
+        
+        $return = ob_get_clean();
+        
+        return $return;
     }
 
     /**

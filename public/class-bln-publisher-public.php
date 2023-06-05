@@ -75,7 +75,8 @@ class BLN_Publisher_Public
 
         wp_localize_script(
             $this->plugin->get_plugin_name(), 'LN_Paywall', array(
-            'rest_base' => get_rest_url(null, '/lnp-alby/v1')
+            'rest_base' => get_rest_url(null, '/lnp-alby/v1'),
+            'post_id'   => get_the_ID(),
             )
         );
     }
