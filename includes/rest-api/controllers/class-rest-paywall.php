@@ -91,7 +91,7 @@ class LNP_PaywallController extends \WP_REST_Controller
             'expiry' => 1800,
             'private' => true
         ];
-        $invoice = $plugin->getLightningClient()->addInvoice($invoice_params);
+        $invoice = $plugin->getLightningClient($post_id)->addInvoice($invoice_params);
         $plugin->getDatabaseHandler()->store_invoice(
             [
             "post_id" => $post_id,
@@ -142,8 +142,9 @@ class LNP_PaywallController extends \WP_REST_Controller
             $invoice = ['settled' => true, 'amount' => $jwt->{"amount"}];
             // if we do not have a preimage we must check with the LN node if the invoice was paid.
         } else {
+            $post_id = $jwt->{'post_id'};
             $invoice_id = $jwt->{'invoice_id'};
-            $invoice = $plugin->getLightningClient()->getInvoice($invoice_id);
+            $invoice = $plugin->getLightningClient($post_id)->getInvoice($invoice_id);
         }
 
         // TODO check amount?

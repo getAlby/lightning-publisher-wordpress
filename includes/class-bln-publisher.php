@@ -292,24 +292,6 @@ class BLN_Publisher
 
         if (!$this->lightningClient)
         {
-            // Default to post author LNaddress
-            // if specified in user profile
-            if ( is_singular( array('post') ) )
-            {
-                global $post;
-                $address = get_user_meta( $post->post_author, '_lnp_ln_address', true );
-
-                if ( $address )
-                {
-                    $this->connection_options['lnaddress_address'] = $address;
-                    
-                    $this->lightningClientType = 'lnaddress';
-                    $this->lightningClient     = new BLN_Publisher_LNAddress_Client($this->connection_options);
-                    
-                    return; 
-                }
-            }
-
             try
             {
                 if (!empty($this->connection_options['lnd_address']))
@@ -473,8 +455,22 @@ class BLN_Publisher
     /**
      * Get the lightning client
      */
-    public function getLightningClient()
+    public function getLightningClient($post_id = null)
     {
+        // Default to post author LNaddress
+        // if specified in user profile
+        if ( $post_id )
+        {
+            $post = get_post($post_id);
+            $address = get_user_meta( $post->post_author, '_lnp_ln_address', true );
+            if ( $address )
+            {
+              $connection_options = $this->connection_options;
+              $connection_options['lnaddress_address'] = $address;
+
+              return new BLN_Publisher_LNAddress_Client($connection_options);
+            }
+        }
         return $this->lightningClient;
     }
 
