@@ -130,11 +130,12 @@ class BLN_Publisher
         $this->initialize_loader();
         $this->set_locale();
         $this->read_database_options();
-        $this->setup_client();
         $this->define_admin_hooks();
         $this->define_public_hooks();
         $this->define_shortcodes();
         $this->initialize_rest_api();
+
+        add_action('init', array($this, 'setup_client') );
     }
 
     /**
@@ -284,7 +285,7 @@ class BLN_Publisher
      * @since  1.0.0
      * @access private
      */
-    private function setup_client()
+    public function setup_client()
     {
 
         $this->lightningClient = null;
@@ -292,6 +293,7 @@ class BLN_Publisher
 
         if (!$this->lightningClient)
         {
+
             // Default to post author LNaddress
             // if specified in user profile
             if ( is_singular( array('post') ) )
