@@ -283,7 +283,7 @@ class BLN_Publisher
      * Setup the lightning client
      *
      * @since  1.0.0
-     * @access private
+     * @access public
      */
     public function setup_client()
     {
