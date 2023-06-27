@@ -135,12 +135,12 @@ class BLN_Publisher_Public
             : $options['lnurl_meta_tag_lnurlp']; // Custom option
 
 
+        $post_id = get_the_ID();
         // In case of WP_Post use authors lightning address
-        if ( is_singular( array('post') ) )
+        if ( $post_id )
         {
-            global $post;
+            $post = get_post($post_id);
             $address = get_user_meta( $post->post_author, '_lnp_ln_address', true );
-
             if ( $address )
             {
                 $lnurl = $address;
