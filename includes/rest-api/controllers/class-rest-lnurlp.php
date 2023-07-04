@@ -100,7 +100,8 @@ class LNP_LnurlpController extends \WP_REST_Controller
         $unhashed_description = $this->get_lnurlp_metadata($payerData);
         $description_hash = hash('sha256', $unhashed_description, false);
 
-        $invoice = $this->plugin->getLightningClient()->addInvoice(
+        $post_id = intval($request->get_param('post_id'));
+        $invoice = $this->plugin->getLightningClient($post_id)->addInvoice(
             [
             'memo' => $memo, // not supported when setting a description hash
             'description_hash' => $description_hash,

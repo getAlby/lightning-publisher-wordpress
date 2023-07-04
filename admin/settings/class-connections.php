@@ -222,10 +222,10 @@ class LNP_ConnectionPage extends LNP_SettingsPage
             '<div>
                 <table class="form-table" role="presentation"><tbody>
                     <tr>
-                        <th scope="row">%s</th><td><input type="email" class="regular-text" id="alby_email" value="" placeholder="" autocomplete="off"></td>
+                        <th scope="row">%s</th><td><input type="email" class="regular-text" id="alby_email" name="lnp_connection[alby_email]" value="" placeholder="" autocomplete="username"></td>
                     </tr>
                     <tr>
-                        <th scope="row">%s</th><td><input type="password" class="regular-text" id="alby_password" value="" placeholder="" autocomplete="off"></td>
+                        <th scope="row">%s</th><td><input type="password" class="regular-text" id="alby_password" name="lnp_connection[alby_password]" value="" placeholder="" autocomplete="new-password"></td>
                     </tr>
                     <tr>
                         <th scope="row"></th><td>

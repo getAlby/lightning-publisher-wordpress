@@ -16,6 +16,12 @@ class LNP_RESTServer
      */
     protected static $instance = null;
 
+    /**
+     * Main Plugin.
+     *
+     * @var BLN_Publisher
+     */
+    protected $plugin;
 
     /**
      * Constructor

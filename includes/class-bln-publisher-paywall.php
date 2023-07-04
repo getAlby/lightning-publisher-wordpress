@@ -46,6 +46,14 @@ class BLN_Publisher_Paywall
     protected $post_id;
 
     /**
+     * Length of the content.
+     *
+     * @since  1.0.0
+     * @access protected
+     * @var    int    $content_length    Length of the content.
+     */
+    protected $content_length;
+    /**
      * Full content that the Paywall is blocking.
      *
      * @since  1.0.0
