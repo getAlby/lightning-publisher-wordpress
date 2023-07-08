@@ -2,9 +2,9 @@
 
 Tags: bitcoin, lightning, payment, donation, paywall, rss, micropayments
 Requires at least: 5.6.0
-Tested up to: 6.0.1
+Tested up to: 6.2.2
 Requires PHP: 7.4
-Stable tag: 1.2.3
+Stable tag: 1.3.0
 License: GPLv3
 Donate link: https://getalby.com
 Contributors: getalby
@@ -79,6 +79,10 @@ Connect to your existing Bitcoin Lightning node or simply create a new Alby acco
 
 For more advanced, custom Lightning integrations you can use the REST API to create and verify invoices. The API also provides a LNURL-pay endpoint. See the REST-API section for details.
 
+== Documentation ==
+
+Refer to the [readme on GitHub](https://github.com/getAlby/lightning-publisher-wordpress#readme) for documentation and more details on how to use the plugin.
+
 == Screenshots ==
 
 1. Paywall Settings
@@ -91,6 +95,10 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 [Release notes on GitHub](https://github.com/getAlby/lightning-publisher-wordpress/releases)
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Add opton to use post author's lightning address for payments. This makes it possible to pay the author directly for the published content.
+Support for fully customizable paywall templates
 
 = 1.2.3 =
 Fix conflict with Elementor plugin (better scope bln-js-modules filter)
