@@ -97,6 +97,7 @@ Refer to the [readme on GitHub](https://github.com/getAlby/lightning-publisher-w
 == Upgrade Notice ==
 
 = 1.3.0 =
+NOTE: we do no longer embed the [twentyuno widget](https://webln.twentyuno.net/widget). To use that widget get the embed code from the [twentyuno website](https://webln.twentyuno.net/widget) and include it on your side.
 Add opton to use post author's lightning address for payments. This makes it possible to pay the author directly for the published content.
 Support for fully customizable paywall templates
 
