@@ -58,7 +58,7 @@ For more advanced, custom Lightning integrations you can use the REST API to cre
 
 Here quick Demo videos showing how to setup and use the plugin:
 
--   [Quck Start - setup + paywall setup](https://www.loom.com/share/095b49a87e444442ac7b297f9483dfa7)
+-   [Quick Start - setup + paywall setup](https://www.loom.com/share/095b49a87e444442ac7b297f9483dfa7)
 -   [Admin Panel](https://www.loom.com/share/dbe501fe9d91445082a2c5c07a1a8ce8)
 
 ## Installation
