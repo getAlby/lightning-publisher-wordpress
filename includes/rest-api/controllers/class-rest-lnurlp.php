@@ -57,14 +57,14 @@ class LNP_LnurlpController extends \WP_REST_Controller
 
         $callback_url = get_rest_url(null, '/lnp-alby/v1/lnurlp/callback');
         $response = [
-          'status' => 'OK',
-          'callback' => $callback_url,
-          'minSendable' => 10 * 1000, // millisatoshi
-          'maxSendable' => 1000000 * 1000, // millisatoshi
-          'tag' => 'payRequest',
-          'commentAllowed' => 128,
-          'payerData' => ["name" => ["mandatory" => false]],
-          'metadata' => $this->get_lnurlp_metadata()
+            'status'         => 'OK',
+            'callback'       => $callback_url,
+            'minSendable'    => 10 * 1000, // millisatoshi
+            'maxSendable'    => 1000000 * 1000, // millisatoshi
+            'tag'            => 'payRequest',
+            'commentAllowed' => 128,
+            'payerData'      => ["name" =>["mandatory" => false]],
+            'metadata'       => $this->get_lnurlp_metadata()
         ];
         ob_end_clean();
         wp_send_json($response, 200);
@@ -97,7 +97,7 @@ class LNP_LnurlpController extends \WP_REST_Controller
             return;
         }
         $amount = ceil($amount / 1000); // amounts are sent in milli sats
-        $unhashed_description = $this->get_lnurlp_metadata($payerData);
+        $unhashed_description = json_encode($this->get_lnurlp_metadata($payerData));
         $description_hash = hash('sha256', $unhashed_description, false);
 
         $post_id = intval($request->get_param('post_id'));
@@ -127,12 +127,13 @@ class LNP_LnurlpController extends \WP_REST_Controller
     private function get_lnurlp_metadata($payerData = null) {
         $description = get_bloginfo('name');
         $identifier = site_url();
-        $metadata = json_encode([
+        $metadata = [
             ["text/identifier", $identifier],
             ["text/plain", $description]
-        ]);
+        ];
+
         if ($payerData) {
-            $metadata = $metadata . $payerData;
+            $metadata = json_encode($metadata) . $payerData;
         }
         return $metadata;
     }
