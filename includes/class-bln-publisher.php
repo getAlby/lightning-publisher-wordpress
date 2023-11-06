@@ -206,6 +206,7 @@ class BLN_Publisher
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/lightning-address.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/interface-bln-publisher-client.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/abstract-class-bln-publisher-client.php';
+        include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-alby-client.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-btcpay-client.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-lnaddress-client.php';
         include_once plugin_dir_path(dirname(__FILE__)) . 'includes/clients/class-bln-publisher-lnbits-client.php';
@@ -294,7 +295,12 @@ class BLN_Publisher
         {
             try
             {
-                if (!empty($this->connection_options['lnd_address']))
+                if (!empty($this->connection_options['alby_access_token']))
+                {
+                    $this->lightningClientType = 'alby';
+                    $this->lightningClient = new BLN_Publisher_Alby_Client($this->connection_options);
+                }
+                elseif (!empty($this->connection_options['lnd_address']))
                 {
                     $this->lightningClientType = 'lnd';
                     $this->lightningClient = new BLN_Publisher_LND_Client($this->connection_options);

@@ -5,6 +5,7 @@
   "license": "MIT",
   "minimum-stability": "dev",
   "require": {
+    "alby/php": "dev-main",
     "octan/lnd-rest": "dev-master",
     "octan/lnbits": "dev-master",
     "octan/lndhub": "dev-main",
@@ -29,6 +30,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/bumi/btcpay-php"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/getAlby/alby-php"
     },
     {
       "type": "vcs",
