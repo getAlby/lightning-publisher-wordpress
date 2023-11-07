@@ -19,7 +19,6 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $this->menu_title = __('Wallet Settings', 'lnp-alby');
 
         add_action('admin_notices', array($this, 'get_ln_node_info'));
-        add_action('lnp_tab_before_alby', array($this, 'render_tab_alby_wallet'));
     }
 
 
@@ -34,7 +33,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         $this->tabs = array(
             'alby' => array(
                 'title'       => __('Alby Wallet', 'lnp-alby'),
-                'description' => __('Create or connect a getalby.com account. Alby manages a Lightning wallet for you.', 'lnp-alby'),
+                'description' => __('Connect to your Alby account using an access token.', 'lnp-alby'),
             ),
             'lnd' => array(
                 'title'       => __('LND', 'lnp-alby'),
@@ -72,6 +71,18 @@ class LNP_ConnectionPage extends LNP_SettingsPage
          * Fields
          */
         $fields = array();
+
+        /**
+         * Fields for section: Alby
+         */
+        $fields[] = array(
+          'tab'     => 'alby',
+          'field'   => array(
+              'name'        => 'alby_access_token',
+              'label'       => __('Access Token', 'lnp-alby'),
+              'description' => __('From https://getalby.com/developer/access_tokens/new', 'lnp-alby'),
+          ),
+      );
 
         /**
          * Fields for section: LND Hub
@@ -211,37 +222,6 @@ class LNP_ConnectionPage extends LNP_SettingsPage
     }
 
 
-
-    /**
-     * Generate Alby
-     */
-    public function render_tab_alby_wallet()
-    {
-
-        printf(
-            '<div>
-                <table class="form-table" role="presentation"><tbody>
-                    <tr>
-                        <th scope="row">%s</th><td><input type="email" class="regular-text" id="alby_email" name="lnp_connection[alby_email]" value="" placeholder="" autocomplete="username"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">%s</th><td><input type="password" class="regular-text" id="alby_password" name="lnp_connection[alby_password]" value="" placeholder="" autocomplete="new-password"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row"></th><td>
-                        <button id="create_alby_account" type="button" class="button button-secondary">%s</button>
-                        </td>
-                    </tr>
-                </table>
-             </div>',
-            __('Email', 'lnp-alby'),
-            __('Password', 'lnp-alby'),
-            __('Use Alby Wallet', 'lnp-alby')
-        );
-    }
-
-
-
     public function get_ln_node_info()
     {
 
@@ -291,7 +271,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
     public function get_active_tab_id()
     {
         $connection_options = $this->plugin->getConnectionOptions();
-        if (!empty($connection_options['lnd_address'])) {
+        if (!empty($connection_options['alby_access_token'])) {
+            return 'alby';
+        } elseif (!empty($connection_options['lnd_address'])) {
             return 'lnd';
         } elseif (!empty($connection_options['lnbits_apikey'])) {
             return 'lnbits';
