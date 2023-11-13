@@ -254,8 +254,8 @@ class LNP_ConnectionPage extends LNP_SettingsPage
       $type    = 'error';
       $message = sprintf(
         '%s %s',
-        __('Connection Error, please check log for details', 'lnp-alby'),
-        $e
+        __('Connection Error, please check log for details: ', 'lnp-alby'),
+        $e->getMessage()
       );
     }
 
