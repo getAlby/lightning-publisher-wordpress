@@ -81,7 +81,7 @@ defined('WPINC') || die; ?>
     <p>
         The advanced Paywall Settings allow you to activate the paywall with certain options:
     </p>
-    <ul style="list-style:disc">
+    <ul style="list-style:disc; margin-left: 1rem;">
         <li>
             <strong>Timeout</strong>: Option to determine the number of hours you want to keep the article behind a paywall before making it free.
         </li>
@@ -100,17 +100,40 @@ defined('WPINC') || die; ?>
     <p>
       You have the option to receive your payments in the following wallets:
     </p>
-    <ul style="list-style:disc">
-        <li>Alby Wallet: Alby provides an easy to use all-in one service and manages a Lightning wallet for you. More information: https://getalby.com/</li>
-        <li>LND: The Lightning Network Daemon (LND) is one implementation of several of a Lightning Network node. If you want to connect a LND node make sure to have enough incoming liquidity to receive all payments.</li>
-        <li>LNDHub: A free and open source, multiple account plugin for Lightning built on top of the Lightning Network Deamon. It allows that a group of users run different accounts with only one node in a trust-minimized setup. More information: https://github.com/getAlby/lndhub.go</li>
-        <li>LNbits: A free and open-source Lightning accounts system with extensions. More information: https://lnbits.com/</li>
-        <li>BTCPay: A self-hosted, open-source cryptocurrency payment processor. More information: https://btcpayserver.org/</li>
-        <li>Lightning Address: A simple way for anyone to send you bitcoin instantly on the Lightning Network.It looks like a normal email address such as you@payaddress.com. But it only works if the website visitor uses a WebLN enabled wallet to pay. More information: https://lightningaddress.com/</li>
+    <ul style="list-style:disc; margin-left: 1rem;">
+      <li><b>Wallet Connection:</b> Nostr Wallet Connect (NWC) is an open protocol to connect lightning wallets to apps. You need to have "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions before creating the connection string. More information below:</li>
+      <li><b>Lightning Address:</b> A simple way for anyone to send you bitcoin instantly on the Lightning Network. It looks like a normal email address such as you@payaddress.com. But it only works if the website visitor uses a WebLN enabled wallet to pay. More information: <a href="https://lightningaddress.com/ target="_blank"">https://lightningaddress.com/</a></li>
+      <li style="opacity: 0.6;"><b>LND (about to be deprecated):</b> The Lightning Network Daemon (LND) is one implementation of several of a Lightning Network node. If you want to connect a LND node make sure to have enough incoming liquidity to receive all payments.</li>
+      <li style="opacity: 0.6;"><b>LNDHub (about to be deprecated):</b> A free and open source, multiple account plugin for Lightning built on top of the Lightning Network Deamon. It allows that a group of users run different accounts with only one node in a trust-minimized setup. More information: <a href="https://github.com/getAlby/lndhub.go" target="_blank">https://github.com/getAlby/lndhub.go</a></li>
+      <li style="opacity: 0.6;"><b>LNBits (about to be deprecated):</b> A free and open-source Lightning accounts system with extensions. More information: <a href="https://lnbits.com/" target="_blank">https://lnbits.com/</a></li>
+      <li style="opacity: 0.6;"><b>BTCPay (about to be deprecated):</b> A self-hosted, open-source cryptocurrency payment processor. More information: <a href="https://btcpayserver.org/" target="_blank">https://btcpayserver.org/</a></li>
     </ul>
 
+    <hr/>
+
+    <h2>What is NWC?</h2>
+    <p>
+      <a href="https://nwc.dev/">Nostr Wallet Connect (NWC)</a> is an open protocol to connect lightning wallets to apps. The lightning publisher uses this protocol to get payment details from your wallet. Payments will be sent directly to your wallet from your visitor.
+    </p>
+    <h3>What wallet is supported?</h3>
+    <p>
+      Any lightning wallet that supports NWC with the following permissions is supported:
+    </p>
+    <ul style="list-style:disc; margin-left: 1rem;">
+      <li>get_info</li>
+      <li>get_balance</li>
+      <li>lookup_invoice</li>
+      <li>make_invoice</li>
+    </ul>
+    <p>
+      We recommend <a href="https://getalby.com/" target="_blank">getalby.com</a>
+    </p>
+    <h3>Where can I get a wallet?</h3>
+    <p>
+      Go to <a href="https://getalby.com/" target="_blank">getalby.com</a> for an easy to use wallet that can be used with WordPress
+    </p>
     <h2>General Settings</h2>
-    <ul style="list-style:disc">
+    <ul style="list-style:disc; margin-left: 1rem;">
         <li>Value4Value Lightning meta tag: The meta tag gives websites a way to receive direct payments from their visitors. It allows websites to describe how and where they would like to receive payments. By enabling this feature you add the payment information directly into the code of the website. Wallets that can read this meta tag can send you payments without any additional payment widgets on your website. More information here: https://github.com/BitcoinAndLightningLayerSpecs/rfc/issues/1</li>
         <li>Enable Value4Value tag: Enabling this feature adds the podcast:value tag to your RSS feed. RSS feed reader apps (e.g. podcast apps) can read the payment information and allow the user to send you payments, if the app is bitcoin enabled. More information here: https://github.com/Podcastindex-org/podcast-namespace/blob/main/podcasting2.0.md</li>
     </ul>

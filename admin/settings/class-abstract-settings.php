@@ -308,7 +308,11 @@ abstract class LNP_SettingsPage
             );
 
             if (! empty($args['description']) ) {
-                echo esc_html($args['description']);
+                echo '<p>' . $args['description'] . '</p>';
+            }
+
+            if (in_array($id, ['lnd', 'lndhub', 'lnbits', 'btcpay'], true)) {
+                echo '<p style="color: red;">⚠️ This option is deprecated and might be released in the future</p>';
             }
 
             do_action("lnp_tab_before_{$id}");
@@ -320,7 +324,13 @@ abstract class LNP_SettingsPage
             $this->do_section_settings_fields($id);
 
             // Cloase table and tab
-            echo '</table></div>';
+            echo '</table>';
+
+            if ( $id == 'nwc') {
+              echo '<h2>What is NWC?</h2><p><a href="https://nwc.dev/" target="_blank">Nostr Wallet Connect (NWC)</a> is an open protocol to connect lightning wallets to apps. The lightning publisher uses this protocol to get payment details from your wallet. Payments will be sent directly to your wallet from your visitor.</p><h3>What wallet is supported?</h3><p>Any lightning wallet that supports NWC with the following permissions is supported:</p><ul style="list-style:disc; margin-left: 1rem;"><li>get_info</li><li>get_balance</li><li>lookup_invoice</li><li>make_invoice</li></ul><p>We recommend <a href="https://getalby.com/" target="_blank">getalby.com</a></p><h3>Where can I get a wallet?</h3><p>Go to <a href="https://getalby.com/ target="_blank"">getalby.com</a> for an easy to use wallet that can be used with WordPress</p>';
+            }
+
+            echo '</div>';
 
             do_action("lnp_tab_after_{$id}");
         }

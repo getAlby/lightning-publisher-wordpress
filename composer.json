@@ -5,13 +5,13 @@
   "license": "MIT",
   "minimum-stability": "dev",
   "require": {
-    "alby/php": "dev-main",
+    "getalby/nwc-php": "dev-main",
     "octan/lnd-rest": "dev-master",
     "octan/lnbits": "dev-master",
     "octan/lndhub": "dev-main",
     "octan/btcpay": "dev-main",
-    "firebase/php-jwt": "dev-main",
-    "jorijn/bitcoin-bolt11": "^0.1.0",
+    "firebase/php-jwt": "6.10.0",
+    "getalby/bitcoin-bolt11": "dev-master",
     "tkijewski/php-lnurl": "dev-master"
   },
   "repositories": [
@@ -33,11 +33,15 @@
     },
     {
       "type": "vcs",
-      "url": "https://github.com/getAlby/alby-php"
+      "url": "https://github.com/getAlby/nwc-php"
     },
     {
       "type": "vcs",
       "url": "https://github.com/tkijewski/php-lnurl.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/getAlby/bitcoin-bolt11"
     }
   ]
 }

@@ -31,9 +31,9 @@ class LNP_ConnectionPage extends LNP_SettingsPage
   {
     // Tabs
     $this->tabs = array(
-      'alby' => array(
-        'title'       => __('Alby Wallet', 'lnp-alby'),
-        'description' => __('Connect to your Alby account using an access token.', 'lnp-alby'),
+      'nwc' => array(
+        'title'       => __('Wallet Connection', 'lnp-alby'),
+        'description' => __('Connect to your node using the NWC connection URI', 'lnp-alby'),
       ),
       'lnd' => array(
         'title'       => __('LND', 'lnp-alby'),
@@ -73,14 +73,15 @@ class LNP_ConnectionPage extends LNP_SettingsPage
     $fields = array();
 
     /**
-     * Fields for section: Alby
+     * Fields for section: NWC
      */
     $fields[] = array(
-      'tab'     => 'alby',
+      'tab'     => 'nwc',
       'field'   => array(
-        'name'        => 'alby_access_token',
-        'label'       => __('Access Token', 'lnp-alby'),
-        'description' => __('Get your Alby access token with permissions for "invoices:create", "invoices:read", and "account:read" permissions from: https://getalby.com/developer/access_tokens/new', 'lnp-alby'),
+        'type'        => 'password',
+        'name'        => 'nwc_connection_uri',
+        'label'       => __('NWC Connection URI', 'lnp-alby'),
+        'description' => __('Get your NWC connection uri with permissions for "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions from: https://nwc.getalby.com/apps/new', 'lnp-alby'),
       ),
     );
 
@@ -269,8 +270,8 @@ class LNP_ConnectionPage extends LNP_SettingsPage
   public function get_active_tab_id()
   {
     $connection_options = $this->plugin->getConnectionOptions();
-    if (!empty($connection_options['alby_access_token'])) {
-      return 'alby';
+    if (!empty($connection_options['nwc_connection_uri'])) {
+      return 'nwc';
     } elseif (!empty($connection_options['lnd_address'])) {
       return 'lnd';
     } elseif (!empty($connection_options['lnbits_apikey'])) {

@@ -1,6 +1,10 @@
 /**
  * Tabs
  */
+.lnp .tab-content.tab-content-active {
+  margin-top: 1rem;
+}
+
 .lnp .tab-content:not(.tab-content-active) {
     display: none;
 }
