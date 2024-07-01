@@ -11,7 +11,7 @@
     "octan/lndhub": "dev-main",
     "octan/btcpay": "dev-main",
     "firebase/php-jwt": "6.10.0",
-    "getalby/bitcoin-bolt11": "dev-master",
+    "jorijn/bitcoin-bolt11": "^0.1.0",
     "tkijewski/php-lnurl": "dev-master"
   },
   "repositories": [

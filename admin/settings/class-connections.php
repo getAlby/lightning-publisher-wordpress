@@ -81,7 +81,7 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         'type'        => 'password',
         'name'        => 'nwc_connection_uri',
         'label'       => __('NWC Connection URI', 'lnp-alby'),
-        'description' => __('Get your NWC connection uri with permissions for "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions from: https://nwc.getalby.com/apps/new', 'lnp-alby'),
+        'description' => __('Get your NWC connection uri with permissions for "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions', 'lnp-alby'),
       ),
     );
 
