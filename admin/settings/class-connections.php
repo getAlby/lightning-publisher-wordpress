@@ -31,9 +31,17 @@ class LNP_ConnectionPage extends LNP_SettingsPage
   {
     // Tabs
     $this->tabs = array(
+      'alby' => array(
+        'title'       => __('Alby Wallet', 'lnp-alby'),
+        'description' => __('Connect to your Alby account using an access token.', 'lnp-alby'),
+      ),
       'nwc' => array(
         'title'       => __('Wallet Connection', 'lnp-alby'),
         'description' => __('Connect to your node using the NWC connection URI', 'lnp-alby'),
+      ),
+      'lnaddress' => array(
+        'title'       => __('LN Address', 'lnp-alby'),
+        'description' => __('Connect using a Lightning Address.', 'lnp-alby'),
       ),
       'lnd' => array(
         'title'       => __('LND', 'lnp-alby'),
@@ -50,10 +58,6 @@ class LNP_ConnectionPage extends LNP_SettingsPage
       'btcpay' => array(
         'title'       => __('BTC Pay', 'lnp-alby'),
         'description' => __('Connect to a BTCPay Server.', 'lnp-alby'),
-      ),
-      'lnaddress' => array(
-        'title'       => __('LN Address', 'lnp-alby'),
-        'description' => __('Connect using a Lightning Address.', 'lnp-alby'),
       ),
     );
 
@@ -73,6 +77,19 @@ class LNP_ConnectionPage extends LNP_SettingsPage
     $fields = array();
 
     /**
+     * Fields for section: Alby
+     */
+    $fields[] = array(
+      'tab'     => 'alby',
+      'field'   => array(
+        'type'        => 'password',
+        'name'        => 'alby_access_token',
+        'label'       => __('Access Token', 'lnp-alby'),
+        'description' => __('Get your Alby access token with permissions for "invoices:create", "invoices:read", and "account:read" permissions from: https://getalby.com/developer/access_tokens/new', 'lnp-alby'),
+      ),
+    );
+
+    /**
      * Fields for section: NWC
      */
     $fields[] = array(
@@ -82,6 +99,19 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         'name'        => 'nwc_connection_uri',
         'label'       => __('NWC Connection URI', 'lnp-alby'),
         'description' => __('Get your NWC connection uri with permissions for "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions', 'lnp-alby'),
+      ),
+    );
+
+    /**
+     * LN Address
+     */
+    $fields[] = array(
+      'tab'     => 'lnaddress',
+      'field'   => array(
+        'type'        => 'email',
+        'name'        => 'lnaddress_address',
+        'label'       => __('Lightning Address', 'lnp-alby'),
+        'description' => __('Lightning Address (e.g. you@getalby.com) - currently only works if the vistor supports WebLN or with a @getalby.com lightning address.', 'lnp-alby'),
       ),
     );
 
@@ -204,20 +234,6 @@ class LNP_ConnectionPage extends LNP_SettingsPage
       ),
     );
 
-
-    /**
-     * LN Address
-     */
-    $fields[] = array(
-      'tab'     => 'lnaddress',
-      'field'   => array(
-        'type'        => 'email',
-        'name'        => 'lnaddress_address',
-        'label'       => __('Lightning Address', 'lnp-alby'),
-        'description' => __('Lightning Address (e.g. you@getalby.com) - currently only works if the vistor supports WebLN or with a @getalby.com lightning address.', 'lnp-alby'),
-      ),
-    );
-
     // Save Form fields to class
     $this->form_fields = $fields;
   }
@@ -270,14 +286,16 @@ class LNP_ConnectionPage extends LNP_SettingsPage
   public function get_active_tab_id()
   {
     $connection_options = $this->plugin->getConnectionOptions();
-    if (!empty($connection_options['nwc_connection_uri'])) {
+    if (!empty($connection_options['alby_access_token'])) {
+      return 'alby';
+    } elseif (!empty($connection_options['nwc_connection_uri'])) {
       return 'nwc';
+    } elseif (!empty($connection_options['lnaddress_address']) || !empty($connection_options['lnaddress_lnurl'])) {
+      return 'lnaddress';
     } elseif (!empty($connection_options['lnd_address'])) {
       return 'lnd';
     } elseif (!empty($connection_options['lnbits_apikey'])) {
       return 'lnbits';
-    } elseif (!empty($connection_options['lnaddress_address']) || !empty($connection_options['lnaddress_lnurl'])) {
-      return 'lnaddress';
     } elseif (!empty($connection_options['btcpay_host'])) {
       return 'btcpay';
     } elseif (!empty($connection_options['lndhub_url']) && !empty($connection_options['lndhub_login']) && !empty($connection_options['lndhub_password'])) {

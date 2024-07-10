@@ -308,7 +308,7 @@ abstract class LNP_SettingsPage
             );
 
             if (! empty($args['description']) ) {
-                echo '<p>' . $args['description'] . '</p>';
+                echo esc_html($args['description']);
             }
 
             if (in_array($id, ['lnd', 'lndhub', 'lnbits', 'btcpay'], true)) {

@@ -101,6 +101,7 @@ defined('WPINC') || die; ?>
       You have the option to receive your payments in the following wallets:
     </p>
     <ul style="list-style:disc; margin-left: 1rem;">
+      <li><b>Alby Wallet:</b> Alby provides an easy to use all-in one service and manages a Lightning wallet for you. More information: https://getalby.com/</li>
       <li><b>Wallet Connection:</b> Nostr Wallet Connect (NWC) is an open protocol to connect lightning wallets to apps. You need to have "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions before creating the connection string. More information below:</li>
       <li><b>Lightning Address:</b> A simple way for anyone to send you bitcoin instantly on the Lightning Network. It looks like a normal email address such as you@payaddress.com. But it only works if the website visitor uses a WebLN enabled wallet to pay. More information: <a href="https://lightningaddress.com/ target="_blank"">https://lightningaddress.com/</a></li>
       <li style="opacity: 0.6;"><b>LND (about to be deprecated):</b> The Lightning Network Daemon (LND) is one implementation of several of a Lightning Network node. If you want to connect a LND node make sure to have enough incoming liquidity to receive all payments.</li>
