@@ -13,7 +13,7 @@ defined('WPINC') || die;
 class BLN_Publisher_LND_Client extends Abstract_BLN_Publisher_Client
 {
 
-    public function __construct($options)
+  public function __construct($options)
     {
         parent::__construct($options);
         $this->client = new LND\Client();

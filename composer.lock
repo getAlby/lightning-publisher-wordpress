@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e22e4575d4b29957c491a33794cff4a",
+    "content-hash": "1c1b1d0c8a2f021dbaa2f5fb5f958b99",
     "packages": [
         {
             "name": "alby/php",
@@ -214,12 +214,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "1d09200268e7d1052ded8e5da9c73c96a63d18f5"
+                "reference": "a40ea7eb72c7963be479663b9dd3e73a7d42a391"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/1d09200268e7d1052ded8e5da9c73c96a63d18f5",
-                "reference": "1d09200268e7d1052ded8e5da9c73c96a63d18f5",
+                "url": "https://api.github.com/repos/composer/semver/zipball/a40ea7eb72c7963be479663b9dd3e73a7d42a391",
+                "reference": "a40ea7eb72c7963be479663b9dd3e73a7d42a391",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +288,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-31T12:20:31+00:00"
+            "time": "2024-05-27T13:39:29+00:00"
         },
         {
             "name": "fgrosse/phpasn1",
@@ -368,16 +368,16 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "dev-main",
+            "version": "v6.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "f03270e63eaccf3019ef0f32849c497385774e11"
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/f03270e63eaccf3019ef0f32849c497385774e11",
-                "reference": "f03270e63eaccf3019ef0f32849c497385774e11",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/a49db6f0a5033aef5143295342f1c95521b075ff",
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,6 @@
                 "ext-sodium": "Support EdDSA (Ed25519) signatures",
                 "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -426,9 +425,55 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.9.0"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.10.0"
             },
-            "time": "2023-10-05T00:24:42+00:00"
+            "time": "2023-12-01T16:26:39+00:00"
+        },
+        {
+            "name": "getalby/nwc-php",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/getAlby/nwc-php.git",
+                "reference": "a855ad8baef3c19c71cdfce7b15d6f68eb490f4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/getAlby/nwc-php/zipball/a855ad8baef3c19c71cdfce7b15d6f68eb490f4a",
+                "reference": "a855ad8baef3c19c71cdfce7b15d6f68eb490f4a",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8.1",
+                "php": ">=7.0",
+                "public-square/phpecc": "0.1.0",
+                "simplito/elliptic-php": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NWC\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alby Contributors",
+                    "email": "hello@getalby.com"
+                }
+            ],
+            "description": "A client for the NWC API",
+            "support": {
+                "source": "https://github.com/getAlby/nwc-php/tree/main",
+                "issues": "https://github.com/getAlby/nwc-php/issues"
+            },
+            "time": "2024-06-26T09:29:49+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -436,12 +481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "d95d9ab74822c2ca06b31477cd6775a4a299b8e8"
+                "reference": "1ee81e5fc8613ba1ad0b095f40e17c119dd4cc93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/d95d9ab74822c2ca06b31477cd6775a4a299b8e8",
-                "reference": "d95d9ab74822c2ca06b31477cd6775a4a299b8e8",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/1ee81e5fc8613ba1ad0b095f40e17c119dd4cc93",
+                "reference": "1ee81e5fc8613ba1ad0b095f40e17c119dd4cc93",
                 "shasum": ""
             },
             "require": {
@@ -456,11 +501,11 @@
                 "psr/http-client-implementation": "1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.8.1",
+                "bamarni/composer-bin-plugin": "^1.8.2",
                 "ext-curl": "*",
-                "php-http/client-integration-tests": "dev-master#2c025848417c1135031fdf9c728ee53d0a7ceaee as 3.0.999",
+                "guzzle/client-integration-tests": "3.0.2",
                 "php-http/message-factory": "^1.1",
-                "phpunit/phpunit": "^8.5.29 || ^9.5.23",
+                "phpunit/phpunit": "^8.5.36 || ^9.6.15",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
             },
             "suggest": {
@@ -538,7 +583,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.8"
+                "source": "https://github.com/guzzle/guzzle/tree/7.9"
             },
             "funding": [
                 {
@@ -554,7 +599,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-11T09:12:01+00:00"
+            "time": "2024-03-31T19:57:34+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -562,20 +607,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "71b12f952d8be69a239989db2fe08314a5189e3b"
+                "reference": "ab801747cbf7d394d4d435c34364704f9bf048e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/71b12f952d8be69a239989db2fe08314a5189e3b",
-                "reference": "71b12f952d8be69a239989db2fe08314a5189e3b",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/ab801747cbf7d394d4d435c34364704f9bf048e6",
+                "reference": "ab801747cbf7d394d4d435c34364704f9bf048e6",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2.5 || ^8.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.8.1",
-                "phpunit/phpunit": "^8.5.29 || ^9.5.23"
+                "bamarni/composer-bin-plugin": "^1.8.2",
+                "phpunit/phpunit": "^8.5.36 || ^9.6.15"
             },
             "default-branch": true,
             "type": "library",
@@ -638,7 +683,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-27T10:15:36+00:00"
+            "time": "2024-03-31T10:06:07+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -646,12 +691,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "38ef514a6c21335f29d9be64b097d2582ecbf8e4"
+                "reference": "a243f80a1ca7fe8ceed4deee17f12c1930efe662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/38ef514a6c21335f29d9be64b097d2582ecbf8e4",
-                "reference": "38ef514a6c21335f29d9be64b097d2582ecbf8e4",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/a243f80a1ca7fe8ceed4deee17f12c1930efe662",
+                "reference": "a243f80a1ca7fe8ceed4deee17f12c1930efe662",
                 "shasum": ""
             },
             "require": {
@@ -665,9 +710,9 @@
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.8.1",
+                "bamarni/composer-bin-plugin": "^1.8.2",
                 "http-interop/http-factory-tests": "^0.9",
-                "phpunit/phpunit": "^8.5.29 || ^9.5.23"
+                "phpunit/phpunit": "^8.5.36 || ^9.6.15"
             },
             "suggest": {
                 "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
@@ -755,7 +800,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-10T16:11:14+00:00"
+            "time": "2024-03-31T10:09:24+00:00"
         },
         {
             "name": "jorijn/bitcoin-bolt11",
@@ -937,6 +982,7 @@
                 "issues": "https://github.com/phpecc/phpecc/issues",
                 "source": "https://github.com/phpecc/phpecc/tree/v0.5.2"
             },
+            "abandoned": "paragonie/ecc",
             "time": "2018-12-03T18:17:01+00:00"
         },
         {
@@ -1226,23 +1272,22 @@
         },
         {
             "name": "psr/http-factory",
-            "version": "dev-master",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "7037f4b0950474e9d1350e8df89b15f1842085f6"
+                "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/7037f4b0950474e9d1350e8df89b15f1842085f6",
-                "reference": "7037f4b0950474e9d1350e8df89b15f1842085f6",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
+                "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.0",
+                "php": ">=7.1",
                 "psr/http-message": "^1.0 || ^2.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1278,7 +1323,7 @@
             "support": {
                 "source": "https://github.com/php-fig/http-factory"
             },
-            "time": "2023-09-22T11:16:44+00:00"
+            "time": "2024-04-15T12:06:14+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1335,6 +1380,81 @@
             "time": "2023-04-04T09:54:51+00:00"
         },
         {
+            "name": "public-square/phpecc",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/public-square/phpecc.git",
+                "reference": "0ff0bfd72bf03bf7145db2c0dde9dff9c818757f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/public-square/phpecc/zipball/0ff0bfd72bf03bf7145db2c0dde9dff9c818757f",
+                "reference": "0ff0bfd72bf03bf7145db2c0dde9dff9c818757f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gmp": "*",
+                "fgrosse/phpasn1": "^2.0",
+                "php": "^7.0||^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0||^8.0||^9.0",
+                "squizlabs/php_codesniffer": "^2.0",
+                "symfony/yaml": "^2.6|^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mdanter\\Ecc\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matyas Danter",
+                    "homepage": "http://matejdanter.com/",
+                    "role": "Author"
+                },
+                {
+                    "name": "Thibaud Fabre",
+                    "email": "thibaud@aztech.io",
+                    "homepage": "http://aztech.io",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Thomas Kerin",
+                    "email": "afk11@users.noreply.github.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "PHP Elliptic Curve Cryptography library",
+            "homepage": "https://github.com/public-square/phpecc",
+            "keywords": [
+                "Diffie",
+                "ECDSA",
+                "Hellman",
+                "curve",
+                "ecdh",
+                "elliptic",
+                "nistp192",
+                "nistp224",
+                "nistp256",
+                "nistp384",
+                "nistp521",
+                "phpecc",
+                "secp256k1",
+                "secp256r1"
+            ],
+            "support": {
+                "source": "https://github.com/public-square/phpecc/tree/v0.1.0"
+            },
+            "time": "2022-10-07T17:58:44+00:00"
+        },
+        {
             "name": "ralouphie/getallheaders",
             "version": "3.0.3",
             "source": {
@@ -1379,17 +1499,164 @@
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
+            "name": "simplito/bigint-wrapper-php",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/simplito/bigint-wrapper-php.git",
+                "reference": "cf21ec76d33f103add487b3eadbd9f5033a25930"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/simplito/bigint-wrapper-php/zipball/cf21ec76d33f103add487b3eadbd9f5033a25930",
+                "reference": "cf21ec76d33f103add487b3eadbd9f5033a25930",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BI\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simplito Team",
+                    "email": "s.smyczynski@simplito.com",
+                    "homepage": "https://simplito.com"
+                }
+            ],
+            "description": "Common interface for php_gmp and php_bcmath modules",
+            "support": {
+                "issues": "https://github.com/simplito/bigint-wrapper-php/issues",
+                "source": "https://github.com/simplito/bigint-wrapper-php/tree/1.0.0"
+            },
+            "time": "2018-02-27T12:38:08+00:00"
+        },
+        {
+            "name": "simplito/bn-php",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/simplito/bn-php.git",
+                "reference": "83446756a81720eacc2ffb87ff97958431451fd6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/simplito/bn-php/zipball/83446756a81720eacc2ffb87ff97958431451fd6",
+                "reference": "83446756a81720eacc2ffb87ff97958431451fd6",
+                "shasum": ""
+            },
+            "require": {
+                "simplito/bigint-wrapper-php": "~1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BN\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simplito Team",
+                    "email": "s.smyczynski@simplito.com",
+                    "homepage": "https://simplito.com"
+                }
+            ],
+            "description": "Big number implementation compatible with bn.js",
+            "support": {
+                "issues": "https://github.com/simplito/bn-php/issues",
+                "source": "https://github.com/simplito/bn-php/tree/1.1.4"
+            },
+            "time": "2024-01-10T16:16:59+00:00"
+        },
+        {
+            "name": "simplito/elliptic-php",
+            "version": "1.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/simplito/elliptic-php.git",
+                "reference": "be321666781be2be2c89c79c43ffcac834bc8868"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/simplito/elliptic-php/zipball/be321666781be2be2c89c79c43ffcac834bc8868",
+                "reference": "be321666781be2be2c89c79c43ffcac834bc8868",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gmp": "*",
+                "simplito/bn-php": "~1.1.0"
+            },
+            "require-dev": {
+                "phpbench/phpbench": "@dev",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Elliptic\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simplito Team",
+                    "email": "s.smyczynski@simplito.com",
+                    "homepage": "https://simplito.com"
+                }
+            ],
+            "description": "Fast elliptic curve cryptography",
+            "homepage": "https://github.com/simplito/elliptic-php",
+            "keywords": [
+                "Curve25519",
+                "ECDSA",
+                "Ed25519",
+                "EdDSA",
+                "cryptography",
+                "curve",
+                "curve25519-weier",
+                "ecc",
+                "ecdh",
+                "elliptic",
+                "nistp192",
+                "nistp224",
+                "nistp256",
+                "nistp384",
+                "nistp521",
+                "secp256k1"
+            ],
+            "support": {
+                "issues": "https://github.com/simplito/elliptic-php/issues",
+                "source": "https://github.com/simplito/elliptic-php/tree/1.0.12"
+            },
+            "time": "2024-01-09T14:57:04+00:00"
+        },
+        {
             "name": "symfony/deprecation-contracts",
             "version": "2.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "80d075412b557d41002320b96a096ca65aa2c98d"
+                "reference": "d36279a5a4bc7f3ca2c412839f10d7c0aa2c1a02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/80d075412b557d41002320b96a096ca65aa2c98d",
-                "reference": "80d075412b557d41002320b96a096ca65aa2c98d",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/d36279a5a4bc7f3ca2c412839f10d7c0aa2c1a02",
+                "reference": "d36279a5a4bc7f3ca2c412839f10d7c0aa2c1a02",
                 "shasum": ""
             },
             "require": {
@@ -1443,19 +1710,19 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-24T14:02:46+00:00"
+            "time": "2024-04-18T08:26:06+00:00"
         },
         {
             "name": "tkijewski/php-lnurl",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tkijewski/php-lnurl.git",
+                "url": "https://github.com/tkthundr/php-lnurl.git",
                 "reference": "7007e8e26b3b3527f19446feaae9d6e4b602f8f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tkijewski/php-lnurl/zipball/7007e8e26b3b3527f19446feaae9d6e4b602f8f8",
+                "url": "https://api.github.com/repos/tkthundr/php-lnurl/zipball/7007e8e26b3b3527f19446feaae9d6e4b602f8f8",
                 "reference": "7007e8e26b3b3527f19446feaae9d6e4b602f8f8",
                 "shasum": ""
             },
@@ -1493,8 +1760,8 @@
             "description": "PHP implementation of lnurl Spec",
             "homepage": "https://github.com/tkijewski/php-lnurl",
             "support": {
-                "source": "https://github.com/tkijewski/php-lnurl/tree/master",
-                "issues": "https://github.com/tkijewski/php-lnurl/issues"
+                "source": "https://github.com/tkthundr/php-lnurl/tree/master",
+                "issues": "https://github.com/tkthundr/php-lnurl/issues"
             },
             "time": "2023-01-13T17:14:49+00:00"
         }
@@ -1504,11 +1771,11 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "alby/php": 20,
+        "getalby/nwc-php": 20,
         "octan/lnd-rest": 20,
         "octan/lnbits": 20,
         "octan/lndhub": 20,
         "octan/btcpay": 20,
-        "firebase/php-jwt": 20,
         "tkijewski/php-lnurl": 20
     },
     "prefer-stable": false,

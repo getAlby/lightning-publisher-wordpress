@@ -6,11 +6,12 @@
   "minimum-stability": "dev",
   "require": {
     "alby/php": "dev-main",
+    "getalby/nwc-php": "dev-main",
     "octan/lnd-rest": "dev-master",
     "octan/lnbits": "dev-master",
     "octan/lndhub": "dev-main",
     "octan/btcpay": "dev-main",
-    "firebase/php-jwt": "dev-main",
+    "firebase/php-jwt": "6.10.0",
     "jorijn/bitcoin-bolt11": "^0.1.0",
     "tkijewski/php-lnurl": "dev-master"
   },
@@ -30,6 +31,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/bumi/btcpay-php"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/getAlby/nwc-php"
     },
     {
       "type": "vcs",
