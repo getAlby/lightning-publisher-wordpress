@@ -39,10 +39,11 @@ The plugin comes with various options to receive donations and [Value 4 Value pa
 Connect to your existing Bitcoin Lightning node or simply create a new [Alby account](https://getalby.com/) to instantly receive Lightning payments.
 
 -   [Alby](https://getalby.com/)
--   [LND](https://github.com/lightningnetwork/lnd/)
--   [LNDHub](https://github.com/getalby/lndhub.go) (e.g. BlueWallet)
--   [LNBits](https://lnbits.com/)
--   [BTCPay Server](https://btcpayserver.org/)
+-   [Any Wallet supporting NWC](https://nwc.dev/)
+-   [LND](https://github.com/lightningnetwork/lnd/) (deprecated)
+-   [LNDHub](https://github.com/getalby/lndhub.go) (e.g. BlueWallet) (deprecated)
+-   [LNBits](https://lnbits.com/) (deprecated)
+-   [BTCPay Server](https://btcpayserver.org/) 
 -   [Lightning Address](https://lightningaddress.com/)
 
 ### REST-API for full advanced custom usage
