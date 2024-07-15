@@ -2,9 +2,9 @@
 
 Tags: bitcoin, lightning, payment, donation, paywall, rss, micropayments
 Requires at least: 5.6.0
-Tested up to: 6.3.1
+Tested up to: 6.5.5
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv3
 Donate link: https://getalby.com
 Contributors: getalby
@@ -95,6 +95,10 @@ Refer to the [readme on GitHub](https://github.com/getAlby/lightning-publisher-w
 [Release notes on GitHub](https://github.com/getAlby/lightning-publisher-wordpress/releases)
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Added support for [NWC](https://nwc.dev) wallets which allows you to receive payments to any wallet that supports NWC.
+In the future we might deprecate other options in favor of NWC.
 
 = 1.3.0 =
 NOTE: we do no longer embed the [twentyuno widget](https://webln.twentyuno.net/widget). To use that widget get the embed code from the [twentyuno website](https://webln.twentyuno.net/widget) and include it on your side.
