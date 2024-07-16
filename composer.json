@@ -12,7 +12,7 @@
     "octan/lndhub": "dev-main",
     "octan/btcpay": "dev-main",
     "firebase/php-jwt": "6.10.0",
-    "jorijn/bitcoin-bolt11": "^0.1.0",
+    "jorijn/bitcoin-bolt11": "dev-master",
     "tkijewski/php-lnurl": "dev-master"
   },
   "repositories": [
@@ -43,6 +43,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/tkijewski/php-lnurl.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/getAlby/bitcoin-bolt11"
     }
   ]
 }
