@@ -153,11 +153,11 @@ class BLN_Publisher_Paywall
                 $show_paid = true;
             }
 
-            if (!empty($this->options['timeout']) && time() > get_post_time('U') + $this->options['timeout'] * 60 * 60) {
+            if (!empty($this->options['timeout']) && time() < get_post_time('U') + $this->options['timeout'] * 60 * 60) {
                 $show_paid = true;
             }
 
-            if (!empty($this->options['timein']) && time() < get_post_time('U') + $this->options['timein'] * 60 * 60) {
+            if (!empty($this->options['timein']) && time() > get_post_time('U') + $this->options['timein'] * 60 * 60) {
                 $show_paid = true;
             }
 
