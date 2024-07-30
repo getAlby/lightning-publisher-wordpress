@@ -1,6 +1,6 @@
 === Bitcoin Lightning Publisher for WordPress ===
 
-Tags: bitcoin, lightning, payment, donation, paywall, rss, micropayments
+Tags: bitcoin, lightning, payment, donation, paywall
 Requires at least: 5.6.0
 Tested up to: 6.5.5
 Requires PHP: 7.4
@@ -8,6 +8,7 @@ Stable tag: 1.4.1
 License: GPLv3
 Donate link: https://getalby.com
 Contributors: getalby
+Bitcoin Lightning Publisher is a Paywall, Donation and Value 4 Value plugin to accept instant Bitcoin payments directly to your favorit wallet.
 
 
 == Description ==
