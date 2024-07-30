@@ -327,7 +327,7 @@ abstract class LNP_SettingsPage
             echo '</table>';
 
             if ( $id == 'nwc') {
-              echo '<h2>What is NWC?</h2><p><a href="https://nwc.dev/" target="_blank">Nostr Wallet Connect (NWC)</a> is an open protocol to connect lightning wallets to apps. The lightning publisher uses this protocol to get payment details from your wallet. Payments will be sent directly to your wallet from your visitor.</p><h3>What wallet is supported?</h3><p>Any lightning wallet that supports NWC with the following permissions is supported:</p><ul style="list-style:disc; margin-left: 1rem;"><li>get_info</li><li>get_balance</li><li>lookup_invoice</li><li>make_invoice</li></ul><p>We recommend <a href="https://getalby.com/" target="_blank">getalby.com</a></p><h3>Where can I get a wallet?</h3><p>Go to <a href="https://getalby.com/ target="_blank"">getalby.com</a> for an easy to use wallet that can be used with WordPress</p>';
+              echo '<p>Get your NWC connection uri with permissions for "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions. <a href="https://getalby.com/hub/apps/new?name=Wordpress%20LN%20Publisher&request_methods=get_info%20get_balance%20make_invoice%20lookup_invoice" target="_blank">Using Alby Hub?</a></p><p>Need help? <a href="/wp-admin/admin.php?page=lnp_settings_help">Learn more about NWC</a></p>';
             }
 
             echo '</div>';

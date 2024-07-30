@@ -31,13 +31,13 @@ class LNP_ConnectionPage extends LNP_SettingsPage
   {
     // Tabs
     $this->tabs = array(
+      'nwc' => array(
+        'title'       => __('NWC Wallet Connection', 'lnp-alby'),
+        'description' => __('Connect to your node using the NWC connection URI', 'lnp-alby'),
+      ),
       'alby' => array(
         'title'       => __('Alby Wallet', 'lnp-alby'),
         'description' => __('Connect to your Alby account using an access token.', 'lnp-alby'),
-      ),
-      'nwc' => array(
-        'title'       => __('Wallet Connection', 'lnp-alby'),
-        'description' => __('Connect to your node using the NWC connection URI', 'lnp-alby'),
       ),
       'lnaddress' => array(
         'title'       => __('LN Address', 'lnp-alby'),
@@ -98,7 +98,6 @@ class LNP_ConnectionPage extends LNP_SettingsPage
         'type'        => 'password',
         'name'        => 'nwc_connection_uri',
         'label'       => __('NWC Connection URI', 'lnp-alby'),
-        'description' => __('Get your NWC connection uri with permissions for "make_invoice", "lookup_invoice", "get_balance" and "get_info" permissions', 'lnp-alby'),
       ),
     );
 
