@@ -4,7 +4,7 @@ Tags: bitcoin, lightning, payment, donation, paywall
 Requires at least: 5.6.0
 Tested up to: 6.7.1
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv3
 Donate link: https://getalby.com
 Contributors: getalby
@@ -96,6 +96,10 @@ Refer to the [readme on GitHub](https://github.com/getAlby/lightning-publisher-w
 [Release notes on GitHub](https://github.com/getAlby/lightning-publisher-wordpress/releases)
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+
+Fix escpaing for transaction filter URLs
 
 = 1.4.1 =
 Fix QR code rendering
