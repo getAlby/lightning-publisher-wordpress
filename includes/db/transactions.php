@@ -215,16 +215,16 @@ class LNP_TransactionsTable extends WP_List_Table
 
         //All link
         $class = ($current == 'all' ? ' class="current"' :'');
-        $all_url =  add_query_arg('state','all');
+        $all_url =  esc_url(add_query_arg('state','all'));
         $views['all'] = "<a href='{$all_url }' {$class} >All</a>";
 
         //Settled link
-        $settled_url = add_query_arg('state','settled');
+        $settled_url = esc_url(add_query_arg('state','settled'));
         $class = ($current == 'settled' ? ' class="current"' :'');
         $views['settled'] = "<a href='{$settled_url}' {$class} >Settled</a>";
 
         //unknown link
-        $unknown_url = add_query_arg('state','unknown');
+        $unknown_url = esc_url(add_query_arg('state','unknown'));
         $class = ($current == 'unknown' ? ' class="current"' :'');
         $views['unknown'] = "<a href='{$unknown_url}' {$class} >Unknown</a>";
 
