@@ -2,7 +2,7 @@
 
 Tags: bitcoin, lightning, payment, donation, paywall
 Requires at least: 5.6.0
-Tested up to: 6.5.5
+Tested up to: 6.7.1
 Requires PHP: 7.4
 Stable tag: 1.4.1
 License: GPLv3
